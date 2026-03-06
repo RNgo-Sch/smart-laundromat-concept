@@ -1,0 +1,151 @@
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/misc.xml
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+deleted file mode 100644
+--- a/.idea/misc.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,6 +0,0 @@
+-<project version="4">
+-  <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+-    <output url="file://$PROJECT_DIR$/out" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/runConfigurations.xml
+===================================================================
+diff --git a/.idea/runConfigurations.xml b/.idea/runConfigurations.xml
+deleted file mode 100644
+--- a/.idea/runConfigurations.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RunConfigurationProducerService">
+-    <option name="ignoredProducers">
+-      <set>
+-        <option value="com.intellij.execution.junit.AbstractAllInDirectoryConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.AllInPackageConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.PatternConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.TestInClassConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.UniqueIdConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.testDiscovery.JUnitTestDiscoveryConfigurationProducer" />
+-        <option value="org.jetbrains.kotlin.idea.junit.KotlinJUnitRunConfigurationProducer" />
+-        <option value="org.jetbrains.kotlin.idea.junit.KotlinPatternConfigurationProducer" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/AndroidProjectSystem.xml
+===================================================================
+diff --git a/.idea/AndroidProjectSystem.xml b/.idea/AndroidProjectSystem.xml
+deleted file mode 100644
+--- a/.idea/AndroidProjectSystem.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="AndroidProjectSystem">
+-    <option name="providerId" value="com.android.tools.idea.GradleProjectSystem" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+deleted file mode 100644
+--- a/.idea/gradle.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,18 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="GradleMigrationSettings" migrationVersion="1" />
+-  <component name="GradleSettings">
+-    <option name="linkedExternalProjectsSettings">
+-      <GradleProjectSettings>
+-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="modules">
+-          <set>
+-            <option value="$PROJECT_DIR$" />
+-            <option value="$PROJECT_DIR$/app" />
+-          </set>
+-        </option>
+-      </GradleProjectSettings>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/deploymentTargetSelector.xml
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="app">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="" vcs="Git" />
+-    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+deleted file mode 100644
+--- a/.idea/compiler.xml	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
++++ /dev/null	(revision 2a65fccced1ca0af392f141cdc4d7614923fbd5f)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="21" />
+-  </component>
+-</project>
+\ No newline at end of file
+diff --git a/classes/TestUser.java b/app/src/main/java/com/example/smart_laundromat_concept/classes/TestUser.java
+rename from classes/TestUser.java
+rename to app/src/main/java/com/example/smart_laundromat_concept/classes/TestUser.java
+diff --git a/classes/User.java b/app/src/main/java/com/example/smart_laundromat_concept/classes/User.java
+rename from classes/User.java
+rename to app/src/main/java/com/example/smart_laundromat_concept/classes/User.java
+diff --git a/classes/Wallet.java b/app/src/main/java/com/example/smart_laundromat_concept/classes/Wallet.java
+rename from classes/Wallet.java
+rename to app/src/main/java/com/example/smart_laundromat_concept/classes/Wallet.java
+diff --git a/classes/IdCounter.java b/app/src/main/java/com/example/smart_laundromat_concept/classes/IdCounter.java
+rename from classes/IdCounter.java
+rename to app/src/main/java/com/example/smart_laundromat_concept/classes/IdCounter.java
+diff --git a/classes/Reputation.java b/app/src/main/java/com/example/smart_laundromat_concept/classes/Reputation.java
+rename from classes/Reputation.java
+rename to app/src/main/java/com/example/smart_laundromat_concept/classes/Reputation.java
