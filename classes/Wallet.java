@@ -19,16 +19,14 @@ public class Wallet {
     // mutators
     public void topUp(float amount) {
         balance += amount;
+        System.out.println("Topped up $" + amount + " to $" + balance);
     }
-    public void increaseDebt(float amount) {
-        debt += amount;
+    public void debit(float amount) {
+        balance -= amount;
+        System.out.println("Debit amount $" + amount + " leaving balance $" + balance);
     }
     public boolean makePayment(float amount) {
         // method returns true if successful, false if failed due to insufficient funds
-        // pay off debt in same payment
-        amount += debt;
-        debt = 0.0f;
-        // make successful payment for amount with debt
         if (balance - amount < 0.0f) {
             System.out.println("Insufficient balance for payment: ");
             return false;
@@ -43,6 +41,6 @@ public class Wallet {
     // override hashMap and equals 
     @Override
     public String toString() {
-        return "balance: $" + balance + "debt: $" + debt;
+        return "Wallet balance: $" + balance;
     }
 }

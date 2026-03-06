@@ -13,4 +13,14 @@ public class User {
         this.reputation = new Reputation();
     }
 
+    // accessors
+    public int getId() {
+        return id;
+    }
+    public Wallet getWallet() {
+        return wallet;
+    }
+    public Reputation getReputation() {
+        return reputation;
+    }
 }
