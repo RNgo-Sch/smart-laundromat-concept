@@ -1,18 +1,13 @@
 // class exists to track the current state of user wallet
 public class Wallet {
     float balance;
-    float debt;
     
     public Wallet() {
         this.balance = 0.0f;
-        this.debt = 0.0f;
     }
 
     // accessors
     public float getBalance() {
-        return balance;
-    }
-    public float getDebt() {
         return balance;
     }
 
