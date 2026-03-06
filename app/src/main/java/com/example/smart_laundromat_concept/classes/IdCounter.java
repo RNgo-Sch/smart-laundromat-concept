@@ -1,3 +1,5 @@
+package com.example.smart_laundromat_concept.classes;
+
 // this class exists to provide sequential id numbers for other objects
 public class IdCounter {
     private int current_id;

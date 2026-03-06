@@ -1,3 +1,4 @@
+package com.example.smart_laundromat_concept.classes;
 // class exists to track the current state of user wallet
 public class Wallet {
     float balance;

@@ -1,3 +1,4 @@
+package com.example.smart_laundromat_concept.classes;
 public class User {
     // static variables for id and reputation system
     private static final int[] REPUTATION_TIERS = {10, 20, 30, 40}; // breakpoints to enter reputation level 1, 2, 3, 4
