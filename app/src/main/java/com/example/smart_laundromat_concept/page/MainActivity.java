@@ -12,8 +12,6 @@ import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
 
 public class MainActivity extends AppCompatActivity {
-
-
     EditText username;
     EditText password;
     Button loginButton;
