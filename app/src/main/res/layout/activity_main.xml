@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/background"
-    tools:context="page.MainActivity">
+    android:background="@drawable/loginbkg"
+    tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -66,15 +66,14 @@
                 android:layout_marginTop="20dp"/>
 
             <Button
-                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="30dp"
-                android:backgroundTint="@color/purple"
-                android:onClick="launchHomePage"
+                android:id="@+id/loginButton"
                 android:text="Login"
                 android:textSize="18sp"
-                app:cornerRadius="20dp" />
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/purple"
+                app:cornerRadius = "20dp"/>
 
         </LinearLayout>
 
@@ -92,4 +91,3 @@
         android:layout_marginBottom="20dp"/>
 
 </LinearLayout>
-
