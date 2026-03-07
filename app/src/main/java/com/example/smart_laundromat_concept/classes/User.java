@@ -15,8 +15,13 @@ public class User {
         this.id = latest_id.getId();
         this.wallet = new Wallet();
         this.reputation = new Reputation();
-        username = this.id;
-        password = "1";
+        this.username = this.id;
+        this.password = "1";
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     // accessors
