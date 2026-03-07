@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Smartlaundromatconcept">
         <activity
+            android:name=".page.HomePageActivity"
+            android:exported="false" />
+        <activity
             android:name=".page.MainActivity"
             android:exported="true">
             <intent-filter>
