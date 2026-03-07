@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (username.getText().toString().equals("user") && password.getText().toString().equals("1234")) {
                     Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                    launchHomePage(view);
+                    launchPage(view);
 
                 } else {
                     Toast.makeText(MainActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
@@ -41,8 +41,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void launchHomePage(View view) {
-        Intent intent = new Intent(this, HomePageActivity.class);
-        startActivity(intent);
+    public void launchPage(View view) {
+
+        Intent intent = null;
+        int id = view.getId();
+        if (id == R.id.loginButton) {
+            intent = new Intent(this, HomePageActivity.class);
+        } else if (id == R.id.signupButton) {
+            intent = new Intent(this, SignUpActivity.class);
+        }
+
+        if (intent != null) {
+            startActivity(intent);
+        }
     }
 }
+
+

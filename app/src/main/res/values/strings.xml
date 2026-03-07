@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Smart laundromat</string>
+    <string name="Ask_Signup">Not yet registered? SignUp Now</string>
 </resources>
