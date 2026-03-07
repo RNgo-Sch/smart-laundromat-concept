@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/backgd"
+    android:background="@drawable/background"
     tools:context="page.MainActivity">
 
     <androidx.cardview.widget.CardView
@@ -24,15 +24,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
-
             android:padding="24dp">
 
             <!-- Loging text -->
             <TextView
+                android:id="@+id/activity_main__login_Text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
-                android:id="@+id/loginText"
                 android:textSize="36sp"
                 android:textAlignment="center"
                 android:textStyle="bold"
@@ -40,7 +39,7 @@
 
             <!-- Username input -->
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/activity_main__username_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="40dp"
@@ -55,9 +54,9 @@
 
             <!-- Password input -->
             <EditText
+                android:id="@+id/activity_main__password_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/password"
                 android:background="@drawable/custom_edittext"
                 android:drawableLeft="@drawable/icons8_lock_24"
                 android:drawablePadding="8dp"
@@ -70,7 +69,7 @@
 
             <!-- Login button -->
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/activity_main__login_Button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
@@ -84,8 +83,9 @@
 
     </androidx.cardview.widget.CardView>
 
+    <!-- go to sign up page -->
     <Button
-        android:id="@+id/signupButton"
+        android:id="@+id/activity_main__go_to_signup_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

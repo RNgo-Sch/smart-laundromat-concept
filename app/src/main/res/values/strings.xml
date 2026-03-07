@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Smart laundromat</string>
     <string name="Ask_Signup">Not yet registered? SignUp Now</string>
+    <string name="Alr_have_acc">Have an account? Sign in</string>
 </resources>
