@@ -8,10 +8,15 @@ public class User {
     private Wallet wallet;
     private Reputation reputation;
 
+    private String username;
+    private String password;
+
     public User() {
         this.id = latest_id.getId();
         this.wallet = new Wallet();
         this.reputation = new Reputation();
+        username = this.id;
+        password = "1";
     }
 
     // accessors
