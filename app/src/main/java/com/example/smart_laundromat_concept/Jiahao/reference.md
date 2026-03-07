@@ -18,7 +18,7 @@ Thus, the code should be largely your own work. We have mentioned above that usi
 code found on the internet is ok, but your project must not be based upon copying large amounts of
 code from websites.
 
-Android App Development in Java All-in-One Tutorial Series
+[Android App Development in Java All-in-One Tutorial Series](@page/MainActivity/onClick)
 https://youtu.be/tZvjSl9dswg?si=INbh7l5dj1nuUl10
 
 UI/UX Design start up course
@@ -28,3 +28,4 @@ user login page
 https://youtu.be/orXJRPNvAc4?si=MyFEb3Gg8m7WJ94V
 
 
+@page/MainActivity.java/
