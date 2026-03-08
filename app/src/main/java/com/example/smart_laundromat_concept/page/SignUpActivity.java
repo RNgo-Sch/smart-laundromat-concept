@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.example.smart_laundromat_concept.classes.*;
 
 import com.example.smart_laundromat_concept.R;
 
@@ -38,7 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
         activity_sign_up__Create_Account_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (activity_sign_up__Signup_username_text.getText().toString().equals("user") && activity_sign_up__Signup_password_text.getText().toString().equals("1234")) {
+                if (activity_sign_up__Signup_username_text.getText().toString().equals("user")) {
                     Toast.makeText(SignUpActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
 
                 } else {

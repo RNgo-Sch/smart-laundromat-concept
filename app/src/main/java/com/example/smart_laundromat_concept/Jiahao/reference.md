@@ -27,4 +27,7 @@ https://youtu.be/wIuVvCuiJhU?si=eisbhCdbNYtk5JO7
 user login page
 https://youtu.be/orXJRPNvAc4?si=MyFEb3Gg8m7WJ94V
 
+ios liquid glass view
+in build Gemini Ai in android studio 
+
 

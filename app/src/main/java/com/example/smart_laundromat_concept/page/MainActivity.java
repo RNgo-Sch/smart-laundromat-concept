@@ -8,14 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
-
+import com.example.smart_laundromat_concept.classes.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText activity_main__username_text;
-    EditText activity_main__password_text;
-    Button activity_main__login_Button;
-    Button activity_main__go_to_signup_Button;
+    private EditText activity_main__username_text;
+    private EditText activity_main__password_text;
+    private Button activity_main__login_Button;
+    private Button activity_main__go_to_signup_Button;
 
 
     @Override
@@ -49,16 +49,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    public void login_verification(View view) {
-//        if (username_text_activity_main.getText().toString().equals("user") && password_text_activity_main.getText().toString().equals("1234")) {
-//            Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-//            launchPage(view);
-//
-//        } else {
-//            Toast.makeText(MainActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
 
     public void launchPage(View view) {
 
