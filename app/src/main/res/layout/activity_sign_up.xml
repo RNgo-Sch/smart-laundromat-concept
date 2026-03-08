@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/background"
+    android:background="@drawable/bg_background"
     tools:context=".page.SignUpActivity">
 
     <androidx.cardview.widget.CardView
@@ -44,8 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/custom_edittext"
-                android:drawableLeft="@drawable/baseline_person_24"
+                android:background="@drawable/shape_box"
+                android:drawableLeft="@drawable/ic_user"
                 android:drawablePadding="8dp"
                 android:hint="Username"
                 android:inputType="text"
@@ -58,8 +58,8 @@
                 android:id="@+id/activity_sign_up__Signup_password_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/custom_edittext"
-                android:drawableLeft="@drawable/icons8_lock_24"
+                android:background="@drawable/shape_box"
+                android:drawableLeft="@drawable/ic_lock"
                 android:drawablePadding="8dp"
                 android:hint="Password"
                 android:padding="8dp"

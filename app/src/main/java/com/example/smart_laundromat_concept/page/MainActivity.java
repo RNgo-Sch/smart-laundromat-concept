@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.classes.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Buttons for activity_main.xml
         //====================================
         if (id == R.id.activity_main__login_Button) {
-            intent = new Intent(this, HomePageActivity.class);
+            intent = new Intent(this, HomeActivity.class);
 
         } else if (id == R.id.activity_main__go_to_signup_Button) {
             intent = new Intent(this, SignUpActivity.class);

@@ -5,4 +5,6 @@
         <attr name="lg_color" format="color" />
         <attr name="lg_corner_radius" format="dimension" />
     </declare-styleable>
+
+
 </resources>

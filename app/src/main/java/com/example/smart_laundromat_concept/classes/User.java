@@ -15,11 +15,12 @@ public class User {
         this.id = latest_id.getId();
         this.wallet = new Wallet();
         this.reputation = new Reputation();
-        this.username = this.id;
+        this.username = String.valueOf(this.id);
         this.password = "1";
     }
 
     public User(String username, String password) {
+        this();
         this.username = username;
         this.password = password;
     }

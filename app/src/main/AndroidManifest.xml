@@ -12,10 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Smartlaundromatconcept">
         <activity
+            android:name=".page.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".page.BookingActivity"
+            android:exported="false" />
+        <activity
             android:name=".page.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".page.HomePageActivity"
+            android:name=".page.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".page.MainActivity"
