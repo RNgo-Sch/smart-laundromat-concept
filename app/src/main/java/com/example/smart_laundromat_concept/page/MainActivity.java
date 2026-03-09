@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.classes.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,37 +50,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void launchPage(View view) {
-
-        Intent intent = null;
-        int id = view.getId();
-
-        //check which button was clicked
-
-        //====================================
-        // Buttons for activity_main.xml
-        //====================================
-        if (id == R.id.activity_main__login_Button) {
-            intent = new Intent(this, HomeActivity.class);
-
-        } else if (id == R.id.activity_main__go_to_signup_Button) {
-            intent = new Intent(this, SignUpActivity.class);
-
-
-        //====================================
-        // Buttons for activity_sign_up.xml
-        //====================================
-//        } else if (id == R.id.create_Account_Button_activity_sign_up) {
-//            intent = new Intent(this, MainActivity.class);
-//            Toast.makeText(MainActivity.this, "Account Created Successfully!", Toast.LENGTH_LONG).show();
+//    public void launchPage(View view) {
 //
-//        } else if (id == R.id.return_to_Signin_Button_acitivity_sign_up) {
-//            intent = new Intent(this, MainActivity.class);
-        }
-
-        if (intent != null) {
-            startActivity(intent);
-        }
+//        Intent intent = null;
+//        int id = view.getId();
+//
+//        //check which button was clicked
+//
+//        //====================================
+//        // Buttons for activity_main.xml
+//        //====================================
+//        if (id == R.id.activity_main__login_Button) {
+//            intent = new Intent(this, HomeActivity.class);
+//
+//        } else if (id == R.id.activity_main__go_to_signup_Button) {
+//            intent = new Intent(this, SignUpActivity.class);
+//
+//
+//        //====================================
+//        // Buttons for activity_sign_up.xml
+//        //====================================
+////        } else if (id == R.id.create_Account_Button_activity_sign_up) {
+////            intent = new Intent(this, MainActivity.class);
+////            Toast.makeText(MainActivity.this, "Account Created Successfully!", Toast.LENGTH_LONG).show();
+////
+////        } else if (id == R.id.return_to_Signin_Button_acitivity_sign_up) {
+////            intent = new Intent(this, MainActivity.class);
+//        }
+//
+//        if (intent != null) {
+//            startActivity(intent);
+//        }
+//    }
+    public void launchPage(View view){
+        Navigation.launchPage(this, view);
     }
 }
 
