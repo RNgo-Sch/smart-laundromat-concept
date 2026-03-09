@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/bg_background"
-    tools:context="page.MainActivity">
+    android:background="@drawable/bg_background">
 
     <!-- Stacking the blur and the content using FrameLayout -->
     <FrameLayout
@@ -16,28 +16,24 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp">
 
-        <!-- Layer 1: The Blur Effect (Behind) -->
         <com.example.smart_laundromat_concept.classes.LiquidGlassView
-            android:id="@+id/blur_layer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/blurlayer"
-            app:lg_blur_radius="10000dp"
-            app:lg_color="#33FFFFFF"
+            app:lg_blur_radius="30dp"
+            app:lg_color="#4DFFFFFF"
             app:lg_corner_radius="30dp" />
 
-        <!-- Layer 2: The Box and Content (In Front) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_box1"
             android:layout_gravity="center_horizontal"
             android:padding="26dp">
 
-            <!-- Loging text -->
+            <!-- Title text (Login/Signup) -->
             <TextView
-                android:id="@+id/activity_main__login_Text"
+                android:id="@+id/activity_main__loginSignup_Text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
@@ -61,8 +57,7 @@
                 android:inputType="text"
                 android:padding="8dp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/sf_pro_semibold"
-                android:textColorHighlight="@color/cardview_dark_background" />
+                android:fontFamily="@font/sf_pro_semibold" />
 
             <!-- Password input -->
             <EditText
@@ -78,10 +73,9 @@
                 android:inputType="textPassword"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sf_pro_semibold"
-                android:textColorHighlight="@color/cardview_dark_background"
                 android:layout_marginTop="20dp"/>
 
-            <!-- Login button -->
+            <!-- Action button (Login/Create Account) -->
             <Button
                 android:id="@+id/activity_main__login_Button"
                 android:layout_width="match_parent"
@@ -97,7 +91,7 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- go to sign up page -->
+    <!-- Switch button (Don't have an account?/Return to Login) -->
     <Button
         android:id="@+id/activity_main__go_to_signup_Button"
         android:layout_width="wrap_content"
@@ -109,7 +103,7 @@
         android:stateListAnimator="@null"
         android:onClick="launchPage"
         android:padding="8dp"
-        android:text="@string/Ask_Signup"
+        android:text="Don't have an account? Sign Up"
         android:fontFamily="@font/sf_pro_semibold"
         android:textAlignment="center"
         android:textColor="@color/white"

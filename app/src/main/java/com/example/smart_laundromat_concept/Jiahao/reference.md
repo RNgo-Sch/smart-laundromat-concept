@@ -18,16 +18,17 @@ Thus, the code should be largely your own work. We have mentioned above that usi
 code found on the internet is ok, but your project must not be based upon copying large amounts of
 code from websites.
 
-Android App Development in Java All-in-One Tutorial Series
-https://youtu.be/tZvjSl9dswg?si=INbh7l5dj1nuUl10
+### Video Tutorials and Online Resources
+- **Android App Development in Java All-in-One Tutorial Series**
+  https://youtu.be/tZvjSl9dswg?si=INbh7l5dj1nuUl10
 
-UI/UX Design start up course
-https://youtu.be/wIuVvCuiJhU?si=eisbhCdbNYtk5JO7
+- **UI/UX Design start up course**
+  https://youtu.be/wIuVvCuiJhU?si=eisbhCdbNYtk5JO7
 
-user login page
-https://youtu.be/orXJRPNvAc4?si=MyFEb3Gg8m7WJ94V
+- **User login page tutorial**
+  https://youtu.be/orXJRPNvAc4?si=MyFEb3Gg8m7WJ94V
 
-ios liquid glass view
-in build Gemini Ai in android studio 
-
-
+### AI Assistance and Refactoring
+- **Liquid Glass View implementation**: Integrated with assistance from built-in Gemini AI in Android Studio.
+- **Project Refactoring & Code Logic**: The centralized `Navigation.java`, `UI.java` menu bar logic, and the `LogInSignUpMode.java` state management were developed with the assistance of Gemini AI and edited by [student].
+- **Code Optimization & Documentation**: Error fixing (symbol lookup issues), orientation locking in `AndroidManifest.xml`, and comprehensive code commenting across the project were performed by Gemini AI and reviewed/edited by [student].
