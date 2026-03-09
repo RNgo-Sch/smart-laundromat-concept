@@ -56,27 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-//    public void launchPage(View view) {
-//
-//        Intent intent = null;
-//        int id = view.getId();
-//
-//        //check which button was clicked
-//
-//        //====================================
-//        // Buttons for activity_sign_up.xml
-//        //====================================
-//        if (id == R.id.activity_sign_up__Create_Account_Button) {
-//            intent = new Intent(this, MainActivity.class);
-//
-//        } else if (id == R.id.activity_sign_up__Return_to_Signin_Button) {
-//            intent = new Intent(this, MainActivity.class);
-//        }
-//
-//        if (intent != null) {
-//            startActivity(intent);
-//        }
-//    }
+
     public void launchPage(View view) {
         Navigation.launchPage(this, view);
     }

@@ -70,4 +70,9 @@ public class UI {
 
         }
     }
+    public static void logInSignUp(Activity activity){
+        View root = activity.findViewById(android.R.id.content);
+
+
+    }
 }
