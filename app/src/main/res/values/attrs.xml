@@ -4,7 +4,9 @@
         <attr name="lg_blur_radius" format="dimension" />
         <attr name="lg_color" format="color" />
         <attr name="lg_corner_radius" format="dimension" />
+        <attr name="lg_stroke_width" format="dimension" />
+        <attr name="lg_stroke_color_start" format="color" />
+        <attr name="lg_stroke_color_center" format="color" />
+        <attr name="lg_stroke_color_end" format="color" />
     </declare-styleable>
-
-
 </resources>

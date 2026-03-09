@@ -1,13 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/bg_background"
     tools:context=".page.ProfileActivity">
 
+    <!-- Main Content Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Profile Circle -->
+        <TextView
+            android:id="@+id/profile_letter_circle"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/circle"
+            android:fontFamily="@font/sf_pro_bold"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="J"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:textStyle="bold" />
+
+        <!-- Username Title -->
+        <TextView
+            android:id="@+id/profile_username_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="User Settings"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:fontFamily="@font/sf_pro_bold" />
+
+        <!-- Glass List Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp">
+
+            <!-- The Glass layer -->
+            <com.example.smart_laundromat_concept.classes.LiquidGlassView
+                android:id="@+id/profile__glass_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:lg_blur_radius="20dp"
+                app:lg_color="#33FFFFFF"
+                app:lg_corner_radius="24dp"
+                app:lg_stroke_color_center="#FFFFFF"
+                app:lg_stroke_color_end="#26FFFFFF"
+                app:lg_stroke_color_start="#26FFFFFF"
+                app:lg_stroke_width="1.5dp">
+
+                <ImageView
+                    android:id="@+id/profile__blurred_bg_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/bg_background" />
+
+            </com.example.smart_laundromat_concept.classes.LiquidGlassView>
+
+            <!-- The Content layer -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="8dp">
+
+                <!-- Item 1: Saved Messages -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingHorizontal="16dp">
+
+                    <View
+                        android:id="@+id/icon_bg_1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/shape_box1"
+                        android:backgroundTint="#007AFF" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignStart="@id/icon_bg_1"
+                        android:layout_alignTop="@id/icon_bg_1"
+                        android:layout_alignEnd="@id/icon_bg_1"
+                        android:layout_alignBottom="@id/icon_bg_1"
+                        app:srcCompat="@drawable/ic_lock"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="14dp"
+                        android:layout_toEndOf="@id/icon_bg_1"
+                        android:text="Saved Messages"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_semibold" />
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/ic_house"
+                        app:tint="#4DFFFFFF" />
+                </RelativeLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginStart="60dp"
+                    android:background="#1AFFFFFF" />
+
+                <!-- Item 2: Recent Calls -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingHorizontal="16dp">
+
+                    <View
+                        android:id="@+id/icon_bg_2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/shape_box1"
+                        android:backgroundTint="#34C759" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignStart="@id/icon_bg_2"
+                        android:layout_alignTop="@id/icon_bg_2"
+                        android:layout_alignEnd="@id/icon_bg_2"
+                        android:layout_alignBottom="@id/icon_bg_2"
+                        app:srcCompat="@drawable/ic_user"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="14dp"
+                        android:layout_toEndOf="@id/icon_bg_2"
+                        android:text="Recent Calls"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_semibold" />
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/ic_house"
+                        app:tint="#4DFFFFFF" />
+                </RelativeLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginStart="60dp"
+                    android:background="#1AFFFFFF" />
+
+                <!-- Item 3: Devices -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingHorizontal="16dp">
+
+                    <View
+                        android:id="@+id/icon_bg_3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/shape_box1"
+                        android:backgroundTint="#FF9500" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignStart="@id/icon_bg_3"
+                        android:layout_alignTop="@id/icon_bg_3"
+                        android:layout_alignEnd="@id/icon_bg_3"
+                        android:layout_alignBottom="@id/icon_bg_3"
+                        app:srcCompat="@drawable/ic_booking"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="14dp"
+                        android:layout_toEndOf="@id/icon_bg_3"
+                        android:text="Devices"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/sf_pro_semibold" />
+
+                    <TextView
+                        android:id="@+id/badge_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/chevron_3"
+                        android:layout_marginEnd="8dp"
+                        android:text="3"
+                        android:textColor="#80FFFFFF"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/chevron_3"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@drawable/ic_house"
+                        app:tint="#4DFFFFFF" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom Menu Bar -->
     <include
         layout="@layout/menu_bar"
         android:id="@+id/menu_bar"
