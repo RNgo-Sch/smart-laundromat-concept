@@ -16,6 +16,12 @@ import com.example.smart_laundromat_concept.classes.*;
 
 import com.example.smart_laundromat_concept.R;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * SignUpActivity handles the Account Creation screen.
  * It reuses the activity_main layout but in "Sign Up Mode".
@@ -61,13 +67,46 @@ public class SignUpActivity extends AppCompatActivity {
                 String user = activity_sign_up__Signup_username_text.getText().toString();
                 String pass = activity_sign_up__Signup_password_text.getText().toString();
 
+                if (user.isEmpty() || pass.isEmpty()) {
+                    Toast.makeText(SignUpActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                User newUser = new User(user, pass);
+
+                // 2. Call Supabase API
+                SupabaseClient.getApi().createUser(newUser).enqueue(new Callback<List<User>>() {
+                    @Override
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        // Log the HTTP Code (201 = Created, 400 = Bad Request, 403 = RLS Issue)
+                        android.util.Log.d("SUPABASE_RES", "Status Code: " + response.code());
+
+                        if (response.isSuccessful()) {
+                            Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                // This tells you EXACTLY why Postgres rejected the insert
+                                String errorBody = response.errorBody().string();
+                                android.util.Log.e("SUPABASE_RES", "Error Body: " + errorBody);
+                            } catch (Exception e) { e.printStackTrace(); }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+                        android.util.Log.e("SUPABASE_RES", "Network Failure: " + t.getMessage());
+                    }
+                });
+
+                /*
                 // Call the mock signup function
                 if (LogInSignUpMode.signup(user, pass, "0")) {
-                    Toast.makeText(SignUpActivity.this, "Account Created Successfully!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpActivity.this, "Toast: Account Created Successfully!", Toast.LENGTH_LONG).show();
                     launchPage(view); // Return to Login or Home
                 } else {
                     Toast.makeText(SignUpActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
                 }
+                 */
             }
         });
 

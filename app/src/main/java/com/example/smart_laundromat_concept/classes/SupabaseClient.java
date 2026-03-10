@@ -3,6 +3,8 @@ package com.example.smart_laundromat_concept.classes;
 import com.example.smart_laundromat_concept.BuildConfig;
 import com.google.gson.internal.GsonBuildConfig;
 
+import okhttp3.OkHttpClient;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
@@ -11,33 +13,35 @@ import java.util.List;
 
 public class SupabaseClient {
 
-    private static final String BASE_URL = "https://timticjbrpcmkdwugrtd.supabase.co";
+    private static final String BASE_URL = "https://timticjbrpcmkdwugrtd.supabase.co/rest/v1/";
 
     private static final String API_KEY = BuildConfig.Supabase_Key;
 
     public interface UserApi {
-        // Create User: POST to /users
         @POST("users")
-        @Headers({
-                "apikey: " + API_KEY,
-                "Authorization: Bearer " + API_KEY,
-                "Content-Type: application/json",
-                "Prefer: return=representation"
-        })
+        @Headers("Prefer: return=representation")
         Call<List<User>> createUser(@Body User user);
 
-        // Query User: GET from /users?username=eq.value
         @GET("users")
-        @Headers({
-                "apikey: " + API_KEY,
-                "Authorization: Bearer " + API_KEY
-        })
-        Call<List<User>> getUserByUsername(@Query("username") String username);
+        Call<List<User>> getUserByUsername(@Query("username") String usernameQuery);
     }
 
     public static UserApi getApi() {
+        // 1. Create a client that adds the headers automatically
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    okhttp3.Request request = chain.request().newBuilder()
+                            .addHeader("apikey", API_KEY)
+                            .addHeader("Authorization", "Bearer " + API_KEY)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        // 2. Build Retrofit using that client
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client) // <--- CRITICAL: Link the client here
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(UserApi.class);
