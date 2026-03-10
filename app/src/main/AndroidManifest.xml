@@ -13,6 +13,11 @@
         android:theme="@style/Theme.Smartlaundromatconcept">
 
         <activity
+            android:name=".page.CropActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".page.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"

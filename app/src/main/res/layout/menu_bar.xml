@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     tools:context=".classes.UI">
 
 
@@ -114,22 +113,31 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <ImageView
+    <com.example.smart_laundromat_concept.classes.LiquidGlassView
         android:id="@+id/menu_bar__Menu_Bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:visibility="visible"
-        android:fillColor="#0DFFFFFF"
         android:alpha="0.9"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.99"
-        app:srcCompat="@drawable/shape_menu_bar" />
+        app:lg_blur_radius="5dp"
+        app:lg_color="#0DFFFFFF"
+        app:lg_corner_radius="30dp"
+        app:lg_stroke_width="1dp">
+
+
+        <View
+            android:layout_width="402dp"
+            android:layout_height="match_parent"
+
+            android:background="@drawable/shape_menu_bar" />
+
+    </com.example.smart_laundromat_concept.classes.LiquidGlassView>
 
     <LinearLayout
         android:id="@+id/menu_bar___LinearLayout_Home"
