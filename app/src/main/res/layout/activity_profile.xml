@@ -49,45 +49,22 @@
 
         <!-- Glass List Container -->
         <FrameLayout
-            android:id="@+id/profile__glass_container"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="30dp"
-            >
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp">
 
-            <!-- The Glass Layer (Blurred Background) -->
-            <com.example.smart_laundromat_concept.classes.LiquidGlassView
-                android:id="@+id/profile__glass_view"
+
+            <include
+                layout="@layout/glass_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:lg_blur_radius="15dp"
-                app:lg_color="#CC1C1C1E"
-                app:lg_corner_radius="30dp">
+                android:layout_height="170dp"/>
 
-                <ImageView
-                    android:id="@+id/profile__blurred_bg_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType= "centerCrop"
-                    app:srcCompat="@drawable/bg_background" />
-
-            </com.example.smart_laundromat_concept.classes.LiquidGlassView>
-
-            <!-- The Sharp Outline (Drawn on top of the blur) -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:background="@drawable/glass_border_sharp" />
-
-            <!-- The Content Layer -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical"
-                android:paddingVertical="8dp">
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp">
 
                 <!-- Item 1: Saved Messages -->
                 <RelativeLayout
@@ -95,8 +72,6 @@
                     android:layout_height="56dp"
                     android:clickable="true"
                     android:focusable="true"
-
-                    android:background="?attr/selectableItemBackground"
                     android:paddingHorizontal="16dp">
 
                     <View
@@ -276,5 +251,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

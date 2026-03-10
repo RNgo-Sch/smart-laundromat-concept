@@ -20,18 +20,18 @@ public class LogInSignUpMode {
      * @param mode     The mode to set (MODE_LOGIN or MODE_SIGNUP).
      */
     public static void setup(Activity activity, int mode) {
-        TextView title = activity.findViewById(R.id.activity_main__loginSignup_Text);
+        //TextView title = activity.findViewById(R.id.activity_main__loginSignup_Text);
         Button actionButton = activity.findViewById(R.id.activity_main__login_Button);
         Button switchButton = activity.findViewById(R.id.activity_main__go_to_signup_Button);
 
         if (mode == MODE_LOGIN) {
             // Configure UI for Login state
-            if (title != null) title.setText("Login");
+            //if (title != null) title.setText("Login");
             if (actionButton != null) actionButton.setText("Login");
             if (switchButton != null) switchButton.setText("Don't have an account? Sign Up");
         } else if (mode == MODE_SIGNUP) {
             // Configure UI for Sign Up state
-            if (title != null) title.setText("Sign Up");
+            //if (title != null) title.setText("Sign Up");
             if (actionButton != null) actionButton.setText("Create Account");
             if (switchButton != null) switchButton.setText("Already have an account? Return to Login");
         }

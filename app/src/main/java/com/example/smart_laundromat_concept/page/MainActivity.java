@@ -6,13 +6,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.classes.*;
+
 
 /**
  * MainActivity handles the Login screen.
@@ -30,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         // Enable edge-to-edge display (system bars overlap with app content)
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+//
 
         // Adjust padding to avoid UI elements being hidden behind system bars (status/navigation bars)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main_root), (v, insets) -> {
@@ -83,4 +89,6 @@ public class MainActivity extends AppCompatActivity {
     public void launchPage(View view){
         Navigation.launchPage(this, view);
     }
+
+
 }

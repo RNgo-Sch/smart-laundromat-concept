@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.smart_laundromat_concept.classes.LiquidGlassView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profile__glass_view"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    app:lg_blur_radius="5dp"
+    app:lg_color="#4DFFFFFF"
+    app:lg_corner_radius="31dp"
+    app:lg_stroke_width="1.5dp">
+
+    <ImageView
+        android:id="@+id/profile__blurred_bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_background"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/glass_shape"/>
+
+</com.example.smart_laundromat_concept.classes.LiquidGlassView>
