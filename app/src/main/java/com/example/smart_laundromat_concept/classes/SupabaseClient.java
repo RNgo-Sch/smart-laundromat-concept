@@ -26,13 +26,13 @@ public class SupabaseClient {
         })
         Call<List<User>> createUser(@Body User user);
 
-        // Query User: GET from /users?email=eq.value
+        // Query User: GET from /users?username=eq.value
         @GET("users")
         @Headers({
                 "apikey: " + API_KEY,
                 "Authorization: Bearer " + API_KEY
         })
-        Call<List<User>> getUserByPhone(@Query("phone") String phoneQuery);
+        Call<List<User>> getUserByUsername(@Query("username") String username);
     }
 
     public static UserApi getApi() {

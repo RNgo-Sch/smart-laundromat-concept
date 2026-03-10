@@ -62,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
                 String pass = activity_sign_up__Signup_password_text.getText().toString();
 
                 // Call the mock signup function
-                if (LogInSignUpMode.signup(user, pass)) {
+                if (LogInSignUpMode.signup(user, pass, "0")) {
                     Toast.makeText(SignUpActivity.this, "Account Created Successfully!", Toast.LENGTH_LONG).show();
                     launchPage(view); // Return to Login or Home
                 } else {

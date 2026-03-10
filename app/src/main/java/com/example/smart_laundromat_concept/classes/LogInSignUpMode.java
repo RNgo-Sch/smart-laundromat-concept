@@ -55,7 +55,7 @@ public class LogInSignUpMode {
      * @param password The entered password.
      * @return true if the username is not already taken, false otherwise.
      */
-    public static boolean signup(String username, String password){
+    public static boolean signup(String username, String password, String phoneNo){
         // Basic check: if username is "user", it already exists
         if (username.equals("user")) {
             return false;
@@ -64,7 +64,12 @@ public class LogInSignUpMode {
         if (password.isEmpty()) {
             return false;
         }
+
+        if (phoneNo.isEmpty()) {
+            return false;
+        }
         // save account to database later
+
         return true;
     }
 }
