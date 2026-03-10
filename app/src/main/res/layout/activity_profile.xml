@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="60dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,6 +29,7 @@
             android:fontFamily="@font/sf_pro_bold"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:layout_marginTop="60dp"
             android:text="J"
             android:textColor="@color/white"
             android:textSize="60sp"
@@ -39,7 +40,7 @@
             android:id="@+id/profile_username_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="-10dp"
             android:gravity="center"
             android:text="User Settings"
             android:textColor="@color/white"
@@ -48,37 +49,43 @@
 
         <!-- Glass List Container -->
         <FrameLayout
+            android:id="@+id/profile__glass_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="30dp"
+            >
 
-            <!-- The Glass layer -->
+            <!-- The Glass Layer (Blurred Background) -->
             <com.example.smart_laundromat_concept.classes.LiquidGlassView
                 android:id="@+id/profile__glass_view"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:lg_blur_radius="20dp"
-                app:lg_color="#33FFFFFF"
-                app:lg_corner_radius="24dp"
-                app:lg_stroke_color_center="#FFFFFF"
-                app:lg_stroke_color_end="#26FFFFFF"
-                app:lg_stroke_color_start="#26FFFFFF"
-                app:lg_stroke_width="1.5dp">
+                android:layout_height="wrap_content"
+                app:lg_blur_radius="15dp"
+                app:lg_color="#CC1C1C1E"
+                app:lg_corner_radius="30dp">
 
                 <ImageView
                     android:id="@+id/profile__blurred_bg_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
+                    android:scaleType= "centerCrop"
                     app:srcCompat="@drawable/bg_background" />
 
             </com.example.smart_laundromat_concept.classes.LiquidGlassView>
 
-            <!-- The Content layer -->
+            <!-- The Sharp Outline (Drawn on top of the blur) -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:background="@drawable/glass_border_sharp" />
+
+            <!-- The Content Layer -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="vertical"
                 android:paddingVertical="8dp">
 
@@ -88,6 +95,7 @@
                     android:layout_height="56dp"
                     android:clickable="true"
                     android:focusable="true"
+
                     android:background="?attr/selectableItemBackground"
                     android:paddingHorizontal="16dp">
 
@@ -116,7 +124,7 @@
                         android:layout_marginStart="14dp"
                         android:layout_toEndOf="@id/icon_bg_1"
                         android:text="Saved Messages"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
 
@@ -126,15 +134,18 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/ic_house"
-                        app:tint="#4DFFFFFF" />
+                        app:tint="#8DFFFFFF" />
                 </RelativeLayout>
 
                 <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
+
                     android:layout_marginStart="60dp"
-                    android:background="#1AFFFFFF" />
+                    android:layout_marginEnd="20dp"
+
+                    android:background="#000000" />
 
                 <!-- Item 2: Recent Calls -->
                 <RelativeLayout
@@ -170,7 +181,7 @@
                         android:layout_marginStart="14dp"
                         android:layout_toEndOf="@id/icon_bg_2"
                         android:text="Recent Calls"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
 
@@ -180,15 +191,19 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/ic_house"
-                        app:tint="#4DFFFFFF" />
+                        app:tint="#8DFFFFFF" />
                 </RelativeLayout>
 
                 <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
+
                     android:layout_marginStart="60dp"
-                    android:background="#1AFFFFFF" />
+                    android:layout_marginEnd="20dp"
+
+                    android:background="#000000" />
+
 
                 <!-- Item 3: Devices -->
                 <RelativeLayout
@@ -224,7 +239,7 @@
                         android:layout_marginStart="14dp"
                         android:layout_toEndOf="@id/icon_bg_3"
                         android:text="Devices"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
 
@@ -246,7 +261,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/ic_house"
-                        app:tint="#4DFFFFFF" />
+                        app:tint="#8DFFFFFF" />
                 </RelativeLayout>
 
             </LinearLayout>
