@@ -8,6 +8,7 @@ material = "1.13.0"
 activity = "1.12.4"
 constraintlayout = "2.1.4"
 playServicesMaps = "20.0.0"
+secretsGradle = "2.0.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -21,3 +22,4 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradle"}
