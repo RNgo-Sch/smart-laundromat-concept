@@ -24,6 +24,13 @@ public class SupabaseClient {
 
         @GET("users")
         Call<List<User>> getUserByUsername(@Query("username") String usernameQuery);
+
+        @GET("users")
+        @Headers({
+                "Prefer: count=exact",
+                "Range: 0-0" // We only want the count, not the actual rows
+        })
+        Call<Void> getUserCount();
     }
 
     public static UserApi getApi() {

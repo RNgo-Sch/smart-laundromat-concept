@@ -74,7 +74,6 @@ public class SignUpActivity extends AppCompatActivity {
 
                 User newUser = new User(user, pass);
 
-                // 2. Call Supabase API
                 SupabaseClient.getApi().createUser(newUser).enqueue(new Callback<List<User>>() {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
