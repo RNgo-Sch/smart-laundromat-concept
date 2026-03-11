@@ -37,7 +37,6 @@ public class IdCounter {
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("SUPABASE_COUNT", "Count: " + current_id);
                 Log.e("SUPABASE_COUNT", "Error: " + t.getMessage());
             }
         });

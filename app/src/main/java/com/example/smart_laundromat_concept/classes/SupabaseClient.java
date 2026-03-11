@@ -28,7 +28,7 @@ public class SupabaseClient {
         @GET("users")
         @Headers({
                 "Prefer: count=exact",
-                "Range: 0-0" // We only want the count, not the actual rows
+                "Range: 0-0" //Give count not rows
         })
         Call<Void> getUserCount();
     }
@@ -48,7 +48,7 @@ public class SupabaseClient {
         // 2. Build Retrofit using that client
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(client) // <--- CRITICAL: Link the client here
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(UserApi.class);
