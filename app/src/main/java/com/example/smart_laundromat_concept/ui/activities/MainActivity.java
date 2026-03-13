@@ -6,32 +6,42 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.ui.components.LogInSignUpMode;
-import com.example.smart_laundromat_concept.ui.components.Navigation;
+import com.example.smart_laundromat_concept.data.remote.AuthRepository;
+import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
+import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
 
 
 /**
  * MainActivity handles the Login screen.
  * It uses the shared activity_main layout in "Login Mode".
+ * <p>
+ * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference 
+ * (e.g., {@link AuthRepository#login}) to jump directly to its implementation.
  */
 public class MainActivity extends AppCompatActivity {
 
+
     // UI elements for the login form
-    private EditText activity_main__username_text;
-    private EditText activity_main__password_text;
-    private Button activity_main__login_Button;
-    private Button activity_main__go_to_signup_Button;
+    private EditText etUsername;
+    private EditText etPassword;
+    private Button loginButton;
+    private Button goSignupButton;
 
 
+    /**
+     * Initializes the Activity, sets up the layout, and configures the UI mode.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         // Enable edge-to-edge display (system bars overlap with app content)
         EdgeToEdge.enable(this);
@@ -44,25 +54,31 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        
+        
+        // Use the utility class to set the title and button text to "Login" mode.
+        // (Hold Cmd/Ctrl + Click on "LoginToggleHelper#setup" to jump to the method)
+        LoginToggleHelper.setup(this, LoginToggleHelper.MODE_LOGIN);
 
-        // TODO Use the utility class to set the title and button text to "Login" mode
-        LogInSignUpMode.setup(this, LogInSignUpMode.MODE_LOGIN);
-
+        
         // Initialize UI component references
-        activity_main__username_text = findViewById(R.id.activity_main__username_text);
-        activity_main__password_text = findViewById(R.id.activity_main__password_text);
-        activity_main__login_Button = findViewById(R.id.activity_main__login_Button);
-        activity_main__go_to_signup_Button = findViewById(R.id.activity_main__go_to_signup_Button);
+        etUsername = findViewById(R.id.activity_main__username_text);
+        etPassword = findViewById(R.id.activity_main__password_text);
+        loginButton = findViewById(R.id.activity_main__login_Button);
+        goSignupButton = findViewById(R.id.activity_main__go_to_signup_Button);
 
+        
         // Set up the Login button logic
-        activity_main__login_Button.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = activity_main__username_text.getText().toString();
-                String password = activity_main__password_text.getText().toString();
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
 
-                // Validate credentials via the mode class
-                if (LogInSignUpMode.login(username, password)) {
+                
+                // Validate credentials via the AuthRepository.
+                // (Hold Cmd/Ctrl + Click on "AuthRepository#login" to jump to the logic)
+                if (AuthRepository.login(username, password)) {
                     Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                     launchPage(view); // Navigate to Home
                 } else {
@@ -71,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        
         // Set up the "Go to Sign Up" button logic
-        activity_main__go_to_signup_Button.setOnClickListener(new View.OnClickListener() {
+        goSignupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchPage(view); // Navigation class handles switching to SignUpActivity
@@ -80,12 +97,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     /**
-     * Delegates page navigation to the centralized Navigation class.
+     * Delegates page navigation to the centralized NavigationHelper class.
+     * <p>
+     * (Hold Cmd/Ctrl + Click on {@link NavigationHelper#launchPage} to jump to the method)
      */
     public void launchPage(View view){
-        Navigation.launchPage(this, view);
+        NavigationHelper.launchPage(this, view);
     }
-
-
 }

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: activity_main.xml
+    Activity: MainActivity (Login Screen) / SignUpActivity (Sign Up Screen)
+    Description: Shared authentication layout that handles both Login and Signup modes
+                 using internal state management in LoginToggleHelper.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,23 +16,31 @@
     android:gravity="center"
     android:background="@drawable/bg_background">
 
-    <!-- Stacking the blur and the content using FrameLayout -->
+
+    <!-- SECTION 1: Authentication Card Container -->
+    <!-- Uses a FrameLayout to stack the glass blur effect behind the form content -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="354dp"
         android:layout_margin="30dp">
 
 
+        <!-- Layer 1: Glass Blur Background -->
         <include
             layout="@layout/glass_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <!-- The Sharp Outline (Drawn on top of the blur) -->
+
+
+        <!-- Layer 2: Sharp Outline -->
+        <!-- Provides the crisp border on top of the blur effect -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/glass_shape" />
 
+
+        <!-- Layer 3: Interactive Content Form -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,15 +48,18 @@
             android:orientation="vertical"
             android:padding="26dp">
 
-            <!-- Title text (Login/Signup) -->
+
+            <!-- Brand Logo -->
             <ImageView
-                android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:srcCompat="@drawable/dryerlogo" />
 
-            <!-- Username input -->
+
+            <!-- USER INPUT SECTION -->
+
+            <!-- Username Field -->
             <EditText
                 android:id="@+id/activity_main__username_text"
                 android:layout_width="match_parent"
@@ -58,7 +75,7 @@
                 android:padding="8dp"
                 android:textColor="@color/black" />
 
-            <!-- Password input -->
+            <!-- Password Field -->
             <EditText
                 android:id="@+id/activity_main__password_text"
                 android:layout_width="match_parent"
@@ -74,7 +91,9 @@
                 android:padding="8dp"
                 android:textColor="@color/black" />
 
-            <!-- Action button (Login/Create Account) -->
+
+            <!-- PRIMARY ACTION SECTION -->
+
             <Button
                 android:id="@+id/activity_main__login_Button"
                 android:layout_width="match_parent"
@@ -88,9 +107,12 @@
                 app:cornerRadius="30dp" />
 
         </LinearLayout>
+
     </FrameLayout>
 
-    <!-- Switch button (Don't have an account?/Return to Login) -->
+
+    <!-- SECTION 2: Footer / Mode Toggle -->
+    <!-- Button to switch between Login and Sign Up screens -->
     <Button
         android:id="@+id/activity_main__go_to_signup_Button"
         android:layout_width="wrap_content"

@@ -1,6 +1,8 @@
 package com.example.smart_laundromat_concept.ui.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.User;
-import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
-import com.example.smart_laundromat_concept.ui.components.LogInSignUpMode;
-import com.example.smart_laundromat_concept.ui.components.Navigation;
+import com.example.smart_laundromat_concept.data.remote.AuthRepository;
+import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
+import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
 
 import java.util.List;
 
@@ -27,24 +29,31 @@ import retrofit2.Response;
 /**
  * SignUpActivity handles the Account Creation screen.
  * It reuses the activity_main layout but in "Sign Up Mode".
+ * <p>
+ * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference 
+ * (e.g., {@link AuthRepository#signup}) to jump directly to its implementation.
  */
 public class SignUpActivity extends AppCompatActivity {
 
     // UI references for input fields and buttons
-    private EditText activity_sign_up__Signup_username_text;
-    private EditText activity_sign_up__Signup_password_text;
-    private Button activity_sign_up__Create_Account_Button;
-    private Button activity_sign_up__Return_to_Signin_Button;
+    private EditText etUsername;
+    private EditText etPassword;
+    private Button btnCreateAccount;
+    private Button btnReturnToLogin;
 
 
-
+    /**
+     * Initializes the Activity, sets up the layout, and configures the UI for "Sign Up" mode.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+
         // Setup screen to use full display (edge-to-edge)
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
 
         // Adjust for system bar height (status bar, navigation bar)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main_root), (v, insets) -> {
@@ -53,77 +62,71 @@ public class SignUpActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Use the utility class to switch the shared layout labels to "Sign Up" mode
-        LogInSignUpMode.setup(this, LogInSignUpMode.MODE_SIGNUP);
+
+        // Use the utility class to switch the shared layout labels to "Sign Up" mode.
+        // (Hold Cmd/Ctrl + Click on "LoginToggleHelper#setup" to jump to the method)
+        LoginToggleHelper.setup(this, LoginToggleHelper.MODE_SIGNUP);
+
 
         // Map layout IDs (from activity_main.xml) to Java variables
-        activity_sign_up__Signup_username_text = findViewById(R.id.activity_main__username_text);
-        activity_sign_up__Signup_password_text = findViewById(R.id.activity_main__password_text);
-        activity_sign_up__Create_Account_Button = findViewById(R.id.activity_main__login_Button);
-        activity_sign_up__Return_to_Signin_Button = findViewById(R.id.activity_main__go_to_signup_Button);
+        etUsername = findViewById(R.id.activity_main__username_text);
+        etPassword = findViewById(R.id.activity_main__password_text);
+        btnCreateAccount = findViewById(R.id.activity_main__login_Button);
+        btnReturnToLogin = findViewById(R.id.activity_main__go_to_signup_Button);
+
 
         // Logic for creating an account
-        activity_sign_up__Create_Account_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String user = activity_sign_up__Signup_username_text.getText().toString();
-                String password = activity_sign_up__Signup_password_text.getText().toString();
+        btnCreateAccount.setOnClickListener(v -> createAccount(v));
 
-                if (user.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(SignUpActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                User newUser = new User(user, password);
-
-                SupabaseClient.getApi().createUser(newUser).enqueue(new Callback<List<User>>() {
-                    @Override
-                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                        // Log the HTTP Code (201 = Created, 400 = Bad Request, 403 = RLS Issue)
-                        android.util.Log.d("SUPABASE_RES", "Status Code: " + response.code());
-
-                        if (response.isSuccessful()) {
-                            Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            try {
-                                // This tells you EXACTLY why Postgres rejected the insert
-                                String errorBody = response.errorBody().string();
-                                android.util.Log.e("SUPABASE_RES", "Error Body: " + errorBody);
-                            } catch (Exception e) { e.printStackTrace(); }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<User>> call, Throwable t) {
-                        android.util.Log.e("SUPABASE_RES", "Network Failure: " + t.getMessage());
-                    }
-                });
-
-                /*
-                // Call the mock signup function
-                if (LogInSignUpMode.signup(user, pass, "0")) {
-                    Toast.makeText(SignUpActivity.this, "Toast: Account Created Successfully!", Toast.LENGTH_LONG).show();
-                    launchPage(view); // Return to Login or Home
-                } else {
-                    Toast.makeText(SignUpActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
-                }
-                 */
-            }
-        });
 
         // Logic for switching back to the Login screen
-        activity_sign_up__Return_to_Signin_Button.setOnClickListener(new View.OnClickListener() {
+        btnReturnToLogin.setOnClickListener(v -> launchPage(v));
+    }
+
+    /**
+     * Handles the account creation process by validating input and calling the repository.
+     */
+    private void createAccount(View view) {
+        String user = etUsername.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (user.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Use the repository to handle the network logic (Note: AuthRepository#signup)
+        AuthRepository.signup(new User(user, password), new Callback<List<User>>() {
             @Override
-            public void onClick(View view) {
-                launchPage(view);
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                Log.d("SUPABASE_RES", "Status Code: " + response.code());
+
+                if (response.isSuccessful()) {
+                    Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                    launchPage(view); // Navigation class handles switching to MainActivity
+                } else {
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e("SUPABASE_RES", "Signup failed: " + errorBody);
+                    } catch (Exception e) { e.printStackTrace(); }
+                    Toast.makeText(SignUpActivity.this, "Signup failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Log.e("SUPABASE_RES", "Network Failure: " + t.getMessage());
+                Toast.makeText(SignUpActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
-     * Helper method to call the centralized Navigation logic.
+     * Delegates page navigation to the centralized NavigationHelper class.
+     * <p>
+     * (Hold Cmd/Ctrl + Click on {@link NavigationHelper#launchPage} to jump to the method)
      */
     public void launchPage(View view) {
-        Navigation.launchPage(this, view);
+        NavigationHelper.launchPage(this, view);
     }
 }

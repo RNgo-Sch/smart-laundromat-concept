@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: activity_profile.xml
+    Activity: ProfileActivity
+    Description: User profile screen displaying settings, history, and account options.
+                 Features a glassmorphism list container and global navigation.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/activity_profile__root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_background"
     tools:context=".ui.activities.ProfileActivity">
 
-    <!-- Main Content Container -->
+
+    <!-- SECTION 1: PROFILE HEADER -->
+    <!-- Displays the user's initial and settings title -->
     <LinearLayout
+        android:id="@+id/activity_profile__header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Profile Circle -->
+        <!-- Initial Avatar Circle -->
         <TextView
-            android:id="@+id/profile_letter_circle"
+            android:id="@+id/activity_profile__letter_circle"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:background="@drawable/circle"
@@ -35,9 +43,9 @@
             android:textSize="60sp"
             android:textStyle="bold" />
 
-        <!-- Username Title -->
+        <!-- Screen Title -->
         <TextView
-            android:id="@+id/profile_username_title"
+            android:id="@+id/activity_profile__username_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-10dp"
@@ -47,18 +55,25 @@
             android:textSize="25sp"
             android:fontFamily="@font/sf_pro_bold" />
 
-        <!-- Glass List Container -->
+
+        <!-- SECTION 2: SETTINGS LIST CONTAINER -->
+        <!-- A glass-styled card containing a list of interactive settings items -->
         <FrameLayout
+            android:id="@+id/activity_profile__list_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp">
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="16dp">
 
-
+            <!-- Background Blur Effect -->
             <include
+                android:id="@+id/activity_profile__glass_include"
                 layout="@layout/glass_container"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"/>
 
+            <!-- Interactive Settings List -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,14 +83,16 @@
 
                 <!-- Item 1: Saved Messages -->
                 <RelativeLayout
+                    android:id="@+id/activity_profile__item_saved_messages"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:background="@drawable/ripple_top_rounded"
                     android:paddingHorizontal="16dp">
 
                     <View
-                        android:id="@+id/icon_bg_1"
+                        android:id="@+id/activity_profile__icon_bg_saved"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
@@ -85,10 +102,10 @@
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        android:layout_alignStart="@id/icon_bg_1"
-                        android:layout_alignTop="@id/icon_bg_1"
-                        android:layout_alignEnd="@id/icon_bg_1"
-                        android:layout_alignBottom="@id/icon_bg_1"
+                        android:layout_alignStart="@id/activity_profile__icon_bg_saved"
+                        android:layout_alignTop="@id/activity_profile__icon_bg_saved"
+                        android:layout_alignEnd="@id/activity_profile__icon_bg_saved"
+                        android:layout_alignBottom="@id/activity_profile__icon_bg_saved"
                         app:srcCompat="@drawable/ic_lock"
                         app:tint="@color/white" />
 
@@ -97,8 +114,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="14dp"
-                        android:layout_toEndOf="@id/icon_bg_1"
-                        android:text="Saved Messages"
+                        android:layout_toEndOf="@id/activity_profile__icon_bg_saved"
+                        android:text="Account"
                         android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
@@ -108,22 +125,21 @@
                         android:layout_height="14dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_house"
+                        app:srcCompat="@drawable/shape_arrow"
                         app:tint="#8DFFFFFF" />
                 </RelativeLayout>
 
-                <!-- Divider -->
+                <!-- List Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-
                     android:layout_marginStart="60dp"
                     android:layout_marginEnd="20dp"
-
                     android:background="#000000" />
 
                 <!-- Item 2: Recent Calls -->
                 <RelativeLayout
+                    android:id="@+id/activity_profile__item_recent_calls"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:clickable="true"
@@ -132,7 +148,7 @@
                     android:paddingHorizontal="16dp">
 
                     <View
-                        android:id="@+id/icon_bg_2"
+                        android:id="@+id/activity_profile__icon_bg_recent"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
@@ -142,10 +158,10 @@
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        android:layout_alignStart="@id/icon_bg_2"
-                        android:layout_alignTop="@id/icon_bg_2"
-                        android:layout_alignEnd="@id/icon_bg_2"
-                        android:layout_alignBottom="@id/icon_bg_2"
+                        android:layout_alignStart="@id/activity_profile__icon_bg_recent"
+                        android:layout_alignTop="@id/activity_profile__icon_bg_recent"
+                        android:layout_alignEnd="@id/activity_profile__icon_bg_recent"
+                        android:layout_alignBottom="@id/activity_profile__icon_bg_recent"
                         app:srcCompat="@drawable/ic_user"
                         app:tint="@color/white" />
 
@@ -154,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="14dp"
-                        android:layout_toEndOf="@id/icon_bg_2"
+                        android:layout_toEndOf="@id/activity_profile__icon_bg_recent"
                         android:text="Recent Calls"
                         android:textColor="@color/black"
                         android:textSize="17sp"
@@ -169,28 +185,26 @@
                         app:tint="#8DFFFFFF" />
                 </RelativeLayout>
 
-                <!-- Divider -->
+                <!-- List Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-
                     android:layout_marginStart="60dp"
                     android:layout_marginEnd="20dp"
-
                     android:background="#000000" />
-
 
                 <!-- Item 3: Devices -->
                 <RelativeLayout
+                    android:id="@+id/activity_profile__item_devices"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="@drawable/ripple_bottom_rounded"
                     android:paddingHorizontal="16dp">
 
                     <View
-                        android:id="@+id/icon_bg_3"
+                        android:id="@+id/activity_profile__icon_bg_devices"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
@@ -200,10 +214,10 @@
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        android:layout_alignStart="@id/icon_bg_3"
-                        android:layout_alignTop="@id/icon_bg_3"
-                        android:layout_alignEnd="@id/icon_bg_3"
-                        android:layout_alignBottom="@id/icon_bg_3"
+                        android:layout_alignStart="@id/activity_profile__icon_bg_devices"
+                        android:layout_alignTop="@id/activity_profile__icon_bg_devices"
+                        android:layout_alignEnd="@id/activity_profile__icon_bg_devices"
+                        android:layout_alignBottom="@id/activity_profile__icon_bg_devices"
                         app:srcCompat="@drawable/ic_booking"
                         app:tint="@color/white" />
 
@@ -212,25 +226,25 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="14dp"
-                        android:layout_toEndOf="@id/icon_bg_3"
+                        android:layout_toEndOf="@id/activity_profile__icon_bg_devices"
                         android:text="Devices"
                         android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
 
                     <TextView
-                        android:id="@+id/badge_text"
+                        android:id="@+id/activity_profile__badge_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/chevron_3"
+                        android:layout_toStartOf="@+id/activity_profile__chevron_devices"
                         android:layout_marginEnd="8dp"
                         android:text="3"
                         android:textColor="#80FFFFFF"
                         android:textSize="17sp" />
 
                     <ImageView
-                        android:id="@+id/chevron_3"
+                        android:id="@+id/activity_profile__chevron_devices"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
                         android:layout_alignParentEnd="true"
@@ -240,18 +254,66 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
+        </FrameLayout>
+
+
+        <!-- SECTION 3: LOGOUT BUTTON -->
+        <!-- A standalone glass-styled button for ending the session -->
+        <FrameLayout
+            android:id="@+id/activity_profile__logout_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="30dp">
+
+            <!-- Background Blur Effect -->
+            <include
+                android:id="@+id/activity_profile__logout_glass_include"
+                layout="@layout/glass_container"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"/>
+
+            <!-- Interactive Logout Item -->
+            <RelativeLayout
+                android:id="@+id/activity_profile__item_logout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_rounded"
+                android:paddingHorizontal="16dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:fontFamily="@font/sf_pro_bold"
+                    android:gravity="center"
+                    android:text="Log Out"
+                    android:textColor="#FF3B30"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
         </FrameLayout>
 
     </LinearLayout>
 
-    <!-- Bottom Menu Bar -->
+
+    <!-- SECTION 4: GLOBAL NAVIGATION -->
+    <!-- Shared bottom menu bar for app-wide routing -->
     <include
         layout="@layout/menu_bar"
         android:id="@+id/menu_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

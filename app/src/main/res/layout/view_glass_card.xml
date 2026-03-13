@@ -1,10 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: view_glass_card.xml
+    Description: Reusable composite view for glass-styled cards.
+    Components: Uses a custom LiquidGlassView to provide the blur and gradient effect.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <!-- Section 1: Glass Effect Layer -->
+    <!-- Handles the blur radius, fill color, and border stroke -->
     <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
-        android:id="@+id/glass_view"
+        android:id="@+id/view_glass_card__glass_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:lg_blur_radius="5dp"
@@ -12,12 +21,16 @@
         app:lg_corner_radius="30dp"
         app:lg_stroke_width="1.5dp">
 
+
+        <!-- Section 2: Background Content -->
+        <!-- The image or content displayed behind the glass panel -->
         <ImageView
-            android:id="@+id/glass_bg"
+            android:id="@+id/view_glass_card__glass_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_background"/>
+            android:src="@drawable/bg_background" />
+
 
     </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
 

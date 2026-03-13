@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Layout: menu_bar.xml
+    Description: Shared bottom navigation bar component.
+    Components: Uses LiquidGlassView for the background and ConstraintLayout for positioning.
+    Helper: Managed by MenuBarHelper.java
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/menu_bar__root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.utils.MenuBarHelper">
 
 
+    <!-- SECTION 1: BACKGROUND CONTAINER -->
+    <!-- The glass panel that forms the base of the menu bar -->
+    <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
+        android:id="@+id/menu_bar__Menu_Bar"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:alpha="0.9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.99"
+        app:lg_blur_radius="5dp"
+        app:lg_color="#0DFFFFFF"
+        app:lg_corner_radius="30dp"
+        app:lg_stroke_width="1dp">
+
+        <View
+            android:layout_width="402dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_menu_bar" />
+
+    </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
+
+
+    <!-- SECTION 2: SELECTION INDICATORS -->
+    <!-- Visual cues that appear behind the icon when a section is active -->
+
+    <!-- Home Select Indicator -->
     <ImageView
         android:id="@+id/menu_bar__HomeIconText_Select"
         android:layout_width="wrap_content"
@@ -20,6 +58,7 @@
         app:layout_constraintVertical_bias="0.39"
         app:srcCompat="@drawable/shape_menu_select" />
 
+    <!-- Booking Select Indicator -->
     <ImageView
         android:id="@+id/menu_bar__BookingIconText_Select"
         android:layout_width="wrap_content"
@@ -32,6 +71,7 @@
         app:layout_constraintVertical_bias="0.39"
         app:srcCompat="@drawable/shape_menu_select" />
 
+    <!-- Profile Select Indicator -->
     <ImageView
         android:id="@+id/menu_bar___ProfileIconText_Select"
         android:layout_width="wrap_content"
@@ -45,6 +85,10 @@
         app:srcCompat="@drawable/shape_menu_select" />
 
 
+    <!-- SECTION 3: INTERACTIVE MENU ITEMS -->
+    <!-- Clickable layouts containing icons and labels -->
+
+    <!-- Booking Item -->
     <LinearLayout
         android:id="@+id/menu_bar___LinearLayout_Booking"
         android:layout_width="150dp"
@@ -53,7 +97,6 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-
         android:onClick="launchPage"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/menu_bar__Menu_Bar"
@@ -79,6 +122,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
+    <!-- Profile Item -->
     <LinearLayout
         android:id="@+id/menu_bar___LinearLayout_Profile"
         android:layout_width="150dp"
@@ -87,7 +131,6 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-
         android:onClick="launchPage"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/menu_bar___LinearLayout_Booking"
@@ -113,32 +156,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
-        android:id="@+id/menu_bar__Menu_Bar"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:alpha="0.9"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"
-        app:lg_blur_radius="5dp"
-        app:lg_color="#0DFFFFFF"
-        app:lg_corner_radius="30dp"
-        app:lg_stroke_width="1dp">
-
-
-        <View
-            android:layout_width="402dp"
-            android:layout_height="match_parent"
-
-            android:background="@drawable/shape_menu_bar" />
-
-    </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
-
+    <!-- Home Item -->
     <LinearLayout
         android:id="@+id/menu_bar___LinearLayout_Home"
         android:layout_width="150dp"
@@ -147,7 +165,6 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-
         android:onClick="launchPage"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/menu_bar___LinearLayout_Booking"
@@ -155,7 +172,6 @@
         app:layout_constraintTop_toTopOf="@+id/menu_bar___LinearLayout_Booking">
 
         <ImageView
-
             android:id="@+id/menu_bar__Home_Icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -170,10 +186,7 @@
             android:fontFamily="@font/sf_pro_semibold"
             android:text="Home"
             android:textColor="@color/black"
-            android:textSize="14sp"
-            tools:layout_editor_absoluteX="82dp"
-            tools:layout_editor_absoluteY="423dp" />
+            android:textSize="14sp" />
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
