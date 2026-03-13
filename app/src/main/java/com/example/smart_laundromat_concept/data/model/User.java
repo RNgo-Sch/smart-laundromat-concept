@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

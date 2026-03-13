@@ -1,7 +1,7 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.data.remote;
 
 import com.example.smart_laundromat_concept.BuildConfig;
-import com.google.gson.internal.GsonBuildConfig;
+import com.example.smart_laundromat_concept.data.model.User;
 
 import okhttp3.OkHttpClient;
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.example.smart_laundromat_concept.classes.LiquidGlassView
+    <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
         android:id="@+id/glass_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +19,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/bg_background"/>
 
-    </com.example.smart_laundromat_concept.classes.LiquidGlassView>
+    </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
 
 </FrameLayout>

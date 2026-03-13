@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.page;
+package com.example.smart_laundromat_concept.ui.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.example.smart_laundromat_concept.classes.*;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.ui.components.Navigation;
+import com.example.smart_laundromat_concept.ui.components.UI;
 
 public class BookingActivity extends AppCompatActivity {
 

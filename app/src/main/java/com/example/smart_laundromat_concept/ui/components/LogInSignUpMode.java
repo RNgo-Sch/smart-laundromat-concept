@@ -1,8 +1,8 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.ui.components;
 
 import android.app.Activity;
 import android.widget.Button;
-import android.widget.TextView;
+
 import com.example.smart_laundromat_concept.R;
 
 /**

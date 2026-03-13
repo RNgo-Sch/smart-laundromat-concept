@@ -19,27 +19,27 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity,MissingClass" />
         <activity
-            android:name=".page.ProfileActivity"
+            android:name=".ui.activities.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".page.BookingActivity"
+            android:name=".ui.activities.BookingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".page.SignUpActivity"
+            android:name=".ui.activities.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".page.HomeActivity"
+            android:name=".ui.activities.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".page.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">

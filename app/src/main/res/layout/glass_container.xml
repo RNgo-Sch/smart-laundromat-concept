@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.smart_laundromat_concept.classes.LiquidGlassView
+<com.example.smart_laundromat_concept.ui.components.LiquidGlassView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/profile__glass_view"
@@ -22,4 +22,4 @@
         android:layout_height="match_parent"
         android:background="@drawable/glass_shape"/>
 
-</com.example.smart_laundromat_concept.classes.LiquidGlassView>
+</com.example.smart_laundromat_concept.ui.components.LiquidGlassView>

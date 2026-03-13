@@ -1,11 +1,8 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.data.model;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.smart_laundromat_concept.page.SignUpActivity;
-
-import java.util.List;
+import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;

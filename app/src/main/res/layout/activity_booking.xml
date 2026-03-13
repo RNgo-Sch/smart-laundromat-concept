@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_background"
-    tools:context=".page.BookingActivity">
+    tools:context=".ui.activities.BookingActivity">
     <include
         layout="@layout/menu_bar"
         android:id="@+id/menu_bar"

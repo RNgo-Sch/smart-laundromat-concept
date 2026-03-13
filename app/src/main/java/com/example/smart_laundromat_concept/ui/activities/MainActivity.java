@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.page;
+package com.example.smart_laundromat_concept.ui.activities;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,16 +6,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.classes.*;
+import com.example.smart_laundromat_concept.ui.components.LogInSignUpMode;
+import com.example.smart_laundromat_concept.ui.components.Navigation;
 
 
 /**
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-//
 
         // Adjust padding to avoid UI elements being hidden behind system bars (status/navigation bars)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main_root), (v, insets) -> {
@@ -48,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Use the utility class to set the title and button text to "Login" mode
+        // TODO Use the utility class to set the title and button text to "Login" mode
         LogInSignUpMode.setup(this, LogInSignUpMode.MODE_LOGIN);
 
         // Initialize UI component references

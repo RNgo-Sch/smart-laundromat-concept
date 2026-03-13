@@ -1,11 +1,15 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.ui.components;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.page.*;
+import com.example.smart_laundromat_concept.ui.activities.BookingActivity;
+import com.example.smart_laundromat_concept.ui.activities.HomeActivity;
+import com.example.smart_laundromat_concept.ui.activities.MainActivity;
+import com.example.smart_laundromat_concept.ui.activities.ProfileActivity;
+import com.example.smart_laundromat_concept.ui.activities.SignUpActivity;
 
 /**
  * Navigation class handles the routing between different activities in the application.

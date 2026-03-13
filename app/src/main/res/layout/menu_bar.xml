@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".classes.UI">
+    tools:context=".ui.components.UI">
 
 
     <ImageView
@@ -113,7 +113,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <com.example.smart_laundromat_concept.classes.LiquidGlassView
+    <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
         android:id="@+id/menu_bar__Menu_Bar"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
@@ -137,7 +137,7 @@
 
             android:background="@drawable/shape_menu_bar" />
 
-    </com.example.smart_laundromat_concept.classes.LiquidGlassView>
+    </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
 
     <LinearLayout
         android:id="@+id/menu_bar___LinearLayout_Home"

@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.data.model;
 public class Reputation {
     private static final int MIN_SCORE = -10;
     private static final int MAX_SCORE = 120;

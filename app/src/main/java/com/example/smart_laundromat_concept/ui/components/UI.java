@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.classes;
+package com.example.smart_laundromat_concept.ui.components;
 
 import android.app.Activity;
 import android.view.View;
