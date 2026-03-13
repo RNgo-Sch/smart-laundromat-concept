@@ -67,14 +67,14 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String user = activity_sign_up__Signup_username_text.getText().toString();
-                String pass = activity_sign_up__Signup_password_text.getText().toString();
+                String password = activity_sign_up__Signup_password_text.getText().toString();
 
-                if (user.isEmpty() || pass.isEmpty()) {
+                if (user.isEmpty() || password.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                User newUser = new User(user, pass);
+                User newUser = new User(user, password);
 
                 SupabaseClient.getApi().createUser(newUser).enqueue(new Callback<List<User>>() {
                     @Override

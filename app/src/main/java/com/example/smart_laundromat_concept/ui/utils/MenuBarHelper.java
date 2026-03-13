@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.ui.components;
+package com.example.smart_laundromat_concept.ui.utils;
 
 import android.app.Activity;
 import android.view.View;
@@ -12,7 +12,7 @@ import com.example.smart_laundromat_concept.R;
 /**
  * UI utility class for managing common interface elements across the application.
  */
-public class UI {
+public class MenuBarHelper {
 
     // Identifiers for the different menu sections
     public static final int HOME = 0;

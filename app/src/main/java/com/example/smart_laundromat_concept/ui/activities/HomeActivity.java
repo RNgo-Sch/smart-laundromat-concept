@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.components.Navigation;
-import com.example.smart_laundromat_concept.ui.components.UI;
+import com.example.smart_laundromat_concept.ui.utils.MenuBarHelper;
 
 /**
  * HomeActivity is the main landing page after a user logs in.
@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // Highlight the 'Home' icon in the bottom menu bar
-        UI.menuBar(this, UI.HOME);
+        MenuBarHelper.menuBar(this, MenuBarHelper.HOME);
 
         // Standard edge-to-edge padding adjustment
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
