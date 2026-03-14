@@ -68,10 +68,28 @@ public class NavigationHelper {
 
         } else if (id == R.id.menu_bar___LinearLayout_Profile) {
             intent = new Intent(activity, ProfileActivity.class);
+
+
+        // --- Phase 3: Profile Logout Flow (Handles overlay visibility and session termination) ---
+
+        } else if (id == R.id.activity_profile__Logout_Button) {
+            // Show the confirmation overlay
+            View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
+            if (overlay != null) overlay.setVisibility(View.VISIBLE);
+
+        } else if (id == R.id.activity_profile__cancel_logout_action) {
+            // Hide the confirmation overlay
+            View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
+            if (overlay != null) overlay.setVisibility(View.GONE);
+
+        } else if (id == R.id.activity_profile__confirm_logout_action) {
+            // Perform logout: Navigate to Login and clear the backstack
+            intent = new Intent(activity, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
 
 
-        // --- Phase 3: Intent Execution ---
+        // --- Phase 4: Intent Execution ---
 
         if (intent != null) {
             // Optimization: Prevent reloading the activity if the user is already on the target page.

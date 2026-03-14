@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Layout: activity_main.xml
-    Activity: MainActivity (Login Screen) / SignUpActivity (Sign Up Screen)
-    Description: Shared authentication layout that handles both Login and Signup modes
-                 using internal state management in LoginToggleHelper.
+    Activity: MainActivity / SignUpActivity
+    Description: Optimized for white backgrounds. Uses a "Dark Frost" glass effect
+                 with soft shadows to ensure visibility on light surfaces.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#F2F2F7"
     android:gravity="center"
-    android:background="@drawable/bg_background">
+    android:orientation="vertical">
 
 
     <!-- SECTION 1: Authentication Card Container -->
-    <!-- Uses a FrameLayout to stack the glass blur effect behind the form content -->
+    <!-- Higher elevation creates a stronger shadow for separation from white background -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="354dp"
-        android:layout_margin="30dp">
+        android:layout_height="380dp"
+        android:layout_margin="30dp"
+        android:elevation="20dp"
+        android:outlineSpotShadowColor="#40000000">
 
 
-        <!-- Layer 1: Glass Blur Background -->
+        <!-- Layer 1: Liquid Glass Effect (Optimized for light mode) -->
+        <!-- Background Blur Effect -->
         <include
-            layout="@layout/glass_container"
+            android:id="@+id/activity_profile__list_glass_include"
+            layout="@layout/normal_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
 
-        <!-- Layer 2: Sharp Outline -->
-        <!-- Provides the crisp border on top of the blur effect -->
+        <!-- Layer 2: White "Frost" Shine -->
+        <!-- A very thin white overlay to simulate the glass reflection -->
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alpha="0.4"
             android:background="@drawable/glass_shape" />
 
 
@@ -49,12 +53,18 @@
             android:padding="26dp">
 
 
-            <!-- Brand Logo -->
-            <ImageView
+            <!-- Screen Title -->
+            <TextView
+                android:id="@+id/activity_main__title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/dryerlogo" />
+                android:layout_marginTop="-10dp"
+                android:fontFamily="@font/sf_pro_bold"
+                android:text="Flow"
+                android:textAlignment="center"
+                android:textColor="@color/blue"
+                android:textSize="36sp"
+                android:textStyle="bold" />
 
 
             <!-- USER INPUT SECTION -->
@@ -66,7 +76,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/shape_box1"
-                android:backgroundTint="#4D000000"
+                android:backgroundTint="#000000"
                 android:drawableLeft="@drawable/ic_user"
                 android:drawablePadding="8dp"
                 android:fontFamily="@font/sf_pro_semibold"
@@ -82,7 +92,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/shape_box1"
-                android:backgroundTint="#4D000000"
+                android:backgroundTint="#000000"
                 android:drawableLeft="@drawable/ic_lock"
                 android:drawablePadding="8dp"
                 android:fontFamily="@font/sf_pro_semibold"
@@ -98,9 +108,9 @@
                 android:id="@+id/activity_main__login_Button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="@color/blue"
-                android:fontFamily="@font/sf_pro_semibold"
+                android:fontFamily="@font/sf_pro_bold"
                 android:onClick="launchPage"
                 android:text="Login"
                 android:textSize="18sp"
@@ -112,23 +122,22 @@
 
 
     <!-- SECTION 2: Footer / Mode Toggle -->
-    <!-- Button to switch between Login and Sign Up screens -->
     <Button
         android:id="@+id/activity_main__go_to_signup_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="-20dp"
         android:background="@android:color/transparent"
-        app:backgroundTint="@android:color/transparent"
-        app:elevation="0dp"
-        android:stateListAnimator="@null"
+        android:fontFamily="@font/sf_pro_semibold"
         android:onClick="launchPage"
         android:padding="8dp"
+        android:stateListAnimator="@null"
         android:text="Don't have an account? Sign Up"
-        android:fontFamily="@font/sf_pro_semibold"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textColor="#80000000"
         android:textSize="14sp"
-        android:textAllCaps="false"/>
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp" />
 
 </LinearLayout>

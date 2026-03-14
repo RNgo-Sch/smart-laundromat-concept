@@ -12,9 +12,16 @@
     android:id="@+id/activity_profile__root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_background"
+    android:background="#F2F2F7"
     tools:context=".ui.activities.ProfileActivity">
-
+<!--
+1. Recommended Off-White Backgrounds
+Use one of these for your Activity background so the white glass stands out:
+•
+#F5F5F7 (Apple-style Light Gray) - Highly Recommended. It provides just enough contrast for white glass to "pop."
+•
+#F2F2F7 (Standard iOS System Gray) - Slightly cooler and more defined.
+-->
 
     <!-- SECTION 1: PROFILE HEADER -->
     <!-- Displays the user's initial and settings title -->
@@ -48,10 +55,10 @@
             android:id="@+id/activity_profile__username_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-10dp"
+            android:layout_marginTop="0dp"
             android:gravity="center"
-            android:text="User Settings"
-            android:textColor="@color/white"
+            android:text="Jon2134"
+            android:textColor="@color/black"
             android:textSize="25sp"
             android:fontFamily="@font/sf_pro_bold" />
 
@@ -63,13 +70,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="16dp">
 
             <!-- Background Blur Effect -->
             <include
-                android:id="@+id/activity_profile__glass_include"
-                layout="@layout/glass_container"
+                android:id="@+id/activity_profile__list_glass_include"
+                layout="@layout/normal_container"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"/>
 
@@ -96,18 +103,19 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_box1"
-                        android:backgroundTint="#007AFF" />
+                        android:background="@drawable/shape_box"
+                        android:backgroundTint="@color/blue" />
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:padding="2dp"
                         android:layout_alignStart="@id/activity_profile__icon_bg_saved"
                         android:layout_alignTop="@id/activity_profile__icon_bg_saved"
                         android:layout_alignEnd="@id/activity_profile__icon_bg_saved"
                         android:layout_alignBottom="@id/activity_profile__icon_bg_saved"
-                        app:srcCompat="@drawable/ic_lock"
-                        app:tint="@color/white" />
+                        app:srcCompat="@drawable/ic_user"
+                        app:tint="@color/black" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,7 +134,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         app:srcCompat="@drawable/shape_arrow"
-                        app:tint="#8DFFFFFF" />
+                        app:tint="#8D000000" />
                 </RelativeLayout>
 
                 <!-- List Divider -->
@@ -152,18 +160,19 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_box1"
+                        android:background="@drawable/shape_box"
                         android:backgroundTint="#34C759" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
+                        android:padding="5dp"
                         android:layout_alignStart="@id/activity_profile__icon_bg_recent"
                         android:layout_alignTop="@id/activity_profile__icon_bg_recent"
                         android:layout_alignEnd="@id/activity_profile__icon_bg_recent"
                         android:layout_alignBottom="@id/activity_profile__icon_bg_recent"
-                        app:srcCompat="@drawable/ic_user"
-                        app:tint="@color/white" />
+                        app:srcCompat="@drawable/ic_booking"
+                        app:tint="@color/black" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,7 +180,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="14dp"
                         android:layout_toEndOf="@id/activity_profile__icon_bg_recent"
-                        android:text="Recent Calls"
+                        android:text="History"
                         android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
@@ -181,8 +190,8 @@
                         android:layout_height="14dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_house"
-                        app:tint="#8DFFFFFF" />
+                        app:srcCompat="@drawable/shape_arrow"
+                        app:tint="#8D000000" />
                 </RelativeLayout>
 
                 <!-- List Divider -->
@@ -208,18 +217,19 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_box1"
+                        android:background="@drawable/shape_box"
                         android:backgroundTint="#FF9500" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
+                        android:padding="2dp"
                         android:layout_alignStart="@id/activity_profile__icon_bg_devices"
                         android:layout_alignTop="@id/activity_profile__icon_bg_devices"
                         android:layout_alignEnd="@id/activity_profile__icon_bg_devices"
                         android:layout_alignBottom="@id/activity_profile__icon_bg_devices"
                         app:srcCompat="@drawable/ic_booking"
-                        app:tint="@color/white" />
+                        app:tint="@color/black" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -232,25 +242,14 @@
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />
 
-                    <TextView
-                        android:id="@+id/activity_profile__badge_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/activity_profile__chevron_devices"
-                        android:layout_marginEnd="8dp"
-                        android:text="3"
-                        android:textColor="#80FFFFFF"
-                        android:textSize="17sp" />
-
                     <ImageView
                         android:id="@+id/activity_profile__chevron_devices"
                         android:layout_width="14dp"
                         android:layout_height="14dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        app:srcCompat="@drawable/ic_house"
-                        app:tint="#8DFFFFFF" />
+                        app:srcCompat="@drawable/shape_arrow"
+                        app:tint="#8D000000" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -270,16 +269,17 @@
             <!-- Background Blur Effect -->
             <include
                 android:id="@+id/activity_profile__logout_glass_include"
-                layout="@layout/glass_container"
+                layout="@layout/normal_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"/>
 
             <!-- Interactive Logout Item -->
             <RelativeLayout
-                android:id="@+id/activity_profile__item_logout"
+                android:id="@+id/activity_profile__Logout_Button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:clickable="true"
+                android:onClick="launchPage"
                 android:focusable="true"
                 android:background="@drawable/ripple_rounded"
                 android:paddingHorizontal="16dp">
@@ -297,7 +297,7 @@
                     android:gravity="center"
                     android:text="Log Out"
                     android:textColor="#FF3B30"
-                    android:textSize="20sp" />
+                    android:textSize="17sp" />
 
             </RelativeLayout>
 
@@ -315,5 +315,82 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+
+    <!-- SECTION 5: LOGOUT CONFIRMATION OVERLAY -->
+    <!-- This is added last to ensure it appears at the FRONT -->
+    <FrameLayout
+        android:id="@+id/activity_profile__logout_confirmation_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="30dp">
+
+            <!-- Confirmation Glass Card -->
+            <include
+                android:id="@+id/activity_profile__confirmation_glass"
+                layout="@layout/glass_container"
+                android:layout_width="match_parent"
+                android:layout_height="240dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm Logout"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/sf_pro_bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Are you sure you want to log out of your account?"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/sf_pro_semibold" />
+
+                <Button
+                    android:id="@+id/activity_profile__confirm_logout_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Log Out"
+                    android:backgroundTint="#FF3B30"
+                    android:onClick="launchPage"
+                    android:fontFamily="@font/sf_pro_bold"
+                    app:cornerRadius="25dp"/>
+
+                <TextView
+                    android:id="@+id/activity_profile__cancel_logout_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="Cancel"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:clickable="true"
+                    android:onClick="launchPage"
+                    android:focusable="true"/>
+
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

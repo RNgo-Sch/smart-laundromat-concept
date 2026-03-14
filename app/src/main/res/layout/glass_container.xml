@@ -4,12 +4,12 @@
     Description: A reusable container component that provides a glassmorphism effect.
                  Includes a blurred background layer and a sharp outline layer.
 -->
-<com.example.smart_laundromat_concept.ui.components.LiquidGlassView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.smart_laundromat_concept.ui.components.LiquidGlassView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/glass_container__root_view"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:background="@color/white"
     app:lg_blur_radius="5dp"
     app:lg_color="#4DFFFFFF"
     app:lg_corner_radius="31dp"
@@ -22,11 +22,10 @@
         android:id="@+id/glass_container__blurred_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
-        <!--
+        android:scaleType="centerCrop" />
+    <!--
         android:src="@drawable/bg_background"/>
         -->
-
 
 
     <!-- LAYER 2: SHARP OVERLAY OUTLINE -->
@@ -35,7 +34,7 @@
         android:id="@+id/glass_container__outline_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/glass_shape"/>
+        android:background="@drawable/glass_shape" />
 
 
 </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>

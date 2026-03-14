@@ -5,4 +5,7 @@
     <color name="purple">#8692f7</color>
     <color name="blue">#0088FF</color>
     <color name="black_30_transparent">#B3000000</color>
+    <color name="white_30_transparent">#B3FFFFFF</color>
+    <color name="blue_30_transparent">#B30088FF</color>
+
 </resources>
