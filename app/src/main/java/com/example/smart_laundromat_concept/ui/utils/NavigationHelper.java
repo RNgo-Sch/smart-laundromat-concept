@@ -22,6 +22,13 @@ import com.example.smart_laundromat_concept.ui.activities.SignUpActivity;
  */
 public class NavigationHelper {
 
+    /**
+     * Internal enumeration to categorize different navigation animation styles.
+     */
+    private enum AnimationType {
+        SLIDE_LEFT, SLIDE_RIGHT, FADE
+    }
+
 
     /**
      * Navigates to the appropriate Activity based on the ID of the clicked View.
@@ -33,7 +40,9 @@ public class NavigationHelper {
         // Initialize intent and identify which element was clicked
         Intent intent = null;
         int id = view.getId();
-        boolean isMenuBarNavigation = false;
+        
+        // Default to standard slide animation
+        AnimationType selectedAnim = AnimationType.SLIDE_RIGHT;
 
 
         // --- Phase 1: Authentication Flow (Handles Login and Sign Up screen transitions) ---
@@ -54,10 +63,13 @@ public class NavigationHelper {
             if (activity instanceof MainActivity) {
                 // Toggle from Login to Sign Up
                 intent = new Intent(activity, SignUpActivity.class);
+                selectedAnim = AnimationType.SLIDE_RIGHT;
+
 
             } else if (activity instanceof SignUpActivity) {
                 // Toggle from Sign Up back to Login
                 intent = new Intent(activity, MainActivity.class);
+                selectedAnim = AnimationType.SLIDE_LEFT;
             }
 
 
@@ -65,15 +77,15 @@ public class NavigationHelper {
 
         } else if (id == R.id.menu_bar___LinearLayout_Home) {
             intent = new Intent(activity, HomeActivity.class);
-            isMenuBarNavigation = true;
+            selectedAnim = AnimationType.FADE;
 
         } else if (id == R.id.menu_bar___LinearLayout_Booking) {
             intent = new Intent(activity, BookingActivity.class);
-            isMenuBarNavigation = true;
+            selectedAnim = AnimationType.FADE;
 
         } else if (id == R.id.menu_bar___LinearLayout_Profile) {
             intent = new Intent(activity, ProfileActivity.class);
-            isMenuBarNavigation = true;
+            selectedAnim = AnimationType.FADE;
 
 
         // --- Phase 3: Profile Logout Flow (Handles overlay visibility and session termination) ---
@@ -102,6 +114,7 @@ public class NavigationHelper {
         } else if (id == R.id.Back_Button) {
             // Closes the current activity to reveal the previous one in the stack
             activity.finish();
+            activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
 
         // --- Phase 5: Location Flow (Handles location-related interactions) ---
@@ -112,19 +125,25 @@ public class NavigationHelper {
 
 
 
-        // --- Intent Execution ---
+        // --- Phase 6: Intent Execution & Animation Switch ---
 
         if (intent != null) {
             // Optimization: Prevent reloading the activity if the user is already on the target page.
             if (!activity.getClass().getName().equals(intent.getComponent().getClassName())) {
                 activity.startActivity(intent);
 
-                if (isMenuBarNavigation) {
-                    // Apply Fade transition for menu bar navigation
-                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                } else {
-                    // Apply the "Slide In" animation for standard forward navigation
-                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                // Use a switch to professionally handle the transition animation
+                switch (selectedAnim) {
+                    case FADE:
+                        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        break;
+                    case SLIDE_LEFT:
+                        activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        break;
+                    case SLIDE_RIGHT:
+                    default:
+                        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        break;
                 }
             }
         }
