@@ -17,8 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.remote.AuthRepository;
+import com.example.smart_laundromat_concept.data.remote.SupabaseError;
 import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -100,16 +102,32 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 Log.d("SUPABASE_RES", "Status Code: " + response.code());
-
+                String errorMsg= "";
                 if (response.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                     launchPage(view); // Navigation class handles switching to MainActivity
                 } else {
                     try {
                         String errorBody = response.errorBody().string();
+
                         Log.e("SUPABASE_RES", "Signup failed: " + errorBody);
-                    } catch (Exception e) { e.printStackTrace(); }
-                    Toast.makeText(SignUpActivity.this, "Signup failed", Toast.LENGTH_SHORT).show();
+
+                        Gson gson = new Gson();
+                        SupabaseError error = gson.fromJson(errorBody, SupabaseError.class);
+                        String errorCode = error.code;
+
+                        if (errorCode.equals("23505")) {
+                            Toast.makeText(SignUpActivity.this, "User already exists!", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (errorCode.equals("22P02")) {
+                            Toast.makeText(SignUpActivity.this, "Invalid input!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(SignUpActivity.this, "Signup failed", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
