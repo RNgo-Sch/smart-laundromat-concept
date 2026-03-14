@@ -7,15 +7,24 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.remote.AuthRepository;
+import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
 import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -67,15 +76,48 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.activity_main__login_Button);
         goSignupButton = findViewById(R.id.activity_main__go_to_signup_Button);
 
-        
         // Set up the Login button logic
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
+                String username = etUsername.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
 
-                
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please enter credentials", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String query = "eq." + username;
+
+                SupabaseClient.getApi().getUserByUsername(query).enqueue(new Callback<List<User>>() {
+                    @Override
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                            User foundUser = response.body().get(0);
+
+                            if (foundUser.password.equals(password)) {
+                                // SUCCESS: Save the session!
+                                saveSession(foundUser.username);
+
+                                Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                                launchPage(view);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Invalid Password", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+            /*
                 // Validate credentials via the AuthRepository.
                 // (Hold Cmd/Ctrl + Click on "AuthRepository#login" to jump to the logic)
                 if (AuthRepository.login(username, password)) {
@@ -84,6 +126,15 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MainActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                 }
+             */
+            }
+
+            private void saveSession(String username) {
+                SharedPreferences sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("current_username", username);
+                editor.putBoolean("is_logged_in", true);
+                editor.apply(); // Saves in the background
             }
         });
 

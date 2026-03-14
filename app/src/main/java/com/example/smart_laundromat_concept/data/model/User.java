@@ -13,8 +13,8 @@ public class User {
     private float wallet;
     private int reputation;
 
-    private String username;
-    private String password;
+    public String username;
+    public String password;
     @SerializedName("phone_no")
     private String phoneNo;
     private float debt;

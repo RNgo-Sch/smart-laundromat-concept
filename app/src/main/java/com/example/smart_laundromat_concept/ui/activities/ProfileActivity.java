@@ -1,6 +1,7 @@
 package com.example.smart_laundromat_concept.ui.activities;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -22,7 +23,6 @@ import com.example.smart_laundromat_concept.ui.utils.MenuBarHelper;
  * (e.g., {@link MenuBarHelper#menuBar}) to jump directly to its implementation.
  */
 public class ProfileActivity extends AppCompatActivity {
-
 
     /**
      * Initializes the Activity, sets up the layout, and configures the menu bar.
