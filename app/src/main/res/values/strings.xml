@@ -2,4 +2,7 @@
     <string name="app_name">Flow</string>
     <string name="Ask_Signup">Not yet registered? SignUp Now</string>
     <string name="Alr_have_acc">Have an account? Sign in</string>
+    <string name="change_location">
+        <u>Change location</u>
+    </string>
 </resources>

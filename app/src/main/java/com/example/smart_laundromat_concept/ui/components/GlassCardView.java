@@ -52,6 +52,6 @@ public class GlassCardView extends FrameLayout {
     private void init() {
         // Inflate the layout that uses LiquidGlassView internally
         // (Note: This refers to R.layout.view_glass_card)
-        inflate(getContext(), R.layout.view_glass_card, this);
+        inflate(getContext(), R.layout.layout_view_glass_card, this);
     }
 }

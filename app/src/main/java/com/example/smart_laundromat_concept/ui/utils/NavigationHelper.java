@@ -7,7 +7,9 @@ import android.view.View;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.activities.BookingActivity;
 import com.example.smart_laundromat_concept.ui.activities.HomeActivity;
+import com.example.smart_laundromat_concept.ui.activities.LocationActivity;
 import com.example.smart_laundromat_concept.ui.activities.MainActivity;
+import com.example.smart_laundromat_concept.ui.activities.NotificationActivity;
 import com.example.smart_laundromat_concept.ui.activities.ProfileActivity;
 import com.example.smart_laundromat_concept.ui.activities.SignUpActivity;
 
@@ -31,6 +33,7 @@ public class NavigationHelper {
         // Initialize intent and identify which element was clicked
         Intent intent = null;
         int id = view.getId();
+        boolean isMenuBarNavigation = false;
 
 
         // --- Phase 1: Authentication Flow (Handles Login and Sign Up screen transitions) ---
@@ -62,12 +65,15 @@ public class NavigationHelper {
 
         } else if (id == R.id.menu_bar___LinearLayout_Home) {
             intent = new Intent(activity, HomeActivity.class);
+            isMenuBarNavigation = true;
 
         } else if (id == R.id.menu_bar___LinearLayout_Booking) {
             intent = new Intent(activity, BookingActivity.class);
+            isMenuBarNavigation = true;
 
         } else if (id == R.id.menu_bar___LinearLayout_Profile) {
             intent = new Intent(activity, ProfileActivity.class);
+            isMenuBarNavigation = true;
 
 
         // --- Phase 3: Profile Logout Flow (Handles overlay visibility and session termination) ---
@@ -86,19 +92,40 @@ public class NavigationHelper {
             // Perform logout: Navigate to Login and clear the backstack
             intent = new Intent(activity, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+
+        // --- Phase 4: Notification Flow (Handles notification-related interactions) ---
+
+        } else if (id == R.id.activity_notification__Notification_Button) {
+            intent = new Intent(activity, NotificationActivity.class);
+            
+        } else if (id == R.id.Back_Button) {
+            // Closes the current activity to reveal the previous one in the stack
+            activity.finish();
+
+
+        // --- Phase 5: Location Flow (Handles location-related interactions) ---
+
+        } else if (id == R.id.activity_location__Location_Button) {
+            intent = new Intent(activity, LocationActivity.class);
         }
 
 
-        // --- Phase 4: Intent Execution ---
+
+        // --- Intent Execution ---
 
         if (intent != null) {
             // Optimization: Prevent reloading the activity if the user is already on the target page.
-            // (Note: activity.getClass().getName() is compared against the target class name)
             if (!activity.getClass().getName().equals(intent.getComponent().getClassName())) {
                 activity.startActivity(intent);
 
-                // Use 0, 0 to disable default sliding transitions for a snappier, "Web-like" feel
-                activity.overridePendingTransition(0, 0);
+                if (isMenuBarNavigation) {
+                    // Apply Fade transition for menu bar navigation
+                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                } else {
+                    // Apply the "Slide In" animation for standard forward navigation
+                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }
             }
         }
     }

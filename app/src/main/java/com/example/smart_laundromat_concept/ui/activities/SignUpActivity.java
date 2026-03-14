@@ -20,6 +20,7 @@ import com.example.smart_laundromat_concept.data.remote.AuthRepository;
 import com.example.smart_laundromat_concept.data.remote.SupabaseError;
 import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
+import com.example.smart_laundromat_concept.ui.utils.UserSession;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -105,6 +106,11 @@ public class SignUpActivity extends AppCompatActivity {
                 String errorMsg= "";
                 if (response.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+
+                    // --- SESSION MANAGEMENT ---
+                    // Save username to the global session so any screen can access it
+                    UserSession.getInstance().setUsername(user);
+
                     launchPage(view); // Navigation class handles switching to MainActivity
                 } else {
                     try {

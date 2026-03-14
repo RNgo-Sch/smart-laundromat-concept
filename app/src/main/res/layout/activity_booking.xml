@@ -37,11 +37,16 @@
 
     </ScrollView>
 
+    <include
+        layout="@layout/layout_location_button"/>
+    <include
+        layout="@layout/layout_notification"/>
+
 
     <!-- SECTION 2: GLOBAL NAVIGATION -->
     <!-- Shared bottom menu bar for app-wide routing -->
     <include
-        layout="@layout/menu_bar"
+        layout="@layout/layout_menu_bar"
         android:id="@+id/menu_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

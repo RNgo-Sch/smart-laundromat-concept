@@ -16,6 +16,7 @@ import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.remote.AuthRepository;
 import com.example.smart_laundromat_concept.ui.utils.LoginToggleHelper;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
+import com.example.smart_laundromat_concept.ui.utils.UserSession;
 
 
 /**
@@ -80,7 +81,14 @@ public class MainActivity extends AppCompatActivity {
                 // (Hold Cmd/Ctrl + Click on "AuthRepository#login" to jump to the logic)
                 if (AuthRepository.login(username, password)) {
                     Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                    launchPage(view); // Navigate to Home
+
+                    // --- SESSION MANAGEMENT ---
+                    // Save username to the global session so any screen can access it
+                    UserSession.getInstance().setUsername(username);
+
+                    // Navigate to Home screen
+                    launchPage(view);
+
                 } else {
                     Toast.makeText(MainActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                 }

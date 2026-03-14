@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.ui.utils.LocationHelper;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
 import com.example.smart_laundromat_concept.ui.utils.MenuBarHelper;
 
@@ -40,6 +41,11 @@ public class HomeActivity extends AppCompatActivity {
         // Highlight the 'Home' icon in the bottom menu bar.
         // (Hold Cmd/Ctrl + Click on "MenuBarHelper#menuBar" to jump to the method)
         MenuBarHelper.menuBar(this, MenuBarHelper.HOME);
+
+
+        // Apply the underline effect to the 'Change Location' text.
+        // (Hold Cmd/Ctrl + Click on "LocationHelper#setupUnderline" to jump to the method)
+        LocationHelper.setupUnderline(this);
 
 
         // Standard edge-to-edge padding adjustment

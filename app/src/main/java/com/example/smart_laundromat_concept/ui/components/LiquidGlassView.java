@@ -36,6 +36,9 @@ public class LiquidGlassView extends FrameLayout {
     // Corner radius for rounded rectangles
     private float cornerRadius;
 
+    // Determines if the view should be rendered as an oval/circle
+    private boolean isOval;
+
 
     // --- State: Stroke/Border Properties ---
     private float strokeWidth;
@@ -112,6 +115,9 @@ public class LiquidGlassView extends FrameLayout {
                 glassColor = a.getColor(R.styleable.LiquidGlassView_lg_color, Color.parseColor("#4DFFFFFF"));
                 cornerRadius = a.getDimension(R.styleable.LiquidGlassView_lg_corner_radius, 30f);
                 
+                // If corner radius is very high, treat as oval/circle
+                isOval = cornerRadius >= 999;
+
                 strokeWidth = a.getDimension(R.styleable.LiquidGlassView_lg_stroke_width, 0f);
                 strokeColorStart = a.getColor(R.styleable.LiquidGlassView_lg_stroke_color_start, Color.parseColor("#1AFFFFFF"));
                 strokeColorCenter = a.getColor(R.styleable.LiquidGlassView_lg_stroke_color_center, Color.WHITE);
@@ -132,7 +138,13 @@ public class LiquidGlassView extends FrameLayout {
         setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), cornerRadius);
+                if (isOval) {
+                    // Use oval outline for circular shapes
+                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                } else {
+                    // Standard rounded rectangle
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), cornerRadius);
+                }
             }
         });
         setClipToOutline(true);
@@ -183,12 +195,17 @@ public class LiquidGlassView extends FrameLayout {
 
         // Draw the glass background
         fillPaint.setColor(glassColor);
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, fillPaint);
         
-        
-        // Draw the border stroke if applicable
-        if (strokeWidth > 0) {
-            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, strokePaint);
+        if (isOval) {
+            canvas.drawOval(rectF, fillPaint);
+            if (strokeWidth > 0) {
+                canvas.drawOval(rectF, strokePaint);
+            }
+        } else {
+            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, fillPaint);
+            if (strokeWidth > 0) {
+                canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, strokePaint);
+            }
         }
     }
 }

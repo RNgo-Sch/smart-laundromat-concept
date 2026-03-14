@@ -30,7 +30,7 @@
         <!-- Background Blur Effect -->
         <include
             android:id="@+id/activity_profile__list_glass_include"
-            layout="@layout/normal_container"
+            layout="@layout/layout_normal_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

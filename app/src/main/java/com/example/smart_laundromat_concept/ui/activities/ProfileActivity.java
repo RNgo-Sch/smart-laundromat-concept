@@ -3,6 +3,7 @@ package com.example.smart_laundromat_concept.ui.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.utils.NavigationHelper;
 import com.example.smart_laundromat_concept.ui.utils.MenuBarHelper;
+import com.example.smart_laundromat_concept.ui.utils.UserSession;
 
 /**
  * ProfileActivity handles the user profile screen.
@@ -25,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     /**
-     * Initializes the Activity, sets up the layout, and configures the menu bar.
+     * Initializes the Activity and sets up the static layout elements.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
 
-        // Highlight the 'Profile' icon in the bottom menu bar.
+        // Highlight the 'Profile' icon in the bottom menu bar
         // (Hold Cmd/Ctrl + Click on "MenuBarHelper#menuBar" to jump to the method)
         MenuBarHelper.menuBar(this, MenuBarHelper.PROFILE);
 
@@ -48,6 +50,39 @@ public class ProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+
+    /**
+     * Called every time the Activity becomes visible.
+     * Ensures the username and avatar are always up-to-date with the current session.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserData();
+    }
+
+
+    /**
+     * Retrieves the username from the global session and updates the UI.
+     */
+    private void loadUserData() {
+        // Retrieve the username from the global user session (Note: UserSession#getUsername)
+        String username = UserSession.getInstance().getUsername();
+        
+        // Update the UI if a user is logged in
+        if (username != null && !username.isEmpty()) {
+            TextView tvUsernameTitle = findViewById(R.id.activity_profile__username_title);
+            TextView tvLetterCircle = findViewById(R.id.activity_profile__letter_circle);
+            
+            // Set the username text
+            tvUsernameTitle.setText(username);
+            
+            // Set the first letter of the username in the avatar circle
+            String firstLetter = username.substring(0, 1).toUpperCase();
+            tvLetterCircle.setText(firstLetter);
+        }
     }
 
 
