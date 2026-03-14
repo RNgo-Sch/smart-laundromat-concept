@@ -15,6 +15,7 @@ public class AuthRepository {
      * TODO: Replace with actual Supabase API call.
      */
     public static boolean login(String username, String password) {
+        User user = (User) SupabaseClient.getApi().getUserByUsername(username);
         return username.equals("user") && password.equals("1234");
 
     }
