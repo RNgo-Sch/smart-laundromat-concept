@@ -1,6 +1,7 @@
 package com.example.smart_laundromat_concept.data.remote;
 
 import com.example.smart_laundromat_concept.BuildConfig;
+import com.example.smart_laundromat_concept.data.model.Machine;
 import com.example.smart_laundromat_concept.data.model.User;
 
 import okhttp3.OkHttpClient;
@@ -31,6 +32,30 @@ public class SupabaseClient {
                 "Range: 0-0" //Give count not rows
         })
         Call<Void> getUserCount();
+
+        @GET("machine")
+        Call<List<Machine>> getMachineByStoreType(
+                @Query("store") Integer storeNumber,
+                @Query("type") String machineType,
+                @Query("status") String curStatus
+        );
+
+        /*
+        Temp: extra feature
+        @GET("store")
+        Call<List<Store>> getStoreByNumber(
+                @Query("name") String storeName
+        );
+         */
+
+        /*
+        TODO: Get Queue information
+        TODO: Post new Queue user
+        TODO: Post update Queue user
+        TODO: Get Store
+        TODO: Get Machine from Store
+        TODO: Get available Machines
+         */
     }
 
     public static UserApi getApi() {
