@@ -12,7 +12,7 @@
     android:id="@+id/menu_bar__root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.utils.MenuBarHelper">
+    tools:context=".ui.common.MenuBarHelper">
 
 
     <!-- SECTION 1: BACKGROUND CONTAINER -->

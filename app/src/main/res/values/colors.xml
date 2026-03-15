@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple">#8692f7</color>
     <color name="blue">#0088FF</color>
-    <color name="black_30_transparent">#B3000000</color>
-    <color name="white_30_transparent">#B3FFFFFF</color>
-    <color name="blue_30_transparent">#B30088FF</color>
 
+    <!-- Off-White / Background Colors -->
+    <color name="white_off_apple">#F5F5F7</color> <!-- Apple-style off-white background -->
+    <color name="white_off_ios">#F2F2F7</color>   <!-- iOS-style light gray background -->
+
+    <!-- Black Visibility Steps -->
+    <color name="black_90_visibility">#E6000000</color> <!-- 90% Visibility -->
+    <color name="black_80_visibility">#CC000000</color> <!-- 80% Visibility -->
+    <color name="black_70_visibility">#B3000000</color> <!-- 70% Visibility -->
+    <color name="black_50_visibility">#80000000</color> <!-- 50% Visibility -->
+    <color name="black_30_visibility">#4D000000</color> <!-- 30% Visibility -->
+    <color name="black_20_visibility">#33000000</color> <!-- 20% Visibility -->
+    <color name="black_10_visibility">#1A000000</color> <!-- 10% Visibility -->
+    <color name="black_05_visibility">#0D000000</color> <!-- 5% Visibility -->
+
+
+    <!-- White Visibility Steps -->
+    <color name="white_90_visibility">#E6FFFFFF</color> <!-- 90% Visibility -->
+    <color name="white_80_visibility">#CCFFFFFF</color> <!-- 80% Visibility -->
+    <color name="white_70_visibility">#B3FFFFFF</color> <!-- 70% Visibility -->
+    <color name="white_50_visibility">#80FFFFFF</color> <!-- 50% Visibility -->
+    <color name="white_30_visibility">#4DFFFFFF</color> <!-- 30% Visibility -->
+    <color name="white_20_visibility">#33FFFFFF</color> <!-- 20% Visibility -->
+    <color name="white_10_visibility">#1AFFFFFF</color> <!-- 10% Visibility -->
+
+    <!-- Blue Visibility Steps -->
+    <color name="blue_90_visibility">#E60088FF</color> <!-- 90% Visibility -->
+    <color name="blue_80_visibility">#CC0088FF</color> <!-- 80% Visibility -->
+    <color name="blue_70_visibility">#B30088FF</color> <!-- 70% Visibility -->
+    <color name="blue_50_visibility">#800088FF</color> <!-- 50% Visibility -->
+    <color name="blue_30_visibility">#4D0088FF</color> <!-- 30% Visibility -->
+    <color name="blue_20_visibility">#330088FF</color> <!-- 20% Visibility -->
+    <color name="blue_10_visibility">#1A0088FF</color> <!-- 10% Visibility -->
 </resources>

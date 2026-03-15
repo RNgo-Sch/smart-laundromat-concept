@@ -14,33 +14,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Smartlaundromatconcept">
         <activity
-            android:name=".ui.activities.LocationActivity"
+            android:name=".ui.activities.location.LocationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.NotificationActivity"
+            android:name=".ui.activities.notification.NotificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.ProfileActivity"
+            android:name=".ui.activities.profile.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.activities.BookingActivity"
+            android:name=".ui.activities.main.BookingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.activities.SignUpActivity"
+            android:name=".ui.activities.auth.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.activities.HomeActivity"
+            android:name=".ui.activities.main.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.auth.LogInActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">

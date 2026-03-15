@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: activity_main.xml
+    Activity: MainActivity / SignUpActivity
+    Description: Optimized for white backgrounds. Uses a "Dark Frost" glass effect
+                 with soft shadows to ensure visibility on light surfaces.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_off_ios"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <!-- SECTION 1: Authentication Card Container -->
+    <!-- Higher elevation creates a stronger shadow for separation from white background -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_margin="30dp"
+        android:elevation="20dp"
+        android:outlineSpotShadowColor="#40000000">
+
+
+        <!-- Layer 1: Liquid Glass Effect (Optimized for light mode) -->
+        <!-- Background Blur Effect -->
+        <include
+            android:id="@+id/activity_profile__list_glass_include"
+            layout="@layout/layout_normal_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+        <!-- Layer 2: White "Frost" Shine -->
+        <!-- A very thin white overlay to simulate the glass reflection -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:background="@drawable/shape_glass" />
+
+
+        <!-- Layer 3: Interactive Content Form -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="26dp">
+
+
+            <!-- Screen Title -->
+            <TextView
+                android:id="@+id/activity_main__title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:fontFamily="@font/sf_pro_bold"
+                android:text="Flow"
+                android:textAlignment="center"
+                android:textColor="@color/blue"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+
+            <!-- USER INPUT SECTION -->
+
+            <!-- Username Field -->
+            <EditText
+                android:id="@+id/activity_main__username_text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_round_box"
+                android:backgroundTint="@color/black_05_visibility"
+                android:drawableLeft="@drawable/ic_user"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/sf_pro_semibold"
+                android:hint="Username"
+                android:inputType="text"
+                android:padding="8dp"
+                android:textColor="@color/black" />
+
+            <!-- Password Field -->
+            <EditText
+                android:id="@+id/activity_main__password_text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_round_box"
+                android:backgroundTint="@color/black_05_visibility"
+                android:drawableLeft="@drawable/ic_lock"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/sf_pro_semibold"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/black" />
+
+
+            <!-- PRIMARY ACTION SECTION -->
+
+            <Button
+                android:id="@+id/activity_main__login_Button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/sf_pro_bold"
+                android:onClick="launchPage"
+                android:text="Login"
+                android:textSize="18sp"
+                app:cornerRadius="30dp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <!-- SECTION 2: Footer / Mode Toggle -->
+    <Button
+        android:id="@+id/activity_main__go_to_signup_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/sf_pro_semibold"
+        android:onClick="launchPage"
+        android:padding="8dp"
+        android:stateListAnimator="@null"
+        android:text="Don't have an account? Sign Up"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#80000000"
+        android:textSize="14sp"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp" />
+
+</LinearLayout>

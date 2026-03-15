@@ -34,7 +34,7 @@
         android:id="@+id/glass_container__outline_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/glass_shape" />
+        android:background="@drawable/shape_glass" />
 
 
 </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
