@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
+import com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
 /**
@@ -34,17 +35,18 @@ public class BookingActivity extends AppCompatActivity {
 
         // Setup full-screen display
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_2_1_booking);
+        setContentView(R.layout.activity_booking);
 
 
         // Highlight the 'Booking' icon in the bottom menu bar.
-        // (Hold Cmd/Ctrl + Click on "MenuBarHelper#menuBar" to jump to the method)
         MenuBarHelper.menuBar(this, MenuBarHelper.BOOKING);
 
 
         // Apply the underline effect to the 'Change Location' text.
-        // (Hold Cmd/Ctrl + Click on "LocationHelper#setupUnderline" to jump to the method)
         LocationHelper.setupUnderline(this);
+
+        // Set Washer as default view on entry
+        new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
 
 
         // Standard edge-to-edge padding adjustment

@@ -53,7 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Setup screen to use full display (edge-to-edge)
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_1_main);
+        setContentView(R.layout.activity_auth);
 
 
         // Adjust for system bar height (status bar, navigation bar)

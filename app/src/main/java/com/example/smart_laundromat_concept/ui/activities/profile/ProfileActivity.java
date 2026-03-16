@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Setup full-screen display
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_2_2_profile);
+        setContentView(R.layout.activity_profile);
 
 
         // Highlight the 'Profile' icon in the bottom menu bar

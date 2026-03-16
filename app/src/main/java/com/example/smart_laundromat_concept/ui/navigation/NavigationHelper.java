@@ -6,35 +6,39 @@ import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Centralized dispatcher for app-wide navigation.
- * Delegates specific routing logic to domain-specific navigators (Auth, Menu, System).
+ * Delegates specific routing logic to domain-specific navigators.
  */
 public class NavigationHelper {
+
+    /**
+     * List of registered navigation modules.
+     * To add a new navigation domain, simply add it to this list.
+     * This follows the Open/Closed Principle.
+     */
+    private static final List<NavigatorModule> NAVIGATORS = Arrays.asList(
+            new AuthNavigator(),
+            new MenuNavigator(),
+            new BookingNavigator(),
+            new SystemNavigator()
+    );
 
     /**
      * Primary entry point for view clicks. Dispatches to specialized navigators.
      */
     public static void launchPage(Activity activity, View view) {
         int id = view.getId();
-        NavigationRequest request;
-
-        // 1. Try Authentication Domain
-        request = AuthNavigator.handleAuth(activity, id);
         
-        // 2. Try Menu Navigation Domain
-        if (request == null) {
-            request = MenuNavigator.handleMenu(activity, id);
-        }
-
-        // 3. Try System/Utility Domain
-        if (request == null) {
-            request = SystemNavigator.handleSystem(activity, id);
-        }
-
-        // 4. Execute if a valid request was returned
-        if (request != null) {
-            executeNavigation(activity, request);
+        for (NavigatorModule navigator : NAVIGATORS) {
+            NavigationRequest request = navigator.handle(activity, id);
+            if (request != null) {
+                executeNavigation(activity, request);
+                return;
+            }
         }
     }
 

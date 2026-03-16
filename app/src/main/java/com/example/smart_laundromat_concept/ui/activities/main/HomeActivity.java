@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Setup full-screen display
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_2_0_home);
+        setContentView(R.layout.activity_home);
 
 
         // Highlight the 'Home' icon in the bottom menu bar.

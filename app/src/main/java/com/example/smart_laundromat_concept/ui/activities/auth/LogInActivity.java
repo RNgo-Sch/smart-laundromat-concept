@@ -53,7 +53,7 @@ public class LogInActivity extends AppCompatActivity {
 
         // Enable edge-to-edge display (system bars overlap with app content)
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_1_main);
+        setContentView(R.layout.activity_auth);
 
 
         // Adjust padding to avoid UI elements being hidden behind system bars (status/navigation bars)

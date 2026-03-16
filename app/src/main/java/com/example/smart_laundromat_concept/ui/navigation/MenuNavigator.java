@@ -9,9 +9,10 @@ import com.example.smart_laundromat_concept.ui.activities.profile.ProfileActivit
 /**
  * Handles navigation logic for the bottom menu bar.
  */
-public class MenuNavigator {
+public class MenuNavigator implements NavigatorModule {
 
-    public static NavigationRequest handleMenu(Activity activity, int id) {
+    @Override
+    public NavigationRequest handle(Activity activity, int id) {
         if (id == R.id.menu_bar___LinearLayout_Home) {
             return new NavigationRequest(HomeActivity.class, NavigationRequest.AnimationType.FADE);
         }

@@ -9,21 +9,21 @@ import com.example.smart_laundromat_concept.ui.activities.main.HomeActivity;
 /**
  * Handles navigation logic for the Authentication domain.
  */
-public class AuthNavigator {
+public class AuthNavigator implements NavigatorModule {
 
-    public static NavigationRequest handleAuth(Activity activity, int id) {
+    @Override
+    public NavigationRequest handle(Activity activity, int id) {
         // --- 1. Login Logic ---
         if (id == R.id.activity_main__login_Button) {
-            Class<? extends Activity> target = (activity instanceof LogInActivity) ? HomeActivity.class : LogInActivity.class;
-//            Class<? extends Activity> target;
-//            if (activity instanceof LogInActivity) {
-//                target = HomeActivity.class;
-//            } else {
-//                target = LogInActivity.class;
-//            }
+            Class<? extends Activity> target;
+            if (activity instanceof LogInActivity) {
+                target = HomeActivity.class;
+            } else {
+                target = LogInActivity.class;
+            }
             return new NavigationRequest(target, NavigationRequest.AnimationType.FADE);
         }
-        
+
         // --- 2. Switch Logic (Login <-> Sign Up) ---
         if (id == R.id.activity_main__go_to_signup_Button) {
             if (activity instanceof LogInActivity) {
@@ -34,5 +34,4 @@ public class AuthNavigator {
         }
         return null;
     }
-
 }

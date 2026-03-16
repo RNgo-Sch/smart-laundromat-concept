@@ -13,9 +13,10 @@ import com.example.smart_laundromat_concept.ui.activities.notification.Notificat
 /**
  * Handles navigation for global system features like Notifications, Location, and Logout.
  */
-public class SystemNavigator {
+public class SystemNavigator implements NavigatorModule {
 
-    public static NavigationRequest handleSystem(Activity activity, int id) {
+    @Override
+    public NavigationRequest handle(Activity activity, int id) {
         // --- 1. Notification ---
         if (id == R.id.activity_notification__Notification_Button) {
             return new NavigationRequest(NotificationActivity.class, NavigationRequest.AnimationType.SLIDE_RIGHT);
