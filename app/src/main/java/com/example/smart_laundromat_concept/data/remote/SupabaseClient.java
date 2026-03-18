@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
 import retrofit2.Call;
 import java.util.List;
+import java.util.Queue;
 
 public class SupabaseClient {
 
@@ -36,8 +37,14 @@ public class SupabaseClient {
         @GET("machine")
         Call<List<Machine>> getMachineByStoreType(
                 @Query("store") Integer storeNumber,
+                @Query("type") String machineType
+        );
+
+        @GET("machine")
+        Call<List<Machine>> getMachineByStoreTypeStatus(
+                @Query("store") Integer storeNumber,
                 @Query("type") String machineType,
-                @Query("status") String curStatus
+                @Query("status") String machineStatus
         );
 
         /*
@@ -48,6 +55,11 @@ public class SupabaseClient {
         );
          */
 
+        @GET("queue") Call<List<Queue>> getActiveQueue(
+                @Query("store") Integer storeNumber,
+                @Query("type") String machineType
+        );
+
         /*
         TODO: Get Queue information
         TODO: Post new Queue user
@@ -55,6 +67,9 @@ public class SupabaseClient {
         TODO: Get Store
         TODO: Get Machine from Store
         TODO: Get available Machines
+        TODO: Post Machine status
+        TODO: Get Current user
+        TODO: Delete user from queue
          */
     }
 
