@@ -1,32 +1,22 @@
 package com.example.smart_laundromat_concept.data.model;
 
-import com.google.gson.annotations.SerializedName;
-
 public class User {
     // static variables for id and reputation system
-    private static final int[] REPUTATION_TIERS = {10, 20, 30, 40}; // breakpoints to enter reputation level 1, 2, 3, 4
     private static IdCounter latest_id = new IdCounter(); // most recent id value used
 
     private Integer id;
-    //private Wallet wallet2;
-    //private Reputation reputation;
-    private float wallet;
-    private int reputation;
+    private final Wallet wallet;
+    private final Reputation reputation;
 
     public String username;
     public String password;
-    @SerializedName("phone_no")
-    private String phoneNo;
-    private float debt;
 
     public User() {
         this.id = null;
-        this.wallet = 0;
-        this.reputation = 0;
+        this.wallet = new Wallet();
+        this.reputation = new Reputation();
         this.username = String.valueOf(this.id);
         this.password = "1";
-        this.phoneNo = "12345";
-        this.debt = 0;
     }
 
     public User(String username, String password) {
@@ -40,17 +30,79 @@ public class User {
         return id;
     }
 
-    /*public Wallet getWallet() {
-        return wallet2;
+    // helper classes
+    public static class Wallet {
+        float balance;
+        
+        public Wallet() {
+            this.balance = 0.0f;
+        }
+
+        // accessors
+        public float getBalance() {
+            return balance;
+        }
+
+        // mutators
+        public void topUp(float amount) {
+            balance += amount;
+            System.out.println("Topped up $" + amount + " to $" + balance);
+        }
+        public boolean makePayment(float amount) {
+            // method returns true if successful, false if failed due to insufficient funds
+            if (balance < 0.0f) {
+                System.out.println("Account cannot make payment: in debt");
+                return false;
+            } else {
+                topUp(-amount);
+                System.out.println("Sucsessful payment made");
+                return true;
+            }
+        }
+
+        // misc
+        // TODO override equals and hashmap 
+        @Override
+        public String toString() {
+            return "Wallet balance: $" + balance;
+        }
     }
+    public static class Reputation {
+        private static final int MIN_SCORE = -10;
+        private static final int MAX_SCORE = 120;
+        private static final int[] TIERS = {
+            10,
+            25,
+            50,
+            100
+        };
+        
+        private int score;
+        
+        public Reputation() {
+            this.score = 0;
+        }
+        
+        // accessors
+        public int getReputationTier() {
+            for (int i = 0; i < TIERS.length; i++) {
+                if (score < TIERS[i]) {
+                    return i;
+                }
+            }
+            return TIERS.length;
+        }
 
-     */
+        // mutators
+        public void adjustScore(int adjustment) {
+            if ((score + adjustment >= MIN_SCORE) && (score + adjustment <= MAX_SCORE)) {
+                score += adjustment;
+            }
+        }
 
-
-
-    /*public Reputation getReputation() {
-        return reputation;
+        // misc
+        public String toString() {
+            return "Reputation tier: " + this.getReputationTier();
+        }
     }
-
-     */
 }
