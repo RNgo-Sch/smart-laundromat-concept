@@ -9,82 +9,112 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.ui.activities.main.booking.BookingActivity;
 
 /**
  * Handles internal UI state navigation within the BookingActivity.
- * Since this only changes visibility/content of the same screen, it returns null
- * as no Activity-level Intent is needed.
+ * <p>
+ * This navigator manages the toggling between Washer and Dryer views, including:
+ * <p>
+ * - Updating button styles (colors and tints).
+ * <p>
+ * - Triggering UI updates via the machine managers.
+ * <p>
+ * - Coordinating slide animations between layout containers.
+ * <p>
+ * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link NavigationHelper#executeInternalTransition}
+ * to see how the view sliding logic is implemented.
  */
 public class BookingNavigator implements NavigatorModule {
 
+    /**
+     * Processes booking-related navigation requests based on view IDs.
+     *
+     * @param activity The current Activity context.
+     * @param id The ID of the clicked View.
+     * @return A {@link NavigationRequest} if the ID is handled, otherwise null.
+     */
     @Override
     public NavigationRequest handle(Activity activity, int id) {
-        
         // --- 1. Washer View Selection ---
         if (id == R.id.activity_booking__btn__washer) {
-            updateUI(activity, true);
-            return null; // No Activity navigation
+            return updateUI(activity, true);
         }
 
         // --- 2. Dryer View Selection ---
         if (id == R.id.activity_booking__btn__dryer) {
-            updateUI(activity, false);
-            return null; // No Activity navigation
+            return updateUI(activity, false);
         }
 
         return null;
     }
 
     /**
-     * Updates the UI state of the BookingActivity to toggle between Washer and Dryer views.
-     * This method handles both container visibility and button styling (background, text, and icons).
+     * Updates the UI state and returns a NavigationRequest for the helper to animate.
+     * <p>
+     * This method synchronizes the visual state of the selection buttons with the 
+     * visibility of the machine containers.
+     *
+     * @param activity Current activity.
+     * @param showWasher True if the Washer section should be shown, false for Dryer.
+     * @return A {@link NavigationRequest} describing the internal transition.
      */
-    private void updateUI(Activity activity, boolean showWasher) {
-        // 1. Reference all required UI elements
-        View washerContainer = activity.findViewById(R.id.activity_booking__view__washer_container);
-        View dryerContainer = activity.findViewById(R.id.activity_booking__view__dryer_container);
+    private NavigationRequest updateUI(Activity activity, boolean showWasher) {
         Button washerButton = activity.findViewById(R.id.activity_booking__btn__washer);
         Button dryerButton = activity.findViewById(R.id.activity_booking__btn__dryer);
+        View washerContainer = activity.findViewById(R.id.activity_booking__view__washer_container);
+        View dryerContainer = activity.findViewById(R.id.activity_booking__view__dryer_container);
 
-        // 2. Safety Check: Ensure all views exist before proceeding
-        if (washerContainer == null || dryerContainer == null || washerButton == null || dryerButton == null) {
-            return;
+        if (washerButton == null || dryerButton == null || washerContainer == null || dryerContainer == null) {
+            return null;
         }
 
-        // 3. Prepare Theme Colors
+        // --- UI STYLE UPDATES ---
         int white = ContextCompat.getColor(activity, R.color.white);
         int black = ContextCompat.getColor(activity, R.color.black);
         int blue = ContextCompat.getColor(activity, R.color.blue);
 
-        // 4. Execute Combined UI Toggle
         if (showWasher) {
-            // --- STATE: Washer Selected ---
-            washerContainer.setVisibility(View.VISIBLE);
-            dryerContainer.setVisibility(View.GONE);
-
-            // Highlight Washer Button
             washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             washerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));
-
-            // Reset Dryer Button
             dryerButton.setBackgroundTintList(ColorStateList.valueOf(white));
             dryerButton.setTextColor(black);
             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(black));
         } else {
-            // --- STATE: Dryer Selected ---
-            washerContainer.setVisibility(View.GONE);
-            dryerContainer.setVisibility(View.VISIBLE);
-
-            // Reset Washer Button
             washerButton.setBackgroundTintList(ColorStateList.valueOf(white));
             washerButton.setTextColor(black);
             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(black));
-
-            // Highlight Dryer Button
             dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             dryerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));
         }
+
+        // --- DATA SYNC ---
+        // Force managers to refresh their respective views
+        if (activity instanceof BookingActivity) {
+            BookingActivity ba = (BookingActivity) activity;
+            if (showWasher) ba.getWasherManager().updateAll();
+            else ba.getDryerManager().updateAll();
+        }
+
+        // --- ANIMATION REQUEST ---
+        if (showWasher) {
+            if (dryerContainer.getVisibility() == View.VISIBLE) {
+                return new NavigationRequest(washerContainer, dryerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT);
+            } else {
+                washerContainer.setVisibility(View.VISIBLE);
+                dryerContainer.setVisibility(View.GONE);
+            }
+        } else {
+            if (washerContainer.getVisibility() == View.VISIBLE) {
+                return new NavigationRequest(dryerContainer, washerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);
+            } else {
+                dryerContainer.setVisibility(View.VISIBLE);
+                washerContainer.setVisibility(View.GONE);
+            }
+        }
+
+        return null;
     }
 }

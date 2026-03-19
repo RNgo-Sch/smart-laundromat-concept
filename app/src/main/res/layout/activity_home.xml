@@ -15,20 +15,200 @@
     tools:context=".ui.activities.main.HomeActivity">
 
 
-    <!-- SECTION 1: MAIN CONTENT AREA -->
-    <!-- Placeholder for home screen content -->
-    <!--
-    <ScrollView
-        android:id="@+id/activity_home__content_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/activity_home__tier_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="100dp"
 
-    </ScrollView>
--->
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/white"
 
-    <!-- SECTION 2: GLOBAL NAVIGATION -->
-    <!-- Shared bottom menu bar for app-wide routing -->
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:fontFamily="@font/sf_pro_semibold"
+                android:text="Reputation: Tier 4"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:layout_marginBottom="-10dp"/>
+
+            <!-- Row: Orders + Spend -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <!-- Orders -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:text="Orders"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sf_pro_semibold"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                    <TextView
+                        android:fontFamily="@font/sf_pro_semibold"
+                        android:text="65/100"
+                        android:textColor="@color/red"
+                        android:textSize="22sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:max="100"
+                        android:progress="65"
+                        android:progressBackgroundTint="#DDDDDD"
+                        android:progressTint="@color/red" />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <!-- Footer -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:text="Progress will be refreshed on 30.06.2026"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Details"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_arrow_right"
+                    android:backgroundTint="#888888" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Wallet Section -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/activity_home__wallet_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/activity_home__tier_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Wallet"
+                android:fontFamily="@font/sf_pro_semibold"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textSize="22sp"
+                    android:textColor="@color/blue"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/activity_home__wallet_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120.50"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textSize="32sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="2dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/activity_home__wallet_top_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top Up"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textColor="@color/blue"
+                    android:textSize="15sp"
+                    android:paddingBottom="4dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <include
         layout="@layout/layout_location_button"/>
@@ -42,18 +222,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="257dp">
 
 
-        <!-- TODO: Add Home Dashboard components here -->
 
-    </LinearLayout>
+
+    <!-- TODO: Add Home Dashboard components here -->
+
+
 
 
 

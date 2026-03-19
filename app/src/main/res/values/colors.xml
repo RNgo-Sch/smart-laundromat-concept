@@ -4,6 +4,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0088FF</color>
+    <color name="green">#34C759</color>
+    <color name="grey">#8E8E93</color>
+    <color name="red">#FF3B30</color>
+    <color name="yellow">#FFCC00</color>
+    <color name="orange">#FF9500</color>
 
     <!-- Off-White / Background Colors -->
     <color name="white_off_apple">#F5F5F7</color> <!-- Apple-style off-white background -->
@@ -19,6 +24,50 @@
     <color name="black_10_visibility">#1A000000</color> <!-- 10% Visibility -->
     <color name="black_05_visibility">#0D000000</color> <!-- 5% Visibility -->
 
+    <!-- Green Visibility Steps -->
+    <color name="green_90_visibility">#E634C759</color> <!-- 90% Visibility -->
+    <color name="green_80_visibility">#CC34C759</color> <!-- 80% Visibility -->
+    <color name="green_70_visibility">#B334C759</color> <!-- 70% Visibility -->
+    <color name="green_50_visibility">#8034C759</color> <!-- 50% Visibility -->
+    <color name="green_30_visibility">#4D34C759</color> <!-- 30% Visibility -->
+    <color name="green_20_visibility">#3334C759</color> <!-- 20% Visibility -->
+    <color name="green_10_visibility">#1A34C759</color> <!-- 10% Visibility -->
+
+    <!-- Grey Visibility Steps -->
+    <color name="grey_90_visibility">#E68E8E93</color> <!-- 90% Visibility -->
+    <color name="grey_80_visibility">#CC8E8E93</color> <!-- 80% Visibility -->
+    <color name="grey_70_visibility">#B38E8E93</color> <!-- 70% Visibility -->
+    <color name="grey_50_visibility">#808E8E93</color> <!-- 50% Visibility -->
+    <color name="grey_30_visibility">#4D8E8E93</color> <!-- 30% Visibility -->
+    <color name="grey_20_visibility">#338E8E93</color> <!-- 20% Visibility -->
+    <color name="grey_10_visibility">#1A8E8E93</color> <!-- 10% Visibility -->
+
+    <!-- Red Visibility Steps -->
+    <color name="red_90_visibility">#E6FF3B30</color> <!-- 90% Visibility -->
+    <color name="red_80_visibility">#CCFF3B30</color> <!-- 80% Visibility -->
+    <color name="red_70_visibility">#B3FF3B30</color> <!-- 70% Visibility -->
+    <color name="red_50_visibility">#80FF3B30</color> <!-- 50% Visibility -->
+    <color name="red_30_visibility">#4DFF3B30</color> <!-- 30% Visibility -->
+    <color name="red_20_visibility">#33FF3B30</color> <!-- 20% Visibility -->
+    <color name="red_10_visibility">#1AFF3B30</color> <!-- 10% Visibility -->
+
+    <!-- Yellow Visibility Steps -->
+    <color name="yellow_90_visibility">#E6FFCC00</color> <!-- 90% Visibility -->
+    <color name="yellow_80_visibility">#CCFFCC00</color> <!-- 80% Visibility -->
+    <color name="yellow_70_visibility">#B3FFCC00</color> <!-- 70% Visibility -->
+    <color name="yellow_50_visibility">#80FFCC00</color> <!-- 50% Visibility -->
+    <color name="yellow_30_visibility">#4DFFCC00</color> <!-- 30% Visibility -->
+    <color name="yellow_20_visibility">#33FFCC00</color> <!-- 20% Visibility -->
+    <color name="yellow_10_visibility">#1AFFCC00</color> <!-- 10% Visibility -->
+
+    <!-- Orange Visibility Steps -->
+    <color name="orange_90_visibility">#E6FF9500</color> <!-- 90% Visibility -->
+    <color name="orange_80_visibility">#CCFF9500</color> <!-- 80% Visibility -->
+    <color name="orange_70_visibility">#B3FF9500</color> <!-- 70% Visibility -->
+    <color name="orange_50_visibility">#80FF9500</color> <!-- 50% Visibility -->
+    <color name="orange_30_visibility">#4DFF9500</color> <!-- 30% Visibility -->
+    <color name="orange_20_visibility">#33FF9500</color> <!-- 20% Visibility -->
+    <color name="orange_10_visibility">#1AFF9500</color> <!-- 10% Visibility -->
 
     <!-- White Visibility Steps -->
     <color name="white_90_visibility">#E6FFFFFF</color> <!-- 90% Visibility -->

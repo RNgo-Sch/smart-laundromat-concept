@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:visibility="visible">
+
+    <!-- Machine 1 -->
+    <LinearLayout
+        android:id="@+id/booking__machine_1"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_square_box"
+        android:backgroundTint="@color/green_50_visibility"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/shape_blue_outline"
+        android:gravity="center"
+        android:onClick="launchPage"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/booking__machine_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/machine_number_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_semibold"
+            android:text="1"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/machine_status_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:fontFamily="@font/sf_pro_semibold"
+            android:text="Open"
+            android:textColor="@color/blue"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- Machine 2 -->
+    <LinearLayout
+        android:id="@+id/booking__machine_2"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_square_box"
+        android:backgroundTint="@color/green_50_visibility"
+        android:foreground="@drawable/shape_blue_outline"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="launchPage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/booking__machine_1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/machine_number_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+
+        <TextView
+            android:id="@+id/machine_status_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:text="Collection"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+    </LinearLayout>
+
+    <!-- Machine 3 -->
+    <LinearLayout
+        android:id="@+id/booking__machine_3"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_square_box"
+        android:backgroundTint="@color/yellow_50_visibility"
+        android:foreground="@drawable/shape_blue_outline"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="launchPage"
+        app:layout_constraintEnd_toStartOf="@+id/booking__machine_4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/booking__machine_1">
+
+        <TextView
+            android:id="@+id/machine_number_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+
+        <TextView
+            android:id="@+id/machine_status_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:text="Reserved"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+    </LinearLayout>
+
+    <!-- Machine 4 -->
+    <LinearLayout
+        android:id="@+id/booking__machine_4"
+        android:layout_width="175dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_square_box"
+        android:backgroundTint="@color/yellow_50_visibility"
+        android:foreground="@drawable/shape_blue_outline"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="launchPage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/booking__machine_3"
+        app:layout_constraintTop_toBottomOf="@+id/booking__machine_2">
+
+        <TextView
+            android:id="@+id/machine_number_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+
+        <TextView
+            android:id="@+id/machine_status_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:text="Reserved"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:fontFamily="@font/sf_pro_semibold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

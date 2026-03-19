@@ -2,27 +2,25 @@ package com.example.smart_laundromat_concept.ui.navigation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.View;
 
 /**
  * Data class to encapsulate a navigation destination and its transition style.
- * Living in its own file prevents circular dependencies between navigators.
  */
 public class NavigationRequest {
 
     public enum AnimationType {
-        SLIDE_LEFT, SLIDE_RIGHT, FADE
+        SLIDE_LEFT, SLIDE_RIGHT, FADE,
+        INTERNAL_SLIDE_LEFT, INTERNAL_SLIDE_RIGHT // New types for view-level animations
     }
 
-    /**
-     * The specific Activity class to navigate to.
-     * The use of {@code <? extends Activity>} ensures that only classes 
-     * inheriting from Android's Activity can be assigned here, providing 
-     * compile-time type safety.
-     */
     public Class<? extends Activity> targetClass;
-
     public Intent intent;
     public AnimationType animation;
+
+    // Fields for internal UI transitions
+    public View viewToShow;
+    public View viewToHide;
 
     public NavigationRequest(Class<? extends Activity> target, AnimationType anim) {
         this.targetClass = target;
@@ -31,6 +29,15 @@ public class NavigationRequest {
 
     public NavigationRequest(Intent intent, AnimationType anim) {
         this.intent = intent;
+        this.animation = anim;
+    }
+
+    /**
+     * Constructor for internal view transitions.
+     */
+    public NavigationRequest(View show, View hide, AnimationType anim) {
+        this.viewToShow = show;
+        this.viewToHide = hide;
         this.animation = anim;
     }
 }

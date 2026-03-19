@@ -16,6 +16,7 @@ import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.remote.AuthRepository;
 import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
+import com.example.smart_laundromat_concept.ui.navigation.AuthNavigator;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 
@@ -30,7 +31,7 @@ import retrofit2.Response;
  * MainActivity handles the Login screen.
  * It uses the shared activity_main layout in "Login Mode".
  * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference 
+ * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference
  * (e.g., {@link AuthRepository#login}) to jump directly to its implementation.
  */
 public class LogInActivity extends AppCompatActivity {
@@ -54,6 +55,7 @@ public class LogInActivity extends AppCompatActivity {
         // Enable edge-to-edge display (system bars overlap with app content)
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_auth);
+        AuthNavigator.resetNavigation();
 
 
         // Adjust padding to avoid UI elements being hidden behind system bars (status/navigation bars)
@@ -62,13 +64,13 @@ public class LogInActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        
-        
+
+
         // Use the utility class to set the title and button text to "Login" mode.
         // (Hold Cmd/Ctrl + Click on "LoginToggleHelper#setup" to jump to the method)
         AuthUIHelper.setup(this, AuthUIHelper.MODE_LOGIN);
 
-        
+
         // Initialize UI component references
         etUsername = findViewById(R.id.activity_main__username_text);
         etPassword = findViewById(R.id.activity_main__password_text);
@@ -158,7 +160,7 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
-        
+
         // Set up the "Go to Sign Up" button logic
         goSignupButton.setOnClickListener(new View.OnClickListener() {
             @Override

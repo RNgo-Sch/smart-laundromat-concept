@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Show blue outline when the view is 'activated' -->
+    <item android:state_activated="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp"/>
+            <stroke android:width="3dp" android:color="@color/blue" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!-- Default state: Transparent (No outline) -->
+    <item android:drawable="@android:color/transparent" />
+</selector>

@@ -7,10 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_off_ios"
-    tools:context=".ui.activities.main.BookingActivity">
+    tools:context=".ui.activities.main.booking.BookingActivity">
 
     <!-- SECTION 1: HEADER (Selection Buttons) -->
-    <!-- Flow is a helper; buttons are siblings, not children -->
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/activity_booking__header"
         android:layout_width="0dp"
@@ -27,7 +26,7 @@
 
     <Button
         android:id="@+id/activity_booking__btn__washer"
-        android:layout_width="170dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
         android:background="@drawable/shape_square_box"
         android:drawableLeft="@drawable/ic_washer"
@@ -37,13 +36,11 @@
         android:textColor="@color/black"
         android:textSize="20dp"
         app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_booking__header"
-        app:layout_constraintStart_toStartOf="@+id/activity_booking__header"
-        app:layout_constraintTop_toTopOf="@+id/activity_booking__header" />
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/activity_booking__btn__dryer"
-        android:layout_width="170dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
         android:background="@drawable/shape_square_box"
         android:drawableLeft="@drawable/ic_dryer"
@@ -53,37 +50,60 @@
         android:textColor="@color/black"
         android:textSize="20dp"
         app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_booking__header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/activity_booking__btn__washer"
-        app:layout_constraintTop_toTopOf="@+id/activity_booking__header" />
+        tools:ignore="MissingConstraints" />
 
     <!-- SECTION 2: CONTENT AREA (Scrollable) -->
     <ScrollView
         android:id="@+id/activity_booking__content_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="210dp"
-        app:layout_constraintBottom_toTopOf="@id/activity_booking__menu_include"
-        app:layout_constraintTop_toBottomOf="@id/activity_booking__header">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/activity_booking__header">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Modular panels for Washer and Dryer -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Washer Container -->
+                <include
+                    android:id="@+id/activity_booking__view__washer_container"
+                    layout="@layout/layout_booking_machine_state"
+                    android:visibility="visible" />
+
+                <!-- Dryer Container -->
+                <include
+                    android:id="@+id/activity_booking__view__dryer_container"
+                    layout="@layout/layout_booking_machine_state"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <!-- QUEUE BUTTON -->
             <include
-                android:id="@+id/activity_booking__view__washer_container"
-                layout="@layout/layout_booking_washer_panel"
-                android:visibility="visible" />
-
+                android:id="@+id/activity_booking__btn__queue"
+                layout="@layout/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="0dp" />
             <include
-                android:id="@+id/activity_booking__view__dryer_container"
-                layout="@layout/layout_booking_dryer_panel"
-                android:visibility="gone" />
+                android:id="@+id/activity_booking__btn__populate"
+                layout="@layout/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="300dp" />
 
-        </FrameLayout>
+        </LinearLayout>
     </ScrollView>
 
     <!-- SECTION 3: NAVIGATION & OVERLAYS -->
@@ -94,8 +114,5 @@
         android:id="@+id/activity_booking__menu_include"
         layout="@layout/layout_menu_bar"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
