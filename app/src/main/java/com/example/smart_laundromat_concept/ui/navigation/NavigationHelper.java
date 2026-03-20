@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * Responsibilities:
  * <p>
- *- Dispatch navigation requests to appropriate handlers
+ * - Dispatch navigation requests to appropriate handlers
  * <p>
  * - Execute activity transitions with animations
  * <p>

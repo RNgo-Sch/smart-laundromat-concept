@@ -39,20 +39,10 @@ public class AuthNavigator implements NavigatorModule {
         // --- 1. Login/Success Logic ---
         if (id == R.id.activity_main__login_Button) {
 
-            if (hasNavigated) {
-                android.util.Log.d("NAV_DEBUG", "Blocked duplicate navigation");
-                return null;
-            }
-            hasNavigated = true;
-
             android.util.Log.d("NAV_DEBUG", "Login navigation triggered: " + System.currentTimeMillis());
 
-            Class<? extends Activity> target;
-            if (activity instanceof LogInActivity) {
-                target = HomeActivity.class;
-            } else {
-                target = LogInActivity.class;
-            }
+            Class<? extends Activity> target = HomeActivity.class;
+            android.util.Log.d("NAV_DEBUG", "Navigating to HomeActivity");
             return new NavigationRequest(target, NavigationRequest.AnimationType.FADE);
         }
 
