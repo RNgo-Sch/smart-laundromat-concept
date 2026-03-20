@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout: layout_home_status_card.xml
+    Description: Smart status card included in activity_home.xml.
+                 Contains two child layouts stacked in a FrameLayout.
+                 HomeCardHelper toggles their visibility depending on session state:
+                   - home_card__snapshot       → shown when no active booking
+                   - home_card__active_booking → shown when user has a running cycle
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp">
+
+    <!-- White card background (reusing your existing normal container style) -->
+    <FrameLayout
+        android:id="@+id/activity_home__tier_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_container_round">
+
+
+        <!-- VIEW 1: Machine availability snapshot (default) -->
+        <include
+            android:id="@+id/home_card__snapshot"
+            layout="@layout/layout_home_snapshot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+
+        <!-- VIEW 2: Active booking countdown (shown when user has a running cycle) -->
+        <include
+            android:id="@+id/home_card__active_booking"
+            layout="@layout/layout_home_active_booking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</FrameLayout>

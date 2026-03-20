@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/activity_home__wallet_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+ >
+        <include
+            layout="@layout/layout_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Wallet"
+                android:fontFamily="@font/sf_pro_semibold"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textSize="22sp"
+                    android:textColor="@color/blue"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/activity_home__wallet_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120.50"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textSize="32sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="2dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/activity_home__wallet_top_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top Up"
+                    android:fontFamily="@font/sf_pro_semibold"
+                    android:textColor="@color/blue"
+                    android:textSize="15sp"
+                    android:paddingBottom="4dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

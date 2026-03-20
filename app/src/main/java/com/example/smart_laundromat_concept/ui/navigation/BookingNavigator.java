@@ -78,13 +78,15 @@ public class BookingNavigator implements NavigatorModule {
             washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             washerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));
-            dryerButton.setBackgroundTintList(ColorStateList.valueOf(white));
+
+            dryerButton.setBackgroundTintList(null);
             dryerButton.setTextColor(black);
             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(black));
         } else {
-            washerButton.setBackgroundTintList(ColorStateList.valueOf(white));
+            washerButton.setBackgroundTintList(null);
             washerButton.setTextColor(black);
             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(black));
+
             dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             dryerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));

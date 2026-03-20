@@ -28,28 +28,29 @@
         android:id="@+id/activity_booking__btn__washer"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="@drawable/shape_square_box"
+        android:background="@drawable/shape_container_square"
         android:drawableLeft="@drawable/ic_washer"
         android:fontFamily="@font/sf_pro_semibold"
         android:onClick="launchPage"
         android:text="Washer"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        app:backgroundTint="@color/white"
+        android:textSize="20sp"
+        app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
+
 
     <Button
         android:id="@+id/activity_booking__btn__dryer"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="@drawable/shape_square_box"
+        android:background="@drawable/shape_container_square"
         android:drawableLeft="@drawable/ic_dryer"
         android:fontFamily="@font/sf_pro_semibold"
         android:onClick="launchPage"
         android:text="Dryer"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
 
     <!-- SECTION 2: CONTENT AREA (Scrollable) -->

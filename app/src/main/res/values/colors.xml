@@ -13,6 +13,8 @@
     <!-- Off-White / Background Colors -->
     <color name="white_off_apple">#F5F5F7</color> <!-- Apple-style off-white background -->
     <color name="white_off_ios">#F2F2F7</color>   <!-- iOS-style light gray background -->
+    <color name="white_off_system">#f2f1f8</color>
+
 
     <!-- Black Visibility Steps -->
     <color name="black_90_visibility">#E6000000</color> <!-- 90% Visibility -->
