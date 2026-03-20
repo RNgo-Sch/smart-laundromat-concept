@@ -103,7 +103,7 @@ Use one of these for your Activity background so the white glass stands out:
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_square_box"
+                        android:background="@drawable/shape_container_square"
                         android:backgroundTint="@color/blue_50_visibility" />
 
                     <ImageView
@@ -160,7 +160,7 @@ Use one of these for your Activity background so the white glass stands out:
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_square_box"
+                        android:background="@drawable/shape_container_square"
                         android:backgroundTint="#8034C759" />
 
                     <ImageView
@@ -217,7 +217,7 @@ Use one of these for your Activity background so the white glass stands out:
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_square_box"
+                        android:background="@drawable/shape_container_square"
                         android:backgroundTint="#80FF9500" />
 
                     <ImageView

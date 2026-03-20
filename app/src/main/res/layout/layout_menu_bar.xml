@@ -2,7 +2,6 @@
 <!--
     Layout: menu_bar.xml
     Description: Shared bottom navigation bar component.
-    Components: Uses LiquidGlassView for the background and ConstraintLayout for positioning.
     Helper: Managed by MenuBarHelper.java
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,31 +17,28 @@
     <!-- SECTION 1: BACKGROUND CONTAINER -->
     <!-- The glass panel that forms the base of the menu bar -->
     <!-- Added elevation and shadow color for depth on white background -->
-    <com.example.smart_laundromat_concept.ui.components.LiquidGlassView
+    <FrameLayout
         android:id="@+id/menu_bar__Menu_Bar"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:alpha="0.9"
         android:elevation="10dp"
+        android:alpha="0.9"
         android:outlineSpotShadowColor="#FF000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"
-        app:lg_blur_radius="5dp"
-        app:lg_color="#FFFFFF"
-        app:lg_corner_radius="30dp"
-        app:lg_stroke_width="1dp">
+        app:layout_constraintVertical_bias="0.99">
 
-        <View
+        <include
+            layout="@layout/layout_container"
             android:layout_width="402dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_menu_bar" />
+            android:layout_height="match_parent" />
 
-    </com.example.smart_laundromat_concept.ui.components.LiquidGlassView>
+    </FrameLayout>
+
 
 
     <!-- SECTION 2: SELECTION INDICATORS -->
