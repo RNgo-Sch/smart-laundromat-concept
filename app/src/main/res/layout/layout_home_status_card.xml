@@ -20,11 +20,8 @@
         android:id="@+id/activity_home__tier_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@layout/layout_container">
-        <include
-            layout="@layout/layout_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:background="@drawable/shape_container_round">
+
 
         <!-- VIEW 1: Machine availability snapshot (default) -->
         <include
