@@ -26,14 +26,22 @@
         android:outlineSpotShadowColor="#40000000">
 
 
-
-
-
+        <!-- Layer 1: Liquid Glass Effect (Optimized for light mode) -->
+        <!-- Background Blur Effect -->
         <include
-            layout="@layout/layout_container"
+            android:id="@+id/activity_profile__list_glass_include"
+            layout="@layout/layout_normal_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+
+        <!-- Layer 2: White "Frost" Shine -->
+        <!-- A very thin white overlay to simulate the glass reflection -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:background="@drawable/shape_glass" />
 
 
         <!-- Layer 3: Interactive Content Form -->
@@ -67,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/shape_container_round"
+                android:background="@drawable/shape_round_box"
                 android:backgroundTint="@color/black_05_visibility"
                 android:drawableLeft="@drawable/ic_user"
                 android:drawablePadding="8dp"
@@ -83,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/shape_container_round"
+                android:background="@drawable/shape_round_box"
                 android:backgroundTint="@color/black_05_visibility"
                 android:drawableLeft="@drawable/ic_lock"
                 android:drawablePadding="8dp"

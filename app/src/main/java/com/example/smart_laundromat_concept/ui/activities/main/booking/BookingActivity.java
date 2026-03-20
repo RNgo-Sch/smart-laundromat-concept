@@ -10,7 +10,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
 import com.example.smart_laundromat_concept.ui.common.ButtonHelper;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
@@ -105,8 +104,7 @@ public class BookingActivity extends AppCompatActivity {
         dryerManager.setState(2, MachineStateHelper.STATE_COLLECTION);
         dryerManager.setState(3, MachineStateHelper.STATE_OUT_OF_SERVICE);
         dryerManager.setState(4, MachineStateHelper.STATE_IN_USE);
-// Example: Washer 2, 30-minute cycle
-        UserSession.getInstance().setActiveBooking("Washer", 2, 30 * 60 * 1000L);
+
         // Highlight specific machines to demonstrate the selection outline effect
         washerManager.setOutline(1, true);
         dryerManager.setOutline(3, true);
