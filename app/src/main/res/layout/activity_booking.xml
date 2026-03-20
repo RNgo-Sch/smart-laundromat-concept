@@ -34,9 +34,10 @@
         android:onClick="launchPage"
         android:text="Washer"
         android:textColor="@color/black"
-        android:textSize="20dp"
-        app:backgroundTint="@color/white"
+        android:textSize="20sp"
+        app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
+
 
     <Button
         android:id="@+id/activity_booking__btn__dryer"
@@ -49,7 +50,7 @@
         android:text="Dryer"
         android:textColor="@color/black"
         android:textSize="20dp"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
 
     <!-- SECTION 2: CONTENT AREA (Scrollable) -->

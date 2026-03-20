@@ -76,7 +76,7 @@ Use one of these for your Activity background so the white glass stands out:
             <!-- Background Blur Effect -->
             <include
                 android:id="@+id/activity_profile__list_glass_include"
-                layout="@layout/layout_normal_container"
+                layout="@layout/layout_container"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"/>
 
@@ -269,7 +269,7 @@ Use one of these for your Activity background so the white glass stands out:
             <!-- Background Blur Effect -->
             <include
                 android:id="@+id/activity_profile__logout_glass_include"
-                layout="@layout/layout_normal_container"
+                layout="@layout/layout_container"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"/>
 
@@ -336,7 +336,7 @@ Use one of these for your Activity background so the white glass stands out:
             <!-- Confirmation Glass Card -->
             <include
                 android:id="@+id/activity_profile__confirmation_glass"
-                layout="@layout/layout_glass_container"
+                layout="@layout/layout_container"
                 android:layout_width="match_parent"
                 android:layout_height="250dp" />
 

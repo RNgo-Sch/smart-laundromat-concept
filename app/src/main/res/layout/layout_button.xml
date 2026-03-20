@@ -13,7 +13,7 @@
     <!-- shape and color -->
     <include
         android:id="@+id/activity_profile__logout_glass_include"
-        layout="@layout/layout_normal_container"
+        layout="@layout/layout_container"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
 
