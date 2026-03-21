@@ -6,48 +6,58 @@ import android.widget.TextView;
 
 import com.example.smart_laundromat_concept.R;
 
+import androidx.annotation.IntDef;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
- * LoginToggleHelper handles the switching between Login and Sign Up UI modes.
- * This class is responsible only for visual state changes on the authentication screens.
+ * Utility for configuring authentication UI states (Login / Sign Up).
  * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference 
- * (e.g., {@link AuthUIHelper#setup}) to jump directly to its implementation.
+ * Updates button labels and text based on the current mode.
+ * <p></p>
+ * This class does not handle navigation or validation logic.
  */
 public class AuthUIHelper {
 
 
-    /** Constant representing the Login state of the UI. */
+    /** Login UI mode. */
     public static final int MODE_LOGIN = 0;
 
-    /** Constant representing the Sign Up state of the UI. */
+
+    /** Sign-up UI mode. */
     public static final int MODE_SIGNUP = 1;
 
 
     /**
-     * Configures the UI components of the provided activity based on the specified mode.
-     * 
-     * @param activity The Activity context containing the views to be modified.
-     * @param mode     The target UI mode (MODE_LOGIN or MODE_SIGNUP).
+     * Restricts valid authentication modes to {@link #MODE_LOGIN} and {@link #MODE_SIGNUP}.
+     * <p>
+     * Used as a lightweight alternative to enums for Android memory efficiency.
      */
-    public static void setup(Activity activity, int mode) {
-        // Retrieve references to the main action and toggle buttons
-        TextView title = activity.findViewById(R.id.activity_main__title_text);
+    @IntDef({MODE_LOGIN, MODE_SIGNUP})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AuthMode {}
+
+
+    /**
+     * Applies UI state for authentication screens.
+     *
+     * @param activity host activity containing the views
+     * @param mode     UI mode ({@link #MODE_LOGIN} or {@link #MODE_SIGNUP})
+     */
+    public static void setup(Activity activity, @AuthMode int mode) {
+
         Button actionButton = activity.findViewById(R.id.activity_main__login_Button);
         Button switchButton = activity.findViewById(R.id.activity_main__go_to_signup_Button);
 
+        if (actionButton == null || switchButton == null) return;
 
-        // Apply text changes based on the requested mode
         if (mode == MODE_LOGIN) {
-            // Configure UI for Login Mode
-            // if (title != null) title.setText("Login");
-            if (actionButton != null) actionButton.setText("Login");
-            if (switchButton != null) switchButton.setText("Don't have an account? Sign Up");
+            actionButton.setText(R.string.auth_login);
+            switchButton.setText(R.string.auth_switch_to_signup);
 
         } else if (mode == MODE_SIGNUP) {
-            // Configure UI for Sign Up Mode
-            // if (title != null) title.setText("Sign Up");
-            if (actionButton != null) actionButton.setText("Create Account");
-            if (switchButton != null) switchButton.setText("Already have an account? Return to Login");
+            actionButton.setText(R.string.auth_signup);
+            switchButton.setText(R.string.auth_switch_to_login);
         }
     }
 }

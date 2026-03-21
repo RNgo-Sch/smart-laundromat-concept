@@ -1,10 +1,12 @@
 package com.example.smart_laundromat_concept.ui.navigation;
 
 import android.app.Activity;
+import android.content.Intent;
+
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.activities.auth.LogInActivity;
 import com.example.smart_laundromat_concept.ui.activities.auth.SignUpActivity;
-import com.example.smart_laundromat_concept.ui.activities.main.HomeActivity;
+import com.example.smart_laundromat_concept.ui.activities.main.home.HomeActivity;
 
 /**
  * Handles navigation logic for the Authentication domain (Login and Sign Up).
@@ -14,49 +16,36 @@ import com.example.smart_laundromat_concept.ui.activities.main.HomeActivity;
  */
 public class AuthNavigator implements NavigatorModule {
 
-    /**
-     * Prevents multiple navigation events from firing simultaneously.
-     */
-    public static boolean hasNavigated = false;
+    // -------------------------------------------------------------------------
+    // Public Methods
+    // -------------------------------------------------------------------------
 
     /**
-     * Resets navigation guard.
-     * Should be called when returning to login screen (e.g., logout).
+     * Resets the navigation state.
+     * Should be called when returning to the login screen (e.g., after logout).
      */
     public static void resetNavigation() {
-        hasNavigated = false;
+        // Reserved for future navigation state resets if needed
     }
 
     /**
      * Processes authentication-related navigation requests based on view IDs.
      *
-     * @param activity The current Activity context.
-     * @param id The ID of the clicked View.
-     * @return A {@link NavigationRequest} if the ID is handled, otherwise null.
+     * @param activity the current Activity context
+     * @param id       the ID of the clicked View
+     * @return a {@link NavigationRequest} if the ID is handled, otherwise null
      */
     @Override
     public NavigationRequest handle(Activity activity, int id) {
-        // --- 1. Login/Success Logic ---
+
+        // --- 1. Successful login — clear back stack so user cannot go back to login ---
         if (id == R.id.activity_main__login_Button) {
-
-            if (hasNavigated) {
-                android.util.Log.d("NAV_DEBUG", "Blocked duplicate navigation");
-                return null;
-            }
-            hasNavigated = true;
-
-            android.util.Log.d("NAV_DEBUG", "Login navigation triggered: " + System.currentTimeMillis());
-
-            Class<? extends Activity> target;
-            if (activity instanceof LogInActivity) {
-                target = HomeActivity.class;
-            } else {
-                target = LogInActivity.class;
-            }
-            return new NavigationRequest(target, NavigationRequest.AnimationType.FADE);
+            Intent intent = new Intent(activity, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            return new NavigationRequest(intent, NavigationRequest.AnimationType.FADE);
         }
 
-        // --- 2. Toggle Logic (Switching between Login and Sign Up screens) ---
+        // --- 2. Toggle between Login and Sign Up screens ---
         if (id == R.id.activity_main__go_to_signup_Button) {
             if (activity instanceof LogInActivity) {
                 return new NavigationRequest(SignUpActivity.class, NavigationRequest.AnimationType.SLIDE_RIGHT);
@@ -64,6 +53,7 @@ public class AuthNavigator implements NavigatorModule {
                 return new NavigationRequest(LogInActivity.class, NavigationRequest.AnimationType.SLIDE_LEFT);
             }
         }
+
         return null;
     }
 }

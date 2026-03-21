@@ -15,7 +15,7 @@
 
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/location_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_semibold"
@@ -48,8 +48,8 @@
             android:textColor="@color/blue"
             android:textSize="15dp"
             app:backgroundTint="@android:color/transparent"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toStartOf="@+id/location_name"
+            app:layout_constraintTop_toBottomOf="@+id/location_name" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

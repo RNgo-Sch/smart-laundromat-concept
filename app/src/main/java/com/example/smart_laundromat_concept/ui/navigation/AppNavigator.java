@@ -1,7 +1,6 @@
 package com.example.smart_laundromat_concept.ui.navigation;
 
 import android.app.Activity;
-import com.example.smart_laundromat_concept.ui.activities.main.HomeActivity;
 
 /**
  * AppNavigator handles global application-level navigation events.

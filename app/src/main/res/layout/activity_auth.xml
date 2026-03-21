@@ -26,9 +26,6 @@
         android:outlineSpotShadowColor="#40000000">
 
 
-
-
-
         <include
             layout="@layout/layout_container"
             android:layout_width="match_parent"
@@ -131,5 +128,12 @@
         android:textSize="14sp"
         app:backgroundTint="@android:color/transparent"
         app:elevation="0dp" />
+    <!-- Loading spinner — shown during network call -->
+    <ProgressBar
+        android:id="@+id/activity_auth__progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </LinearLayout>

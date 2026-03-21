@@ -26,6 +26,7 @@
         android:padding="20dp">
 
         <TextView
+            android:id="@+id/reputation__tier_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_semibold"
@@ -53,6 +54,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/reputation__progress_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sf_pro_semibold"
@@ -61,6 +63,7 @@
                     android:textSize="22sp" />
 
                 <ProgressBar
+                    android:id="@+id/reputation__progress_bar"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
@@ -81,6 +84,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/reputation__refresh_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sf_pro_semibold"

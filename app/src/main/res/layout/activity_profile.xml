@@ -143,7 +143,7 @@ Use one of these for your Activity background so the white glass stands out:
                     android:layout_height="0.5dp"
                     android:layout_marginStart="60dp"
                     android:layout_marginEnd="20dp"
-                    android:background="#000000" />
+                    android:background="@color/black_50_visibility" />
 
                 <!-- Item 2: Recent Calls -->
                 <RelativeLayout
@@ -200,7 +200,7 @@ Use one of these for your Activity background so the white glass stands out:
                     android:layout_height="0.5dp"
                     android:layout_marginStart="60dp"
                     android:layout_marginEnd="20dp"
-                    android:background="#000000" />
+                    android:background="@color/black_50_visibility" />
 
                 <!-- Item 3: Devices -->
                 <RelativeLayout
@@ -223,7 +223,7 @@ Use one of these for your Activity background so the white glass stands out:
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        android:padding="2dp"
+                        android:padding="5dp"
                         android:layout_alignStart="@id/activity_profile__icon_bg_devices"
                         android:layout_alignTop="@id/activity_profile__icon_bg_devices"
                         android:layout_alignEnd="@id/activity_profile__icon_bg_devices"
@@ -237,7 +237,7 @@ Use one of these for your Activity background so the white glass stands out:
                         android:layout_centerVertical="true"
                         android:layout_marginStart="14dp"
                         android:layout_toEndOf="@id/activity_profile__icon_bg_devices"
-                        android:text="Devices"
+                        android:text="Text"
                         android:textColor="@color/black"
                         android:textSize="17sp"
                         android:fontFamily="@font/sf_pro_semibold" />

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.smart_laundromat_concept.ui.activities.admin.FirstFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/nav_first_fragment"
         tools:layout="@layout/fragment_first" >
 
         <action
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.smart_laundromat_concept.ui.activities.admin.SecondFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/nav_second_fragment"
         tools:layout="@layout/fragment_second" >
 
         <action

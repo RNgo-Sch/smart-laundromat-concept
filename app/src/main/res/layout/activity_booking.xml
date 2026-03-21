@@ -38,7 +38,6 @@
         app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
 
-
     <Button
         android:id="@+id/activity_booking__btn__dryer"
         android:layout_width="0dp"
@@ -53,59 +52,69 @@
         app:backgroundTint="@null"
         tools:ignore="MissingConstraints" />
 
-    <!-- SECTION 2: CONTENT AREA (Scrollable) -->
-    <ScrollView
-        android:id="@+id/activity_booking__content_scroll"
+    <!-- SECTION 2: CONTENT AREA (Swipe to refresh + Scrollable) -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/activity_booking__swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@+id/activity_booking__header">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/activity_booking__content_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:fillViewport="true">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Washer Container -->
-                <include
-                    android:id="@+id/activity_booking__view__washer_container"
-                    layout="@layout/layout_booking_machine_state"
-                    android:visibility="visible" />
-
-                <!-- Dryer Container -->
-                <include
-                    android:id="@+id/activity_booking__view__dryer_container"
-                    layout="@layout/layout_booking_machine_state"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
-            <!-- QUEUE BUTTON -->
-            <include
-                android:id="@+id/activity_booking__btn__queue"
-                layout="@layout/layout_button"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="0dp" />
-            <include
-                android:id="@+id/activity_booking__btn__populate"
-                layout="@layout/layout_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="300dp" />
+                android:orientation="vertical">
 
-        </LinearLayout>
-    </ScrollView>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Washer Container -->
+                    <include
+                        android:id="@+id/activity_booking__view__washer_container"
+                        layout="@layout/layout_booking_machine_state"
+                        android:visibility="visible" />
+
+                    <!-- Dryer Container -->
+                    <include
+                        android:id="@+id/activity_booking__view__dryer_container"
+                        layout="@layout/layout_booking_machine_state"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+                <!-- Queue Button -->
+                <include
+                    android:id="@+id/activity_booking__btn__queue"
+                    layout="@layout/layout_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="0dp" />
+
+                <!-- Demo Button -->
+                <include
+                    android:id="@+id/activity_booking__btn__populate"
+                    layout="@layout/layout_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="300dp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <!-- SECTION 3: NAVIGATION & OVERLAYS -->
     <include layout="@layout/layout_location_button" />

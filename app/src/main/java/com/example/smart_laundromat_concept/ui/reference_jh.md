@@ -70,3 +70,31 @@ code from websites.
 - **Navigation Architecture & Bug Fixing**: Assisted in designing a modular navigation system using `Navigator`, `NavigationRequest`, and `NavigationHelper`, including handling animation separation and preventing duplicate navigation issues (e.g., double-trigger login bug), with ChatGPT assistance and reviewed/edited by Jiahao.
 - **UI Animation Handling**: Provided guidance on structuring animation logic centrally within helper classes to avoid duplicated animations (e.g., slide-in animation triggering twice). Suggested use of flags and clean separation of concerns, with ChatGPT assistance and reviewed/edited by Jiahao.
 - **Custom UI Enhancements**: Assisted with implementing UI improvements such as text outlines, drawable styling, and reusable UI components for machine display elements, with ChatGPT assistance and reviewed/edited by Jiahao.
+
+
+**ChatGPT (Claude - Anthropic):**
+- **Code Review & Refactoring**: Assisted in reviewing and refactoring multiple
+  Java files including `UserSession.java`, `User.java`, `LogInActivity.java`,
+  `SignUpActivity.java`, `AuthUIHelper.java`, `AuthRepository.java`,
+  `WasherManager.java`, `DryerManager.java`, `MachineStateHelper.java`,
+  `BookingActivity.java`, `HomeActivity.java`, `ProfileActivity.java`,
+  `ButtonHelper.java`, `MenuBarHelper.java`, and all Navigator classes.
+  Improvements included consistent Javadoc formatting, section separators,
+  removing dead code, and applying Java coding conventions, with Claude
+  assistance and reviewed/edited by Jiahao.
+
+- **Bug Fixes**: Identified and fixed critical bugs including missing `return`
+  statement after hardcoded login causing app crash, back stack not being cleared
+  after login causing navigation to return to auth screens, and duplicate
+  layout_container reference in `layout_home_status_card.xml` causing post-login
+  crash, with Claude assistance and reviewed/edited by Jiahao.
+
+- **Session Management Refactoring**: Refactored `UserSession.java` to store the
+  full `User` object instead of just the username, adding convenience getters for
+  wallet balance, reputation score, and login state, with Claude assistance and
+  reviewed/edited by Jiahao.
+
+- **UI Enhancements**: Implemented loading state for login and signup forms
+  (ProgressBar + button disable), `ReputationHelper.java` for dynamic reputation
+  card updates, and dynamic last-refreshed label using Calendar, with Claude
+  assistance and reviewed/edited by Jiahao.

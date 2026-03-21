@@ -4,30 +4,27 @@ import com.example.smart_laundromat_concept.data.model.User;
 import retrofit2.Callback;
 import java.util.List;
 
-/**
- * Handles authentication logic and data validation.
- * Centralizes communication with the Supabase backend.
- */
 public class AuthRepository {
 
     /**
-     * Validates login credentials.
-     * TODO: Replace with actual Supabase API call.
+     * Queries Supabase for a user by username.
+     * The Activity handles the response via the callback.
+     *
+     * @param username the username to search for
+     * @param callback the Retrofit callback to handle success/failure in the Activity
      */
-    public static boolean login(String username, String password) {
-        User user = (User) SupabaseClient.getApi().getUserByUsername(username);
-        return username.equals("user") && password.equals("1234");
-
+    public static void login(String username, Callback<List<User>> callback) {
+        String query = "eq." + username;
+        SupabaseClient.getApi().getUserByUsername(query).enqueue(callback);
     }
 
     /**
      * Communicates with Supabase to create a new user account.
-     * 
-     * @param user     The user object containing credentials.
-     * @param callback The retrofit callback to handle success/failure in the Activity.
+     *
+     * @param user     the user object containing credentials
+     * @param callback the Retrofit callback to handle success/failure in the Activity
      */
     public static void signup(User user, Callback<List<User>> callback) {
-        // Delegate the network call to the SupabaseClient
         SupabaseClient.getApi().createUser(user).enqueue(callback);
     }
 }
