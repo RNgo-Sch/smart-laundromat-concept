@@ -1,6 +1,9 @@
 package com.example.smart_laundromat_concept.data.session;
 
 import com.example.smart_laundromat_concept.data.model.User;
+import com.example.smart_laundromat_concept.data.remote.UserRepository;
+
+import retrofit2.Callback;
 
 /**
  * Singleton class to manage the current user session.
@@ -50,6 +53,44 @@ public class UserSession {
         return currentUser != null ? currentUser.getWallet() : 0f;
     }
 
+    public void topUpAndSync(float amount) {
+        topUpAndSync(amount, null);
+    }
+
+    public void topUpAndSync(float amount, Runnable onComplete) {
+        if (currentUser != null) {
+
+            // 1. Update locally
+            float newBalance = currentUser.getWallet() + amount;
+            currentUser.setWallet(newBalance);
+
+            // 2. Sync with Supabase
+            UserRepository.updateWallet(
+                    currentUser.getId(),
+                    newBalance,
+                    new Callback<Void>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<Void> call,
+                                               retrofit2.Response<Void> response) {
+                            // ✅ success (optional: log or toast)
+                            System.out.println("Wallet updated successfully");
+                            if (onComplete != null) {
+                                onComplete.run();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                            t.printStackTrace();
+                            if (onComplete != null) {
+                                onComplete.run();
+                            }
+                        }
+                    }
+            );
+        }
+    }
+
     /** Returns reputation score or 0 if not logged in. */
     public int getReputation() {
         return currentUser != null ? currentUser.getReputation() : 0;
@@ -65,6 +106,7 @@ public class UserSession {
         this.currentUser = null;
         clearActiveBooking();
     }
+
 
 
     // -------------------------------------------------------------------------

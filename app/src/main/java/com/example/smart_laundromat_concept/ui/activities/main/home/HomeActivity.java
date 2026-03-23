@@ -2,8 +2,10 @@ package com.example.smart_laundromat_concept.ui.activities.main.home;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.data.model.User;
+import com.example.smart_laundromat_concept.data.remote.UserRepository;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
@@ -21,7 +25,12 @@ import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * HomeActivity is the main landing page after a user logs in.
@@ -32,37 +41,19 @@ import java.util.Locale;
  *   <li>Machine availability snapshot (when idle)</li>
  *   <li>Live countdown timer (when user has an active booking)</li>
  * </ul>
- * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference
- * (e.g., {@link MenuBarHelper#menuBar}) to jump directly to its implementation.
  */
 public class HomeActivity extends AppCompatActivity {
 
-    /**
-     * Drives the smart status card (snapshot ↔ active booking).
-     * (Hold Cmd/Ctrl + Click on {@link HomeCardHelper#refresh} to jump to the logic)
-     */
     private HomeCardHelper homeCardHelper;
-
-    /** Handles the pull-to-refresh gesture on the home screen. */
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    // -------------------------------------------------------------------------
-    // Lifecycle
-    // -------------------------------------------------------------------------
-
-    /**
-     * Initializes the Activity, sets up the layout, and configures the menu bar.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Setup full-screen display
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        // Adjust padding to avoid UI elements being hidden behind system bars
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.activity_home__root), (v, insets) -> {
                     Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -71,25 +62,19 @@ public class HomeActivity extends AppCompatActivity {
                     return insets;
                 });
 
-        // Highlight the 'Home' icon in the bottom menu bar
         MenuBarHelper.menuBar(this, MenuBarHelper.HOME);
-
-        // Apply the underline effect to the 'Change Location' text
         LocationHelper.setupUnderline(this);
-
-        // Initialize the status card helper
         homeCardHelper = new HomeCardHelper(this);
 
-        // Initialize swipe to refresh
         swipeRefreshLayout = findViewById(R.id.activity_home__swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> refreshAll());
+        swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
     }
 
-    /**
-     * Called every time the screen becomes visible.
-     * Re-evaluates the session so the card always shows the correct state,
-     * whether the user is coming from Booking, Profile, or reopening the app.
-     */
+    public void onTopUpClick(View view) {
+        UserSession session = UserSession.getInstance();
+        session.topUpAndSync(250, this::loadUserData);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -98,52 +83,63 @@ public class HomeActivity extends AppCompatActivity {
         updateLocationName();
     }
 
-    /**
-     * Stops the countdown timer to prevent memory leaks when the Activity is destroyed.
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         homeCardHelper.stopTimer();
     }
 
-    // -------------------------------------------------------------------------
-    // UI Data
-    // -------------------------------------------------------------------------
-
     /**
-     * Refreshes all data on the home screen.
-     * Called when the user pulls down to refresh.
+     * Refreshes all data on the home screen, including syncing with Supabase.
      */
     private void refreshAll() {
-        homeCardHelper.refresh();
-        loadUserData();
-        updateLocationName();
+        UserSession session = UserSession.getInstance();
+        if (!session.isLoggedIn()) {
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
 
-        // Stop the spinning indicator after refresh
-        swipeRefreshLayout.setRefreshing(false);
+        // Fetch latest data from Supabase
+        UserRepository.fetchUserByUsername(session.getUsername(), new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    // Update local session with fresh data from server
+                    User freshUser = response.body().get(0);
+                    session.setCurrentUser(freshUser);
+                    
+                    // Update UI
+                    loadUserData();
+                    homeCardHelper.refresh();
+                    updateLocationName();
+                } else {
+                    Toast.makeText(HomeActivity.this, "Failed to sync data", Toast.LENGTH_SHORT).show();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
-    /**
-     * Loads user data from the session and updates the wallet and reputation UI.
-     */
     private void loadUserData() {
         UserSession session = UserSession.getInstance();
 
-        // Update wallet balance
         TextView walletBalance = findViewById(R.id.activity_home__wallet_balance);
         if (walletBalance != null) {
             walletBalance.setText(String.format("%.2f", session.getWallet()));
         }
 
-        // Update reputation tier title
         TextView reputationTitle = findViewById(R.id.reputation__tier_title);
         if (reputationTitle != null) {
             int tier = getReputationTier(session.getReputation());
             reputationTitle.setText("Reputation: Tier " + tier);
         }
 
-        // Update reputation progress bar and text
         ProgressBar reputationBar   = findViewById(R.id.reputation__progress_bar);
         TextView reputationProgress = findViewById(R.id.reputation__progress_text);
         if (reputationBar != null && reputationProgress != null) {
@@ -152,17 +148,12 @@ public class HomeActivity extends AppCompatActivity {
             reputationProgress.setText(score + "/100");
         }
 
-        // Update last refreshed label
         TextView refreshDate = findViewById(R.id.reputation__refresh_date);
         if (refreshDate != null) {
             refreshDate.setText(getLastRefreshedLabel());
         }
     }
 
-    /**
-     * Updates the location name in the floating location bar.
-     * Called in onResume so it refreshes every time the user returns from LocationActivity.
-     */
     private void updateLocationName() {
         TextView locationName = findViewById(R.id.location_name);
         if (locationName != null) {
@@ -170,12 +161,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Returns the reputation tier (1-4) based on the user's score.
-     *
-     * @param score the user's current reputation score
-     * @return tier number between 1 and 4
-     */
     private int getReputationTier(int score) {
         if (score >= 100) return 4;
         if (score >= 50)  return 3;
@@ -183,20 +168,8 @@ public class HomeActivity extends AppCompatActivity {
         return 1;
     }
 
-    /**
-     * Returns a human-readable label showing when reputation was last refreshed.
-     * <p>
-     * Examples:
-     * - "Last refreshed today at 2:35 PM"
-     * - "Last refreshed yesterday"
-     * - "Last refreshed on 10.03.2026"
-     *
-     * @return formatted label string
-     */
     private String getLastRefreshedLabel() {
-        // TODO: Replace with actual last refresh timestamp from Supabase
         Calendar lastRefresh = Calendar.getInstance();
-
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         today.set(Calendar.MINUTE, 0);
@@ -219,15 +192,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Navigation
-    // -------------------------------------------------------------------------
-
-    /**
-     * Delegates page navigation to the centralized NavigationHelper class.
-     * <p>
-     * (Hold Cmd/Ctrl + Click on {@link NavigationHelper#launchPage} to jump to the method)
-     */
     public void launchPage(View view) {
         NavigationHelper.launchPage(this, view);
     }

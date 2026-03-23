@@ -1,7 +1,7 @@
 package com.example.smart_laundromat_concept.data.remote;
 
 import com.example.smart_laundromat_concept.BuildConfig;
-import com.example.smart_laundromat_concept.data.model.Machine;
+import com.example.smart_laundromat_concept.data.model.AppMachine; // Updated to AppMachine
 import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.model.Notification;
 
@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
 import retrofit2.Call;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
 
 public class SupabaseClient {
 
@@ -31,23 +31,22 @@ public class SupabaseClient {
         @GET("users")
         @Headers({
                 "Prefer: count=exact",
-                "Range: 0-0" //Give count not rows
+                "Range: 0-0"
         })
         Call<Void> getUserCount();
 
         @GET("machine")
-        Call<List<Machine>> getMachineByStoreType(
+        Call<List<AppMachine>> getMachineByStoreType(
                 @Query("store") Integer storeNumber,
                 @Query("type") String machineType
         );
 
         @GET("machine")
-        Call<List<Machine>> getMachineByStoreTypeStatus(
+        Call<List<AppMachine>> getMachineByStoreTypeStatus(
                 @Query("store") Integer storeNumber,
                 @Query("type") String machineType,
                 @Query("status") String machineStatus
         );
-
 
         @GET("notifications")
         Call<List<Notification>> getNotificationsByUser(
@@ -56,33 +55,23 @@ public class SupabaseClient {
         );
 
         /*
-        Temp: extra feature
-        @GET("store")
-        Call<List<Store>> getStoreByNumber(
-                @Query("name") String storeName
-        );
-         */
-
         @GET("queue") Call<List<Queue>> getActiveQueue(
                 @Query("store") Integer storeNumber,
                 @Query("type") String machineType
         );
+        */
 
-        /*
-        TODO: Get Queue information
-        TODO: Post new Queue user
-        TODO: Post update Queue user
-        TODO: Get Store
-        TODO: Get Machine from Store
-        TODO: Get available Machines
-        TODO: Post Machine status
-        TODO: Get Current user
-        TODO: Delete user from queue
-         */
+        @PATCH("users")
+        @Headers({
+                "Prefer: return=minimal"
+        })
+        Call<Void> updateWallet(
+                @Query("id") String userIdQuery,
+                @Body Map<String, Object> fields
+        );
     }
 
     public static UserApi getApi() {
-        // 1. Create a client that adds the headers automatically
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     okhttp3.Request request = chain.request().newBuilder()
@@ -93,7 +82,6 @@ public class SupabaseClient {
                 })
                 .build();
 
-        // 2. Build Retrofit using that client
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client)

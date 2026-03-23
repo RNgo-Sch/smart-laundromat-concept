@@ -1,0 +1,179 @@
+Index: app/src/main/java/com/example/smart_laundromat_concept/ui/activities/main/booking/BookingActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.smart_laundromat_concept.ui.activities.main.booking;\n\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout;\n\nimport com.example.smart_laundromat_concept.R;\nimport com.example.smart_laundromat_concept.data.session.LocationSession;\nimport com.example.smart_laundromat_concept.data.session.UserSession;\nimport com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;\nimport com.example.smart_laundromat_concept.ui.common.ButtonHelper;\nimport com.example.smart_laundromat_concept.ui.common.MenuBarHelper;\nimport com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;\nimport com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;\n\n/**\n * BookingActivity manages the machine selection and status display for the laundromat.\n * <p>\n * Responsibilities:\n * <ul>\n *   <li>Coordinating {@link WasherManager} and {@link DryerManager} to display machine states.</li>\n *   <li>Initializing UI components like the menu bar and location markers.</li>\n *   <li>Handling navigation to specific machine pages via {@link NavigationHelper}.</li>\n * </ul>\n * <p>\n * This activity uses a \"Manager\" pattern to handle different categories of machines\n * (Washers/Dryers) that share the same layout IDs but exist in different container views.\n * <p>\n * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link WasherManager} or\n * {@link MachineStateHelper} to jump to their respective implementations.\n */\npublic class BookingActivity extends AppCompatActivity {\n\n    // Machine managers to handle UI and state logic for each section\n    private WasherManager washerManager;\n    private DryerManager dryerManager;\n\n    /** Handles the pull-to-refresh gesture on the booking screen. */\n    private SwipeRefreshLayout swipeRefreshLayout;\n\n    // -------------------------------------------------------------------------\n    // Lifecycle\n    // -------------------------------------------------------------------------\n\n    /**\n     * Initializes the Activity, sets up the layout, and configures the machine managers.\n     */\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Enable edge-to-edge display\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_booking);\n\n        // Adjust padding to avoid UI elements being hidden behind system bars\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        // 1. Retrieve container views for washer and dryer sections\n        View washerContainer = findViewById(R.id.activity_booking__view__washer_container);\n        View dryerContainer  = findViewById(R.id.activity_booking__view__dryer_container);\n\n        // 2. Initialize UI styling helpers\n        MenuBarHelper.menuBar(this, MenuBarHelper.BOOKING);\n        LocationHelper.setupUnderline(this);\n\n        // 3. Initialize machine managers\n        washerManager = new WasherManager(washerContainer);\n        dryerManager  = new DryerManager(dryerContainer);\n\n        // 4. Configure initial machine states\n        setupInitialStates();\n\n        // 5. Set default visible tab (Washer view)\n        new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);\n\n        // 6. Setup Queue button\n        ButtonHelper.setup(this, R.id.activity_booking__btn__queue, \"Join the Queue\", v -> {\n            Toast.makeText(this, \"Join the Queue!\", Toast.LENGTH_SHORT).show();\n        });\n\n        // Demo button — populates machine states for presentation purposes\n        ButtonHelper.setup(this, R.id.activity_booking__btn__populate, \"Populate Demo\", v -> {\n            Toast.makeText(this, \"populate\", Toast.LENGTH_SHORT).show();\n        });\n\n        // 7. Initialize swipe to refresh\n        swipeRefreshLayout = findViewById(R.id.activity_booking__swipe_refresh);\n        swipeRefreshLayout.setOnRefreshListener(() -> refreshAll());\n    }\n\n    /**\n     * Called every time the screen becomes visible.\n     * Refreshes the location name in case the user changed it in LocationActivity.\n     */\n    @Override\n    protected void onResume() {\n        super.onResume();\n        updateLocationName();\n    }\n\n    // -------------------------------------------------------------------------\n    // Setup\n    // -------------------------------------------------------------------------\n\n    /**\n     * Initializes the default states of all washer and dryer machines.\n     * TODO: Replace mock data with real Supabase data before submission.\n     * <p>\n     * (Hold Cmd/Ctrl + Click on {@link WasherManager#setState} to jump to the logic)\n     */\n    private void setupInitialStates() {\n        // Mock data for Washer states\n        washerManager.setState(1, MachineStateHelper.STATE_RESERVED);\n        washerManager.setState(2, MachineStateHelper.STATE_IN_USE);\n        washerManager.setState(3, MachineStateHelper.STATE_OPEN);\n        washerManager.setState(4, MachineStateHelper.STATE_OUT_OF_SERVICE);\n\n        // Mock data for Dryer states\n        dryerManager.setState(1, MachineStateHelper.STATE_OPEN);\n        dryerManager.setState(2, MachineStateHelper.STATE_COLLECTION);\n        dryerManager.setState(3, MachineStateHelper.STATE_OUT_OF_SERVICE);\n        dryerManager.setState(4, MachineStateHelper.STATE_IN_USE);\n\n        // TODO: Replace with real booking data from Supabase\n        UserSession.getInstance().setActiveBooking(\"Washer\", 2, 30 * 60 * 1000L);\n\n        // Highlight selected machines\n        washerManager.setOutline(1, true);\n        dryerManager.setOutline(3, true);\n    }\n\n    // -------------------------------------------------------------------------\n    // UI Data\n    // -------------------------------------------------------------------------\n\n    /**\n     * Refreshes all data on the booking screen.\n     * Called when the user pulls down to refresh.\n     */\n    private void refreshAll() {\n        washerManager.updateAll();\n        dryerManager.updateAll();\n        updateLocationName();\n\n        // Stop the spinning indicator after refresh\n        swipeRefreshLayout.setRefreshing(false);\n    }\n\n    /**\n     * Updates the location name in the floating location bar.\n     * Called in onResume so it refreshes every time the user returns from LocationActivity.\n     */\n    private void updateLocationName() {\n        TextView locationName = findViewById(R.id.location_name);\n        if (locationName != null) {\n            locationName.setText(LocationSession.getInstance().getLocationName());\n        }\n    }\n\n    // -------------------------------------------------------------------------\n    // Accessors\n    // -------------------------------------------------------------------------\n\n    /**\n     * Provides access to the WasherManager.\n     *\n     * @return the WasherManager instance\n     */\n    public WasherManager getWasherManager() {\n        return washerManager;\n    }\n\n    /**\n     * Provides access to the DryerManager.\n     *\n     * @return the DryerManager instance\n     */\n    public DryerManager getDryerManager() {\n        return dryerManager;\n    }\n\n    // -------------------------------------------------------------------------\n    // Navigation\n    // -------------------------------------------------------------------------\n\n    /**\n     * Delegates page navigation to the centralized NavigationHelper class.\n     * <p>\n     * (Hold Cmd/Ctrl + Click on {@link NavigationHelper#launchPage} to jump to the method)\n     */\n    public void launchPage(View view) {\n        NavigationHelper.launchPage(this, view);\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/main/booking/BookingActivity.java b/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/main/booking/BookingActivity.java
+--- a/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/main/booking/BookingActivity.java	(revision f2ea9eda40bb4c17430e4628d329dee780f11a63)
++++ b/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/main/booking/BookingActivity.java	(date 1774243733679)
+@@ -13,6 +13,8 @@
+ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+ 
+ import com.example.smart_laundromat_concept.R;
++import com.example.smart_laundromat_concept.data.model.Machine;
++import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
+ import com.example.smart_laundromat_concept.data.session.LocationSession;
+ import com.example.smart_laundromat_concept.data.session.UserSession;
+ import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
+@@ -21,6 +23,12 @@
+ import com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;
+ import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
+ 
++import java.util.List;
++
++import retrofit2.Call;
++import retrofit2.Callback;
++import retrofit2.Response;
++
+ /**
+  * BookingActivity manages the machine selection and status display for the laundromat.
+  * <p>
+@@ -81,7 +89,7 @@
+         dryerManager  = new DryerManager(dryerContainer);
+ 
+         // 4. Configure initial machine states
+-        setupInitialStates();
++        loadMachineStates();
+ 
+         // 5. Set default visible tab (Washer view)
+         new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
+@@ -109,6 +117,7 @@
+     protected void onResume() {
+         super.onResume();
+         updateLocationName();
++        loadMachineStates();
+     }
+ 
+     // -------------------------------------------------------------------------
+@@ -142,6 +151,91 @@
+         dryerManager.setOutline(3, true);
+     }
+ 
++    /**
++     * Loads machine states from Supabase based on the currently selected location.
++     */
++    private void loadMachineStates() {
++        int storeNumber = getStoreNumber();
++
++        SupabaseClient.getApi()
++                .getMachineByStoreType(storeNumber, "washer")
++                .enqueue(new Callback<List<Machine>>() {
++                    @Override
++                    public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
++                        if (response.isSuccessful() && response.body() != null) {
++                            applyMachineStates(response.body(), washerManager);
++                        }
++                    }
++                    @Override
++                    public void onFailure(Call<List<Machine>> call, Throwable t) {}
++                });
++
++        SupabaseClient.getApi()
++                .getMachineByStoreType(storeNumber, "dryer")
++                .enqueue(new Callback<List<Machine>>() {
++                    @Override
++                    public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
++                        if (response.isSuccessful() && response.body() != null) {
++                            applyMachineStates(response.body(), dryerManager);
++                        }
++                    }
++                    @Override
++                    public void onFailure(Call<List<Machine>> call, Throwable t) {}
++                });
++    }
++
++    /**
++     * Maps Supabase status strings to MachineStateHelper constants.
++     *
++     * @param machines list of machines from Supabase
++     * @param manager  the WasherManager or DryerManager to update
++     */
++    private void applyMachineStates(List<Machine> machines, Object manager) {
++        for (int i = 0; i < machines.size(); i++) {
++            int machineNum = i + 1;
++            int state = statusToState(machines.get(i).getCurStatus());
++
++            if (manager instanceof WasherManager) {
++                ((WasherManager) manager).setState(machineNum, state);
++            } else if (manager instanceof DryerManager) {
++                ((DryerManager) manager).setState(machineNum, state);
++            }
++        }
++    }
++
++    /**
++     * Converts a Supabase status string to a MachineStateHelper constant.
++     *
++     * @param status the raw status string from Supabase
++     * @return the matching state constant
++     */
++    private int statusToState(String status) {
++        if (status == null) return MachineStateHelper.STATE_OPEN;
++        switch (status) {
++            case "in_use":         return MachineStateHelper.STATE_IN_USE;
++            case "reserved":       return MachineStateHelper.STATE_RESERVED;
++            case "collection":     return MachineStateHelper.STATE_COLLECTION;
++            case "out_of_service": return MachineStateHelper.STATE_OUT_OF_SERVICE;
++            case "open":
++            default:               return MachineStateHelper.STATE_OPEN;
++        }
++    }
++
++    /**
++     * Returns the Supabase store number for the currently selected location.
++     *
++     * @return store number matching the location
++     */
++    private int getStoreNumber() {
++        String locationName = LocationSession.getInstance().getLocationName();
++        switch (locationName) {
++            case "SUTD Blk 57": return 2;
++            case "SUTD Blk 55": return 3;
++            case "SUTD Blk 59":
++            default:            return 1;
++        }
++    }
++
+     // -------------------------------------------------------------------------
+     // UI Data
+     // -------------------------------------------------------------------------
+Index: app/src/main/java/com/example/smart_laundromat_concept/data/model/Machine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/data/model/Machine.java b/app/src/main/java/com/example/smart_laundromat_concept/data/model/Machine.java
+new file mode 100644
+--- /dev/null	(date 1774271730376)
++++ b/app/src/main/java/com/example/smart_laundromat_concept/data/model/Machine.java	(date 1774271730376)
+@@ -0,0 +1,27 @@
++public class Machine {
++
++    @SerializedName("id")
++    private Integer id;
++
++    @SerializedName("type")
++    private String machineType;
++
++    @SerializedName("store")
++    private Integer storeNo;
++
++    @SerializedName("status")
++    private String curStatus;
++
++    @SerializedName("duration")
++    private float duration;
++
++    @SerializedName("current_user")
++    private Integer currentUser;
++
++    public Integer getId()          { return id; }
++    public String getMachineType()  { return machineType; }
++    public Integer getStoreNo()     { return storeNo; }
++    public String getCurStatus()    { return curStatus; }
++    public float getDuration()      { return duration; }
++    public Integer getCurrentUser() { return currentUser; }
++}
+\ No newline at end of file

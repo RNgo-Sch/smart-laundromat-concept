@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.data.model.Machine;
+import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 
@@ -191,9 +191,9 @@ public class HomeCardHelper {
 
         SupabaseClient.getApi()
                 .getMachineByStoreTypeStatus(STORE_NUMBER, type, statusQuery)
-                .enqueue(new Callback<List<Machine>>() {
+                .enqueue(new Callback<List<AppMachine>>() {
                     @Override
-                    public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                    public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
                         int count = 0;
                         if (response.isSuccessful() && response.body() != null) {
                             count = response.body().size();
@@ -207,7 +207,7 @@ public class HomeCardHelper {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Machine>> call, Throwable t) {
+                    public void onFailure(Call<List<AppMachine>> call, Throwable t) {
                         // Silently fail — snapshot will show dashes from XML default
                     }
                 });

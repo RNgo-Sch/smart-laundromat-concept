@@ -1,0 +1,32 @@
+Index: app/src/main/java/com/example/smart_laundromat_concept/data/model/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.smart_laundromat_concept.data.model;\n\npublic class User {\n    // static variables for id and reputation system\n    private static IdCounter latest_id = new IdCounter(); // most recent id value used\n\n    private int id;\n    public final Wallet wallet;\n    public final Reputation reputation;\n\n    public String username;\n    public String password;\n\n\n    // -------------------------------------------------------------------------\n    // Constructors\n    // -------------------------------------------------------------------------\n\n    /**\n     * Default constructor. Initialises all fields to safe empty values.\n     * Used by Gson when deserialising a user from Supabase.\n     */\n    public User() {\n        this.id = null;\n        this.wallet = new Wallet();\n        this.reputation = new Reputation();\n        this.username = String.valueOf(this.id);\n        this.password = \"1\";\n    }\n\n    /**\n     * Creates a user with a username and password.\n     * Used when registering or logging in.\n     *\n     * @param username the user's chosen username\n     * @param password the user's chosen password\n     */\n    public User(String username, String password) {\n    // -------------------------------------------------------------------------\n\n    /**\n     * Returns the user's unique ID assigned by Supabase.\n     */\n    public Integer getId() {\n        return id;\n    }\n\n    // helper classes\n    public static class Wallet {\n        float balance;\n        \n        public Wallet() {\n            this.balance = 0.0f;\n        }\n\n        // accessors\n        public float getBalance() {\n            return balance;\n        }\n\n        // mutators\n        public void topUp(float amount) {\n            balance += amount;\n            System.out.println(\"Topped up $\" + amount + \" to $\" + balance);\n        }\n        public boolean makePayment(float amount) {\n            // method returns true if successful, false if failed due to insufficient funds\n            if (balance < 0.0f) {\n                System.out.println(\"Account cannot make payment: in debt\");\n                return false;\n            } else {\n                topUp(-amount);\n                System.out.println(\"Sucsessful payment made\");\n                return true;\n            }\n        }\n\n        // misc\n        // TODO override equals and hashmap \n        @Override\n        public String toString() {\n            return \"Wallet balance: $\" + balance;\n        }\n    }\n    public static class Reputation {\n        private static final int MIN_SCORE = -10;\n        private static final int MAX_SCORE = 120;\n        private static final int[] TIERS = {\n            10,\n            25,\n            50,\n            100\n        };\n        \n        private int score;\n        \n        public Reputation() {\n            this.score = 0;\n        }\n        \n        // accessors\n        public int getReputationTier() {\n            for (int i = 0; i < TIERS.length; i++) {\n                if (score < TIERS[i]) {\n                    return i;\n                }\n            }\n            return TIERS.length;\n        }\n\n        // mutators\n        public void adjustScore(int adjustment) {\n            if ((score + adjustment >= MIN_SCORE) && (score + adjustment <= MAX_SCORE)) {\n                score += adjustment;\n            }\n        }\n\n        // misc\n        public String toString() {\n            return \"Reputation tier: \" + this.getReputationTier();\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/data/model/User.java b/app/src/main/java/com/example/smart_laundromat_concept/data/model/User.java
+--- a/app/src/main/java/com/example/smart_laundromat_concept/data/model/User.java	(revision f2ea9eda40bb4c17430e4628d329dee780f11a63)
++++ b/app/src/main/java/com/example/smart_laundromat_concept/data/model/User.java	(date 1774271513210)
+@@ -4,7 +4,7 @@
+     // static variables for id and reputation system
+     private static IdCounter latest_id = new IdCounter(); // most recent id value used
+ 
+-    private int id;
++    private Integer id;
+     public final Wallet wallet;
+     public final Reputation reputation;
+ 
+@@ -36,6 +36,12 @@
+      * @param password the user's chosen password
+      */
+     public User(String username, String password) {
++        this.id = null;
++        this.wallet = new Wallet();
++        this.reputation = new Reputation();
++        this.username = username;
++        this.password = password;
++    }
+     // -------------------------------------------------------------------------
+ 
+     /**
