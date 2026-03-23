@@ -4,9 +4,9 @@ public class User {
     // static variables for id and reputation system
     private static IdCounter latest_id = new IdCounter(); // most recent id value used
 
-    private Integer id;
-    private final Wallet wallet;
-    private final Reputation reputation;
+    private int id;
+    public final Wallet wallet;
+    public final Reputation reputation;
 
     public String username;
     public String password;
