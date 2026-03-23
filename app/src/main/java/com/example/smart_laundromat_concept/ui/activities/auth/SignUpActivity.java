@@ -68,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.activity_main__username_text);
         etPassword = findViewById(R.id.activity_main__password_text);
         btnCreateAccount = findViewById(R.id.activity_main__login_Button);
-        btnReturnToLogin = findViewById(R.id.activity_main__go_to_signup_Button);
+        btnReturnToLogin = findViewById(R.id.activity_main__Switch_Button);
 
         // Logic for creating an account
         btnCreateAccount.setOnClickListener(v -> createAccount(v));

@@ -112,7 +112,7 @@
 
     <!-- SECTION 2: Footer / Mode Toggle -->
     <Button
-        android:id="@+id/activity_main__go_to_signup_Button"
+        android:id="@+id/activity_main__Switch_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp"

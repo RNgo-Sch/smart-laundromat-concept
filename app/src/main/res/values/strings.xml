@@ -5,6 +5,7 @@
 
     <!-- ================= Authentication ================= -->
     <string name="auth_login">Login</string>
+    <string name="auth_logging_in">Logging in...</string>
     <string name="auth_signup">Create Account</string>
     <string name="auth_switch_to_signup">Don\'t have an account? Sign Up</string>
     <string name="auth_switch_to_login">Already have an account? Return to Login</string>

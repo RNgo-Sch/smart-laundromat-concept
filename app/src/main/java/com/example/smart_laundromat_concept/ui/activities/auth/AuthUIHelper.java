@@ -2,7 +2,6 @@ package com.example.smart_laundromat_concept.ui.activities.auth;
 
 import android.app.Activity;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.smart_laundromat_concept.R;
 
@@ -47,7 +46,7 @@ public class AuthUIHelper {
     public static void setup(Activity activity, @AuthMode int mode) {
 
         Button actionButton = activity.findViewById(R.id.activity_main__login_Button);
-        Button switchButton = activity.findViewById(R.id.activity_main__go_to_signup_Button);
+        Button switchButton = activity.findViewById(R.id.activity_main__Switch_Button);
 
         if (actionButton == null || switchButton == null) return;
 

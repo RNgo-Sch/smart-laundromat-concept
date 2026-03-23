@@ -47,6 +47,8 @@ public class SupabaseClient {
                 @Query("type") String machineType,
                 @Query("status") String machineStatus
         );
+
+
         @GET("notifications")
         Call<List<Notification>> getNotificationsByUser(
                 @Query("user_id") String userIdQuery,

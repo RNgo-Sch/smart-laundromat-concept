@@ -46,7 +46,7 @@ public class AuthNavigator implements NavigatorModule {
         }
 
         // --- 2. Toggle between Login and Sign Up screens ---
-        if (id == R.id.activity_main__go_to_signup_Button) {
+        if (id == R.id.activity_main__Switch_Button) {
             if (activity instanceof LogInActivity) {
                 return new NavigationRequest(SignUpActivity.class, NavigationRequest.AnimationType.SLIDE_RIGHT);
             } else {

@@ -41,7 +41,7 @@ public class LogInActivity extends AppCompatActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button loginButton;
-    private Button goSignupButton;
+    private Button switchButton;
     private ProgressBar progressBar;
 
     /**
@@ -70,12 +70,12 @@ public class LogInActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.activity_main__username_text);
         etPassword = findViewById(R.id.activity_main__password_text);
         loginButton = findViewById(R.id.activity_main__login_Button);
-        goSignupButton = findViewById(R.id.activity_main__go_to_signup_Button);
+        switchButton = findViewById(R.id.activity_main__Switch_Button);
         progressBar = findViewById(R.id.activity_auth__progress);
 
         // Set up button click listeners
         loginButton.setOnClickListener(v -> handleLogin(v));
-        goSignupButton.setOnClickListener(v -> launchPage(v));
+        switchButton.setOnClickListener(v -> launchPage(v));
     }
 
     // -------------------------------------------------------------------------
@@ -148,7 +148,7 @@ public class LogInActivity extends AppCompatActivity {
     private void setLoading(boolean isLoading) {
         if (isLoading) {
             loginButton.setEnabled(false);
-            loginButton.setText("Logging in...");
+            loginButton.setText(R.string.auth_logging_in);
             progressBar.setVisibility(View.VISIBLE);
         } else {
             loginButton.setEnabled(true);
