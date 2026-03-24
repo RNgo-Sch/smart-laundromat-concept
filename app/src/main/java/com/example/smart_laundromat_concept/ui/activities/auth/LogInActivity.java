@@ -113,7 +113,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     User foundUser = response.body().get(0);
 
-                    if (foundUser.password.equals(password)) {
+                    if (foundUser.getPassword().equals(password)) {
                         //Toast.makeText(LogInActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
                         // Save the full user object to the session

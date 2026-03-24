@@ -1,24 +1,36 @@
 package com.example.smart_laundromat_concept.data.model;
 
+/**
+ * Represents a user in the Smart Laundromat system.
+ * <p>
+ * This is a data model (POJO) used for:
+ * <ul>
+ *     <li>Storing user information locally in the app</li>
+ *     <li>Mapping JSON data from Supabase via Retrofit/Gson</li>
+ * </ul>
+ *
+ * This class does NOT contain business logic. It only holds data.
+ */
 public class User {
-    // static variables for id and reputation system
-    private static IdCounter latest_id = new IdCounter(); // most recent id value used
 
+    /** Unique user ID assigned by Supabase (primary key). */
     private Integer id;
+
+    /** Current wallet balance of the user. */
     private float wallet;
+
+    /** Reputation score used for tier calculation. */
     private int reputation;
 
-    public String username;
-    public String password;
+    /** Username used for login. */
+    private String username;
 
-
-    // -------------------------------------------------------------------------
-    // Constructors
-    // -------------------------------------------------------------------------
+    /** Password used for authentication (plain text for now). */
+    private String password;
 
     /**
-     * Default constructor. Initialises all fields to safe empty values.
-     * Used by Gson when deserialising a user from Supabase.
+     * Default constructor required for Gson deserialization.
+     * Initializes fields with safe default values.
      */
     public User() {
         this.id = null;
@@ -29,11 +41,11 @@ public class User {
     }
 
     /**
-     * Creates a user with a username and password.
-     * Used when registering or logging in.
+     * Creates a new user with the given username and password.
+     * Used during signup or login.
      *
-     * @param username the user's chosen username
-     * @param password the user's chosen password
+     * @param username the user's username
+     * @param password the user's password
      */
     public User(String username, String password) {
         this.id = null;
@@ -42,37 +54,31 @@ public class User {
         this.username = username;
         this.password = password;
     }
-    // -------------------------------------------------------------------------
+
+    /** @return the user's unique ID */
+    public Integer getId() { return id; }
+
+    /** @return the user's wallet balance */
+    public float getWallet() { return wallet; }
+
+    /** @return the user's reputation score */
+    public int getReputation() { return reputation; }
+
+    /** @return the user's username */
+    public String getUsername() { return username; }
+
+    /** @return the user's password */
+    public String getPassword() { return password; }
 
     /**
-     * Returns the user's unique ID assigned by Supabase.
+     * Updates the user's wallet balance.
+     * @param wallet new wallet balance
      */
-    public Integer getId() {
-        return id;
-    }
+    public void setWallet(float wallet) { this.wallet = wallet; }
 
     /**
-     * Returns the user's current wallet balance.
+     * Updates the user's reputation score.
+     * @param reputation new reputation value
      */
-    public float getWallet() {
-        return wallet;
-    }
-
-    /**
-     * Returns the user's current reputation score.
-     */
-    public int getReputation() {
-        return reputation;
-    }
-
-    /** Sets the user's wallet balance. */
-    public void setWallet(float wallet) {
-        this.wallet = wallet;
-    }
-
-    /** Sets the user's reputation score. */
-    public void setReputation(int reputation) {
-        this.reputation = reputation;
-    }
-
+    public void setReputation(int reputation) { this.reputation = reputation; }
 }

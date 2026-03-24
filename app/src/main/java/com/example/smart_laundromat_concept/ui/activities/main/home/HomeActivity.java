@@ -72,7 +72,36 @@ public class HomeActivity extends AppCompatActivity {
 
     public void onTopUpClick(View view) {
         UserSession session = UserSession.getInstance();
-        session.topUpAndSync(250, this::loadUserData);
+        float amount = 250;
+        float oldBalance = session.getWallet();
+        float newBalance = oldBalance + amount;
+
+        // 1. Update local state
+        session.topUp(amount);
+
+        // 2. Sync with backend
+        UserRepository.updateBalance(
+                session.getCurrentUser().getId(),
+                newBalance,
+                new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            loadUserData();
+                        } else {
+                            // rollback if failed
+                            session.getCurrentUser().setWallet(oldBalance);
+                            Toast.makeText(HomeActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        session.getCurrentUser().setWallet(oldBalance);
+                        Toast.makeText(HomeActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     @Override

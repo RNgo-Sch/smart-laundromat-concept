@@ -6,24 +6,41 @@ import com.example.smart_laundromat_concept.data.remote.UserRepository;
 import retrofit2.Callback;
 
 /**
- * Singleton class to manage the current user session.
- * Stores the logged-in user and active booking state
- * so it can be accessed from any screen.
+ * Singleton class that manages the current user's session.
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *     <li>Stores the currently logged-in user</li>
+ *     <li>Provides easy access to user data (username, wallet, reputation)</li>
+ *     <li>Maintains temporary app state such as active bookings</li>
+ * </ul>
+ *
+ * This class does NOT perform network/API calls. It only manages local state.
  */
 public class UserSession {
 
     private static UserSession instance;
 
     // --- Current User ---
+    /** The currently logged-in user (null if not logged in). */
     private User currentUser;
 
     // --- Active Booking ---
+    /** Type of machine currently booked (e.g., Washer or Dryer). */
     private String activeMachineType;
+
+    /** Machine number currently booked. */
     private int activeMachineNum;
+
+    /** Timestamp (in milliseconds) when the booking ends. */
     private long bookingEndTimeMillis;
 
     private UserSession() {}
 
+    /**
+     * Returns the single instance of UserSession (Singleton pattern).
+     * Creates one if it does not exist.
+     */
     public static UserSession getInstance() {
         if (instance == null) {
             instance = new UserSession();
@@ -35,17 +52,24 @@ public class UserSession {
 // Auth
 // -------------------------------------------------------------------------
 
+    /**
+     * Sets the currently logged-in user.
+     * Called after successful login.
+     */
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
+    /**
+     * @return the current logged-in user object
+     */
     public User getCurrentUser() {
         return currentUser;
     }
 
     /** Returns username or null if not logged in. */
     public String getUsername() {
-        return currentUser != null ? currentUser.username : null;
+        return currentUser != null ? currentUser.getUsername() : null;
     }
 
     /** Returns wallet balance or 0 if not logged in. */
@@ -53,43 +77,21 @@ public class UserSession {
         return currentUser != null ? currentUser.getWallet() : 0f;
     }
 
-    public void topUpAndSync(float amount) {
-        topUpAndSync(amount, null);
-    }
-
-    public void topUpAndSync(float amount, Runnable onComplete) {
+    /**
+     * Increases the user's wallet balance locally.
+     * <p>
+     * NOTE: This does NOT sync with the backend.
+     * API calls should be handled separately in the Activity/Repository.
+     *
+     * @param amount amount to add to wallet
+     */
+    public void topUp(float amount) {
         if (currentUser != null) {
-
-            // 1. Update locally
             float newBalance = currentUser.getWallet() + amount;
             currentUser.setWallet(newBalance);
-
-            // 2. Sync with Supabase
-            UserRepository.updateWallet(
-                    currentUser.getId(),
-                    newBalance,
-                    new Callback<Void>() {
-                        @Override
-                        public void onResponse(retrofit2.Call<Void> call,
-                                               retrofit2.Response<Void> response) {
-                            // ✅ success (optional: log or toast)
-                            System.out.println("Wallet updated successfully");
-                            if (onComplete != null) {
-                                onComplete.run();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(retrofit2.Call<Void> call, Throwable t) {
-                            t.printStackTrace();
-                            if (onComplete != null) {
-                                onComplete.run();
-                            }
-                        }
-                    }
-            );
         }
     }
+
 
     /** Returns reputation score or 0 if not logged in. */
     public int getReputation() {
@@ -101,7 +103,10 @@ public class UserSession {
         return currentUser != null;
     }
 
-    /** Clears the current session, logging out the user and clearing any active booking. */
+    /**
+     * Logs out the current user.
+     * Clears user data and active booking state.
+     */
     public void logout() {
         this.currentUser = null;
         clearActiveBooking();
@@ -143,7 +148,12 @@ public class UserSession {
         this.bookingEndTimeMillis = 0;
     }
 
+    /** @return the type of machine currently booked */
     public String getActiveMachineType()  { return activeMachineType; }
+
+    /** @return the machine number currently booked */
     public int    getActiveMachineNum()   { return activeMachineNum; }
+
+    /** @return booking end time in milliseconds */
     public long   getBookingEndTimeMillis() { return bookingEndTimeMillis; }
 }

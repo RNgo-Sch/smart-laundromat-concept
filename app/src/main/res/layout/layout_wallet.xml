@@ -69,6 +69,7 @@
                     android:textSize="15sp"
                     android:paddingBottom="4dp"
                     android:clickable="true"
+                    android:onClick="onTopUpClick"
                     android:focusable="true"/>
             </LinearLayout>
         </LinearLayout>
