@@ -21,10 +21,6 @@ public class FacilityController {
     }
 
 
-    @GetMapping("/test-db")
-    public String testDb() {
-        return "DB connected!";
-    }
 
     // POST /queue/washer/join
     @PostMapping("/washer/join")
