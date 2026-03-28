@@ -53,14 +53,18 @@ public class SystemNavigator implements NavigatorModule {
         // --- 3. Logout — show confirmation overlay ---
         if (id == R.id.activity_profile__Logout_Button) {
             View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
-            if (overlay != null) overlay.setVisibility(View.VISIBLE);
+            if (overlay != null) {
+                overlay.setVisibility(View.VISIBLE);
+            }
             return null;
         }
 
         // --- 4. Logout — cancel and hide overlay ---
         if (id == R.id.activity_profile__cancel_logout_action) {
             View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
-            if (overlay != null) overlay.setVisibility(View.GONE);
+            if (overlay != null){
+                overlay.setVisibility(View.GONE);
+            }
             return null;
         }
 

@@ -3,6 +3,8 @@ package com.example.smart_laundromat_concept.ui.activities.main.booking;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.data.model.AppMachine;
+import com.example.smart_laundromat_concept.data.model.MachineData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class WasherManager {
     private final View container;
 
     // Internal mapping of washer numbers to their current state constants
-    private final Map<Integer, Integer> washerStates = new HashMap<>();
+    private final Map<Integer, AppMachine.State> washerStates = new HashMap<>();
 
     /**
      * Array of resource IDs corresponding to the washer views in the layout.
@@ -48,7 +50,7 @@ public class WasherManager {
 
         // Initialize all washers to OPEN state by default
         for (int i = 1; i <= WASHER_IDS.length; i++) {
-            washerStates.put(i, MachineStateHelper.STATE_OPEN);
+            washerStates.put(i, AppMachine.State.AVAILABLE);
         }
     }
 
@@ -60,10 +62,11 @@ public class WasherManager {
      * Updates the logical state and UI display for a specific washer.
      *
      * @param washerNum the machine number (1-based index)
-     * @param state     the new state constant from {@link MachineStateHelper}
+     * @param state     the new state from {@link AppMachine.State}
      */
-    public void setState(int washerNum, int state) {
+    public void setState(int washerNum, AppMachine.State state) {
         washerStates.put(washerNum, state);
+        MachineData.setWasherState(washerNum, state);
         updateUI(washerNum);
     }
 

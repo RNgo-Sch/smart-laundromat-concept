@@ -15,11 +15,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
+import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
 import com.example.smart_laundromat_concept.ui.common.ButtonHelper;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
 import com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
+import static com.example.smart_laundromat_concept.data.model.AppMachine.State.*;
 
 /**
  * BookingActivity manages the machine selection and status display for the laundromat.
@@ -80,8 +82,9 @@ public class BookingActivity extends AppCompatActivity {
         washerManager = new WasherManager(washerContainer);
         dryerManager  = new DryerManager(dryerContainer);
 
-        // 4. Configure initial machine states
-        setupInitialStates();
+        // 4. Load current machine states from MachineData
+        washerManager.updateAll();
+        dryerManager.updateAll();
 
         // 5. Set default visible tab (Washer view)
         new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
@@ -93,7 +96,8 @@ public class BookingActivity extends AppCompatActivity {
 
         // Demo button — populates machine states for presentation purposes
         ButtonHelper.setup(this, R.id.activity_booking__btn__populate, "Populate Demo", v -> {
-            Toast.makeText(this, "populate", Toast.LENGTH_SHORT).show();
+            populateDemoData();
+            Toast.makeText(this, "Demo populated", Toast.LENGTH_SHORT).show();
         });
 
         // 7. Initialize swipe to refresh
@@ -116,23 +120,24 @@ public class BookingActivity extends AppCompatActivity {
     // -------------------------------------------------------------------------
 
     /**
-     * Initializes the default states of all washer and dryer machines.
-     * TODO: Replace mock data with real Supabase data before submission.
-     * <p>
-     * (Hold Cmd/Ctrl + Click on {@link WasherManager#setState} to jump to the logic)
+     * Populates demo machine states.
+     *
+     * NOTE:
+     * This method is used for demonstration/testing only.
+     * Real data should come from MachineData (or backend).
      */
-    private void setupInitialStates() {
+    private void populateDemoData() {
         // Mock data for Washer states
-        washerManager.setState(1, MachineStateHelper.STATE_RESERVED);
-        washerManager.setState(2, MachineStateHelper.STATE_IN_USE);
-        washerManager.setState(3, MachineStateHelper.STATE_OPEN);
-        washerManager.setState(4, MachineStateHelper.STATE_OUT_OF_SERVICE);
+        washerManager.setState(1, RESERVED);
+        washerManager.setState(2, IN_USE);
+        washerManager.setState(3, IN_USE);
+        washerManager.setState(4, OOS);
 
         // Mock data for Dryer states
-        dryerManager.setState(1, MachineStateHelper.STATE_OPEN);
-        dryerManager.setState(2, MachineStateHelper.STATE_COLLECTION);
-        dryerManager.setState(3, MachineStateHelper.STATE_OUT_OF_SERVICE);
-        dryerManager.setState(4, MachineStateHelper.STATE_IN_USE);
+        dryerManager.setState(1, IN_USE);
+        dryerManager.setState(2, IN_USE);
+        dryerManager.setState(3, OOS);
+        dryerManager.setState(4, IN_USE);
 
         // TODO: Replace with real booking data from Supabase
         UserSession.getInstance().setActiveBooking("Washer", 2, 30 * 60 * 1000L);
@@ -140,6 +145,9 @@ public class BookingActivity extends AppCompatActivity {
         // Highlight selected machines
         washerManager.setOutline(1, true);
         dryerManager.setOutline(3, true);
+
+        // Notify HomeActivity to update immediately
+        sendBroadcast(new android.content.Intent("MACHINE_UPDATED"));
     }
 
     // -------------------------------------------------------------------------

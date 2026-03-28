@@ -118,32 +118,47 @@ public class NavigationHelper {
         }
 
         // Case 2 — activity navigation (new screen)
-        Intent intent = request.intent != null
-                ? request.intent
-                : new Intent(activity, request.targetClass);
+        Intent intent;
+        if (request.intent != null) {
+            intent = request.intent;
+        } else {
+            intent = new Intent(activity, request.targetClass);
+        }
 
-        String targetName = intent.getComponent() != null
-                ? intent.getComponent().getClassName()
-                : request.targetClass.getName();
+        // Get target activity name
+        String targetName;
+        if (intent.getComponent() != null) {
+            targetName = intent.getComponent().getClassName();
+        } else {
+            targetName = request.targetClass.getName();
+        }
 
-        // Prevent launching the same activity again
+        // Prevent launching the same activity again to avoid duplicate screens
         if (activity.getClass().getName().equals(targetName)) {
             return;
         }
 
+        // Launch the target activity
         activity.startActivity(intent);
 
-        // Apply transition animation
+        // -----------------------------------------------------------------
+        // Apply transition animation between activities
+        // -----------------------------------------------------------------
         if (request.animation != null) {
             switch (request.animation) {
                 case FADE:
+                    // Fade transition (smooth appearance)
                     activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
+
                 case SLIDE_LEFT:
+                    // New screen slides in from left
                     activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     break;
+
                 case SLIDE_RIGHT:
                 default:
+                    // Default: new screen slides in from right
                     activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
             }

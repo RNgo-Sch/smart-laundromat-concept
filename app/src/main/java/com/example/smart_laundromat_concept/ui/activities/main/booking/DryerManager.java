@@ -1,8 +1,12 @@
 package com.example.smart_laundromat_concept.ui.activities.main.booking;
 
+import com.example.smart_laundromat_concept.data.model.AppMachine;
+
+
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.data.model.MachineData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +25,8 @@ public class DryerManager {
     // The container view holding the dryer layouts
     private final View container;
 
-    // Internal mapping of dryer numbers to their current state constants
-    private final Map<Integer, Integer> dryerStates = new HashMap<>();
+    // Internal mapping of dryer numbers to their current state
+    private final Map<Integer, AppMachine.State> dryerStates = new HashMap<>();
 
     /**
      * Array of resource IDs corresponding to the dryer views in the layout.
@@ -46,9 +50,9 @@ public class DryerManager {
     public DryerManager(View container) {
         this.container = container;
 
-        // Initialize all dryers to OPEN state by default
+        // Initialize all dryers to AVAILABLE state by default
         for (int i = 1; i <= DRYER_IDS.length; i++) {
-            dryerStates.put(i, MachineStateHelper.STATE_OPEN);
+            dryerStates.put(i, AppMachine.State.AVAILABLE);
         }
     }
 
@@ -60,10 +64,11 @@ public class DryerManager {
      * Updates the logical state and UI display for a specific dryer.
      *
      * @param dryerNum 1 to 4 (1-based index)
-     * @param state    the new state constant from {@link MachineStateHelper}
+     * @param state    the new state from {@link AppMachine.State}
      */
-    public void setState(int dryerNum, int state) {
+    public void setState(int dryerNum, AppMachine.State state) {
         dryerStates.put(dryerNum, state);
+        MachineData.setDryerState(dryerNum, state);
         updateUI(dryerNum);
     }
 
