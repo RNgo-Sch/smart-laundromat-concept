@@ -1,5 +1,6 @@
 package com.example.smart_laundromat_concept.ui.activities.main.booking;
 
+import android.util.Log;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
@@ -47,6 +48,7 @@ public class WasherManager {
      */
     public WasherManager(View container) {
         this.container = container;
+        Log.d("DEBUG", "WasherManager container = " + container);
 
         // Initialize all washers to OPEN state by default
         for (int i = 1; i <= WASHER_IDS.length; i++) {

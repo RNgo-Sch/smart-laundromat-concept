@@ -3,6 +3,7 @@ package com.example.smart_laundromat_concept.ui.activities.main.booking;
 import com.example.smart_laundromat_concept.data.model.AppMachine;
 
 
+import android.util.Log;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
@@ -49,6 +50,7 @@ public class DryerManager {
      */
     public DryerManager(View container) {
         this.container = container;
+        Log.d("DEBUG", "DryerManager container = " + container);
 
         // Initialize all dryers to AVAILABLE state by default
         for (int i = 1; i <= DRYER_IDS.length; i++) {
