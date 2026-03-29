@@ -5,7 +5,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.laundromat.server.model.Machine;
-import com.laundromat.server.model.User;
 import com.laundromat.server.queue.MachineQueue;
 
 import jakarta.annotation.PreDestroy;
@@ -19,14 +18,17 @@ public class Facility {
     public Facility(Machine[] washers, Machine[] dryers) {
         this.washerQueue = new MachineQueue(washers);
         this.dryerQueue = new MachineQueue(dryers);
+        System.out.println("Facility: Object created:\n"+washerQueue+"\n"+dryerQueue+"\n---");
     }
 
     // app request related methods
-    public void queueForWasher(User queuer) {
-        this.washerQueue.joinQueue(queuer);
+    public void queueForWasher(int userId) {
+        System.out.println("Facility: user queueing for washer - " + userId);
+        this.washerQueue.joinQueue(userId);
     }
-    public void queueForDryer(User queuer) {
-        this.dryerQueue.joinQueue(queuer);
+    public void queueForDryer(int userId) {
+        System.out.println("Facility: user queueing for dryer - " + userId);
+        this.dryerQueue.joinQueue(userId);
     }
 
     // queue monitoring methods
@@ -42,6 +44,18 @@ public class Facility {
             }
             // TODO Sync machines to Supabase
         }, 0, 5, TimeUnit.SECONDS);
+    }
+
+    // machine interaction
+    public void interactWith(int userId, int machineId) {
+        System.out.println("User " + userId + "interacting with Machine " + machineId);
+        if (washerQueue.containsMachine(machineId)) {
+            washerQueue.interactWith(userId, machineId);
+        } else if (dryerQueue.containsMachine(machineId)) {
+            dryerQueue.interactWith(userId, machineId);
+        } else {
+            System.out.println("Machine not found in facility")
+        }
     }
 
     // misc

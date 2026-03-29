@@ -12,8 +12,8 @@ public class FacilityConfig {
     @Bean
     public Facility facility() {
         // TODO: Replace with Supabase fetch
-        Machine[] washers = { new Machine(), new Machine() };
-        Machine[] dryers = { new Machine(), new Machine() };
+        Machine[] washers = { new Machine(0), new Machine(1) };
+        Machine[] dryers = { new Machine(2), new Machine(3) };
 
         Facility f = new Facility(washers, dryers);
 

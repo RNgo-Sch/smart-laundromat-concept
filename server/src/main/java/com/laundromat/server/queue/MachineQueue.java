@@ -3,7 +3,6 @@ package com.laundromat.server.queue;
 import java.util.PriorityQueue;
 
 import com.laundromat.server.model.Machine;
-import com.laundromat.server.model.User;
 
 public class MachineQueue extends PriorityQueue<QueueMember> {
     private Machine[] machines;
@@ -13,12 +12,12 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     }
 
     // queue related methods
-    public void joinQueue(User queuer) {
+    public void joinQueue(int queuer) {
         // assign machine if possible
         if (isEmpty()) {
             Machine m = this.findAvailableMachine();
             if (m != null) {
-                this.assignToMachine(queuer, m);
+                m.useMachine(queuer);
             } else {
                 this.add(new QueueMember(queuer));
             }
@@ -27,17 +26,16 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
             add(new QueueMember(queuer));
         }
     }
-    public void leaveQueue(User queuer) {
-        QueueMember qm = new QueueMember(queuer);
-        if (contains(qm)) {
-            remove(qm);
+    public void leaveQueue(int queuer) {
+        if (contains(queuer)) {
+            remove(queuer);
         }
     }
     public void updateQueue() {
         // method called because available machine for user
-        User u = this.poll().getQueuer();
+        int u = this.poll().getQueuer().getId();
         Machine m = findAvailableMachine();
-        assignToMachine(u, m);
+        m.useMachine(u);
     }
 
     // queue helper methods
@@ -52,21 +50,29 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     public boolean hasAvailableMachine() {
         return findAvailableMachine() != null;
     }
-    public User getUserFromQueue() {
-        if (!isEmpty()) {
-            return poll().getQueuer();
-        } else {
-            return null;
-        }
-    }
-    private void assignToMachine(User q, Machine m) {
-        // previous logic guarantees m is in AVAILABLE state
-        m.useMachine(q);
+
+    // facility helper methods
+    public void interactWith(int userId, int machineId) {
+        Machine m = getMachine(machineId);
+        m.useMachine(userId);
     }
 
-    private boolean contains(User u) {
+    // machine array helper methods
+    public boolean containsMachine(int machineId) {
+        return getMachine(machineId) != null;
+    }
+    private Machine getMachine(int machineId) {
+        for (Machine m: this.machines) {
+            if (m.getId() == machineId) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    private boolean contains(int queuer) {
         for (Object o: this.toArray()) {
-            if (o.equals(u)) {
+            if (o instanceof QueueMember m && m.getQueuer().getId() == queuer) {
                 return true;
             }
         }

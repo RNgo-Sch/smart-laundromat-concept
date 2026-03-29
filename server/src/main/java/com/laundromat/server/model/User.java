@@ -1,10 +1,9 @@
 package com.laundromat.server.model;
 
-import com.laundromat.server.idcounter.IdCounter;
+import com.laundromat.server.Query;
 
 public class User {
     // static variables for id and reputation system
-    private static IdCounter latest_id = new IdCounter(); // most recent id value used
 
     private Integer id;
     public final Wallet wallet;
@@ -13,23 +12,29 @@ public class User {
     public String username;
     public String password;
 
-    public User() {
-        this.id = latest_id.getId();
+    // TODO rewrite constructor to be supabase friendly
+    public User(int userId) {
+        this.id = Query.userFromId(userId);
         this.wallet = new Wallet();
         this.reputation = new Reputation();
         this.username = String.valueOf(this.id);
         this.password = "1";
     }
 
-    public User(String username, String password) {
-        this();
-        this.username = username;
-        this.password = password;
-    }
-
     // accessors
     public int getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj instanceof User other) return this.id.equals(other.id);
+        return false;
+    }
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
     }
 
     // helper classes

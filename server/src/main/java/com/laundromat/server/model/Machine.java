@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.laundromat.server.idcounter.IdCounter;
+import com.laundromat.server.db.Query;
 
 public class Machine {
     public static enum State {
@@ -15,7 +16,7 @@ public class Machine {
                 return AVAILABLE; // should be no case where timeOut() in AVAILABLE to be called
             }
             @Override
-            public State interact(Machine m, User u) {
+            public State interact(Machine m, int u) {
                 // User which interacted reserved machine
                 m.setCurrentUser(u);
                 m.setNextTime(10);
@@ -33,9 +34,9 @@ public class Machine {
                 return AVAILABLE;
             }
             @Override
-            public State interact(Machine m, User u) {
+            public State interact(Machine m, int u) {
                 // if same user, they start the washing cycle
-                if (m.getCurrentUser().equals(u)) {
+                if (m.getCurrentUser().getId() == u) {
                     m.setNextTime(30);
                     return INUSE;
                 } else {
@@ -53,8 +54,8 @@ public class Machine {
                 return COLLECTION;
             }
             @Override
-            public State interact(Machine m, User u) {
-                return INUSE; // ignore interaction during state 
+            public State interact(Machine m, int u) {
+                return INUSE; // ignore interaction during state
             }
         },
         COLLECTION {
@@ -67,9 +68,9 @@ public class Machine {
                 return AVAILABLE;
             }
             @Override
-            public State interact(Machine m, User u) {
+            public State interact(Machine m, int u) {
                 // user collects laundry on time
-                if (m.getCurrentUser().equals(u)) {
+                if (m.getCurrentUser().getId() == u) {
                     m.clearNextTime();
                     m.clearCurrentUser();
                     return AVAILABLE;
@@ -80,16 +81,17 @@ public class Machine {
         };
 
         public abstract State timeOut(Machine m);
-        public abstract State interact(Machine m, User u);
+        public abstract State interact(Machine m, int u);
     }
-    private static IdCounter latest_id = new IdCounter();
 
     private final Integer id;
     private State state;
     private User currentUser;
     private ScheduledExecutorService nextTime;
-    public Machine() {
-        this.id = latest_id.getId();
+
+    // TODO rewrite constructor to be supabase friendly
+    public Machine(int machineId) {
+        this.id = machineId;
         this.state = State.AVAILABLE;
         this.currentUser = null;
         this.nextTime = Executors.newSingleThreadScheduledExecutor();
@@ -100,9 +102,9 @@ public class Machine {
         this.state = this.state.timeOut(this);
         System.out.print("Timeout triggered; " + this.toString() + "\n");
     }
-    public void useMachine(User u) {
-        this.state = this.state.interact(this, u);
-        System.out.print("User " + u.getId() + " interacted; " + this.toString() + "\n");
+    public void useMachine(int userId) {
+        this.state = this.state.interact(this, userId);
+        System.out.print("User " + userId + " interacted; " + this.toString() + "\n");
     }
     protected void punishCurrentUser() {
         if (this.currentUser != null) {
@@ -111,6 +113,9 @@ public class Machine {
         }
     }
     // getters
+    public int getId() {
+        return this.id;
+    }
     public User getCurrentUser() {
         return this.currentUser;
     }
@@ -119,11 +124,11 @@ public class Machine {
     }
 
     // setters
-    protected void setCurrentUser(User u) {
-        this.currentUser = u;
+    protected void setCurrentUser(int userId) {
+        this.currentUser = Query.userFromId(userId);
     }
     protected void clearCurrentUser() {
-        setCurrentUser(null);
+        this.currentUser = null;
     }
     protected void setNextTime(long seconds) {
         this.clearNextTime();
