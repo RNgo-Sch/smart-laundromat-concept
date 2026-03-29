@@ -54,16 +54,17 @@ public class SystemNavigator implements NavigatorModule {
         if (id == R.id.activity_profile__Logout_Button) {
             View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
             if (overlay != null) {
-                overlay.setVisibility(View.VISIBLE);
+                NavigationHelper.fadeIn(overlay);
             }
             return null;
         }
+
 
         // --- 4. Logout — cancel and hide overlay ---
         if (id == R.id.activity_profile__cancel_logout_action) {
             View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
             if (overlay != null){
-                overlay.setVisibility(View.GONE);
+                NavigationHelper.fadeOut(overlay);
             }
             return null;
         }
@@ -74,6 +75,22 @@ public class SystemNavigator implements NavigatorModule {
             Intent logoutIntent = new Intent(activity, LogInActivity.class);
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             return new NavigationRequest(logoutIntent, NavigationRequest.AnimationType.FADE);
+        }
+
+        if (id == R.id.reputation__progress_details|| id == R.id.reputation__progress_details_1){
+            View overlay = activity.findViewById(R.id.activity_home__Reputation_Details);
+            if (overlay != null) {
+                NavigationHelper.fadeIn(overlay);
+            }
+            return null;
+        }
+
+        if (id == R.id.activity_home__Reputation_Details){
+            View overlay = activity.findViewById(R.id.activity_home__Reputation_Details);
+            if (overlay != null){
+                NavigationHelper.fadeOut(overlay);
+            }
+            return null;
         }
 
         // --- 6. Global back button ---

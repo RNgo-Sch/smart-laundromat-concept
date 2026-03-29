@@ -29,4 +29,12 @@
     <string name="status_pending">Pending</string>
     <string name="status_out_of_service">Out of Service</string>
 
+
+    <string name="reputation_logic">
+    Tier 4: 100+ points\n
+    Tier 3: 50–99 points\n
+    Tier 2: 25–49 points\n
+    Tier 1: Below 25 points
+</string>
+
 </resources>

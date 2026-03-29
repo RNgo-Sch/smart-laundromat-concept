@@ -63,6 +63,23 @@ public class NavigationHelper {
         }
     }
 
+    public static void fadeIn(View view) {
+        view.setAlpha(0f);
+        view.setVisibility(View.VISIBLE);
+        view.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start();
+    }
+
+    public static void fadeOut(View view) {
+        view.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction(() -> view.setVisibility(View.GONE))
+                .start();
+    }
+
     /**
      * Executes an internal view transition within the same Activity.
      * Supports directional slide animations or simple visibility toggling.

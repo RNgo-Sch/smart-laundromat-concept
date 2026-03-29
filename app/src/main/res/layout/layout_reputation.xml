@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sf_pro_semibold"
-                    android:text="Orders"
+                    android:text="Points"
                     android:textSize="16sp" />
 
                 <TextView
@@ -77,6 +77,7 @@
         </LinearLayout>
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -98,22 +99,29 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/reputation__progress_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="launchPage"
                 android:fontFamily="@font/sf_pro_semibold"
                 android:text="Details"
                 android:textColor="#888888"
                 android:textSize="12sp" />
 
             <ImageView
+                android:id="@+id/reputation__progress_details_1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="launchPage"
                 android:layout_marginStart="4dp"
-                android:src="@drawable/ic_arrow_right"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_right"
                 app:tint="#888888" />
+
 
         </LinearLayout>
 
