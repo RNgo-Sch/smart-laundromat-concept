@@ -2,6 +2,7 @@ package com.example.smart_laundromat_concept.data.remote;
 
 import com.example.smart_laundromat_concept.BuildConfig;
 import com.example.smart_laundromat_concept.data.model.AppMachine; // Updated to AppMachine
+import com.example.smart_laundromat_concept.data.model.Machine;
 import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.model.Notification;
 
@@ -46,6 +47,15 @@ public class SupabaseClient {
                 @Query("store") Integer storeNumber,
                 @Query("type") String machineType,
                 @Query("status") String machineStatus
+        );
+        /**
+         * Fetches all machines for a given store and type.
+         * Used by BookingActivity for live machine status.
+         */
+        @GET("machine")
+        Call<List<Machine>> getMachinesByStoreAndType(
+                @Query("store") Integer store,
+                @Query("type")  String type
         );
 
         @GET("notifications")
