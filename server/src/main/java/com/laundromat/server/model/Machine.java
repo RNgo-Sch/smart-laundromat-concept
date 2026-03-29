@@ -21,7 +21,7 @@ public class Machine {
                 m.setNextTime(10);
                 return RESERVED;
             }
-        }, 
+        },
         RESERVED {
             // this state has currentUser and 10s nextTime
             @Override
@@ -138,7 +138,7 @@ public class Machine {
     }
 
     // misc
-    @Override 
+    @Override
     public String toString() {
         return "Machine " + this.id + " state: " + this.getState() + "; currentUser: " + this.getCurrentUser() + "; Executor: " + this.nextTime;
     }

@@ -15,7 +15,7 @@ public class Facility {
     private MachineQueue dryerQueue;
 
     private ScheduledExecutorService queueChecker;
-    
+
     public Facility(Machine[] washers, Machine[] dryers) {
         this.washerQueue = new MachineQueue(washers);
         this.dryerQueue = new MachineQueue(dryers);
@@ -43,7 +43,7 @@ public class Facility {
             // TODO Sync machines to Supabase
         }, 0, 5, TimeUnit.SECONDS);
     }
-    
+
     // misc
     @Override
     public String toString() {

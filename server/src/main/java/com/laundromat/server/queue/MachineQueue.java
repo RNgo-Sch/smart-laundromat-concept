@@ -22,7 +22,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
             } else {
                 this.add(new QueueMember(queuer));
             }
-        // cannot assign or queue already has people waiting
+            // cannot assign or queue already has people waiting
         } else if (!contains(queuer)) {
             add(new QueueMember(queuer));
         }
@@ -79,7 +79,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
         String out = "";
         for (Machine m: this.machines) {
             out += "\t" + m.toString() + "\n";
-        } 
+        }
         return out;
     }
 }

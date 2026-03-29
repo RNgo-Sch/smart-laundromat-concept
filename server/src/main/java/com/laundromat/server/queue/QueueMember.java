@@ -6,7 +6,7 @@ import com.laundromat.server.model.User;
 
 public class QueueMember implements Comparable<QueueMember> {
     private final static int REPUTATION_BONUS = 1;
-    
+
     private final User queuer;
     private int priority;
 
