@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.data.model.MachineData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class DryerManager {
      */
     public void setState(int dryerNum, AppMachine.State state) {
         dryerStates.put(dryerNum, state);
-        MachineData.setDryerState(dryerNum, state);
+        AppMachine.setDryerState(dryerNum, state);
         updateUI(dryerNum);
     }
 

@@ -1,32 +1,26 @@
 package com.example.smart_laundromat_concept.data.model;
 
 import com.example.smart_laundromat_concept.R;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Represents a laundry machine in the smart laundromat system.
+ * Unified machine model for the Smart Laundromat system.
  * <p>
- * This class serves as a data model (Model layer) that stores:
- * <ul>
- *     <li>Machine ID</li>
- *     <li>Current operational state</li>
- *     <li>Machine type (e.g., Washer, Dryer)</li>
- * </ul>
- *
- * <p><b>Design Notes:</b>
- * <ul>
- *     <li>Uses {@link State} enum to ensure type-safe state management.</li>
- *     <li>Separates UI concerns by storing only a string resource ID instead of raw text.</li>
- *     <li>Designed to integrate with backend systems (e.g., Spring Boot, Supabase).</li>
- * </ul>
+ * Combines:
+ * - Supabase data model (raw fields from database)
+ * - UI state model (State enum with string resources)
+ * - Static in-memory store (AppMachine)
  */
 public class AppMachine {
+    public int position;
 
-    /**
-     * Represents the current state of a laundry machine.
-     * <p>
-     * Each state is associated with a string resource ID, allowing the UI layer
-     * to display localized text without hardcoding values in the model.
-     */
+    // -------------------------------------------------------------------------
+    // State Enum
+    // -------------------------------------------------------------------------
+
     public enum State {
         AVAILABLE(R.string.status_open),
         RESERVED(R.string.status_reserved),
@@ -36,84 +30,129 @@ public class AppMachine {
 
         private final int stringResId;
 
-        /**
-         * Constructs a State enum value and associates it with a string resource ID.
-         * <p>
-         * This resource ID is later used by the UI layer to retrieve a localized
-         * string from {@code strings.xml}, ensuring proper separation of logic and presentation.
-         *
-         * @param stringResId the string resource ID representing this machine state
-         */
         State(int stringResId) {
             this.stringResId = stringResId;
         }
 
-        /**
-         * Returns the string resource ID associated with this state.
-         * <p>
-         * The UI layer should call {@code context.getString(getStringResId())}
-         * to obtain the human-readable, localized text.
-         *
-         * @return the string resource ID for this state
-         */
         public int getStringResId() {
             return stringResId;
         }
+
+        /**
+         * Converts a raw Supabase status string into a State enum.
+         *
+         * @param status raw string from Supabase e.g. "IN_USE"
+         * @return matching State, defaults to AVAILABLE
+         */
+        public static State fromString(String status) {
+            if (status == null) return AVAILABLE;
+            switch (status.toUpperCase()) {
+                case "RESERVED":   return RESERVED;
+                case "IN_USE":     return IN_USE;
+                case "COLLECTION": return COLLECTION;
+                case "OOS":        return OOS;
+                default:           return AVAILABLE;
+            }
+        }
     }
 
-    // Unique identifier for the machine (e.g., 1, 2, 3, ...)
-    private final int id;
-    // Current operational state of the machine
+    // -------------------------------------------------------------------------
+    // Supabase Fields (mapped from JSON)
+    // -------------------------------------------------------------------------
+
+    /** Database ID — used for Supabase mapping. */
+    public int id;
+
+    /** Raw status string from Supabase e.g. "AVAILABLE", "IN_USE". */
+    public String status;
+
+    /** Machine type from Supabase e.g. "washer" or "dryer". */
+    public String type;
+
+    /** Store number this machine belongs to. */
+    public Integer store;
+
+    /** Username of the current user using this machine. */
+    @SerializedName("current_user")
+    public String currentUser;
+
+    // -------------------------------------------------------------------------
+    // UI State
+    // -------------------------------------------------------------------------
+
+    /** UI state derived from the raw status string. */
     private State state;
-    // Type of machine (e.g., "Washer", "Dryer")
-    private final String type;
+
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
+
+    /** Default constructor — required for Gson deserialization from Supabase. */
+    public AppMachine() {
+        this.state = State.AVAILABLE;
+    }
 
     /**
-     * Constructs a new AppMachine instance.
+     * Constructs a machine with explicit values.
+     * Used when creating machines manually (e.g. demo data).
      *
-     * @param id    unique machine identifier
-     * @param state initial state of the machine
-     * @param type  type of machine (e.g., Washer or Dryer)
+     * @param id    machine position number (1-4)
+     * @param state initial UI state
+     * @param type  "washer" or "dryer"
      */
     public AppMachine(int id, State state, String type) {
-        this.id = id;         // Assign machine ID
-        this.state = state;   // Set initial state
-        this.type = type;     // Set machine type
+        this.id    = id;
+        this.state = state;
+        this.type  = type;
     }
 
-    /**
-     * Returns the unique ID of the machine.
-     *
-     * @return machine ID
-     */
-    public int getId() {
-        return this.id;
-    }
+    // -------------------------------------------------------------------------
+    // Accessors
+    // -------------------------------------------------------------------------
+
+    public int getId()            { return id; }
+    public String getMachineType(){ return type; }
 
     /**
-     * Returns the current state of the machine.
-     *
-     * @return current {@link State}
+     * Returns the UI state.
+     * If state has not been explicitly set, derives it from the raw status string.
      */
     public State getState() {
-        return this.state;
+        if (state == null) {
+            state = State.fromString(status);
+        }
+        return state;
     }
 
-    /**
-     * Returns the type of the machine.
-     *
-     * @return machine type (e.g., Washer or Dryer)
-     */
-    public String getMachineType() {
-        return this.type;
+    /** Updates the UI state. */
+    public void setState(State newState) {
+        this.state  = newState;
+        this.status = newState.name(); // keep raw status in sync
     }
 
-    /**
-     * Updates the state of the machine.
-     *
-     * @param newState the new state to set
-     */
-    public void changeState(State newState) {
-        this.state = newState; // Update machine state
+    // -------------------------------------------------------------------------
+    // Static In-Memory Store (replaces AppMachine)
+    // -------------------------------------------------------------------------
+
+    private static final Map<Integer, State> washers = new HashMap<>();
+    private static final Map<Integer, State> dryers  = new HashMap<>();
+
+    static {
+        // Default states — overwritten by Supabase fetch on app start
+        washers.put(1, State.AVAILABLE);
+        washers.put(2, State.AVAILABLE);
+        washers.put(3, State.AVAILABLE);
+        washers.put(4, State.AVAILABLE);
+
+        dryers.put(1, State.AVAILABLE);
+        dryers.put(2, State.AVAILABLE);
+        dryers.put(3, State.AVAILABLE);
+        dryers.put(4, State.AVAILABLE);
     }
+
+    public static void setWasherState(int id, State state) { washers.put(id, state); }
+    public static void setDryerState(int id, State state)  { dryers.put(id, state); }
+
+    public static Map<Integer, State> getWashers() { return washers; }
+    public static Map<Integer, State> getDryers()  { return dryers; }
 }

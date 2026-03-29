@@ -22,7 +22,7 @@
     </string>
 
     <!-- ================= Machine Status ================= -->
-    <string name="status_open">Open</string>
+    <string name="status_open">Available</string>
     <string name="status_collection">Collection</string>
     <string name="status_in_use">In Use</string>
     <string name="status_reserved">Reserved</string>

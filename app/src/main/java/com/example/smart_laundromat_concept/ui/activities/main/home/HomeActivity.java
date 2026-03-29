@@ -2,7 +2,6 @@ package com.example.smart_laundromat_concept.ui.activities.main.home;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,9 +15,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.AppMachine;
-import com.example.smart_laundromat_concept.data.model.MachineData;
 import com.example.smart_laundromat_concept.data.model.User;
-import com.example.smart_laundromat_concept.data.remote.UserRepository;
+import com.example.smart_laundromat_concept.data.remote.repository.MachineRepository;
+import com.example.smart_laundromat_concept.data.remote.repository.UserRepository;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
@@ -144,6 +143,8 @@ public class HomeActivity extends AppCompatActivity {
                     loadUserData();
                     homeCardHelper.refresh();
                     updateLocationName();
+                    updateMachineAvailability();
+
                 } else {
                     Toast.makeText(HomeActivity.this, "Failed to sync data", Toast.LENGTH_SHORT).show();
                 }
@@ -225,34 +226,38 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void updateMachineAvailability() {
 
-        int washerAvailable = 0;
-        int washerInUse = 0;
+        MachineRepository.fetchAllMachines(() -> {
 
-        for (AppMachine.State state : MachineData.getWashers().values()) {
-            if (state == AppMachine.State.AVAILABLE) {
-                washerAvailable++;
-            } else if (state == AppMachine.State.IN_USE) {
-                washerInUse++;
+            final int[] washerAvailable = {0};
+            final int[] washerInUse = {0};
+
+            for (AppMachine.State state : AppMachine.getWashers().values()) {
+                if (state == AppMachine.State.AVAILABLE) {
+                    washerAvailable[0]++;
+                } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
+                    washerInUse[0]++;
+                }
             }
-        }
 
-        int dryerAvailable = 0;
-        int dryerInUse = 0;
+            final int[] dryerAvailable = {0};
+            final int[] dryerInUse = {0};
 
-        for (AppMachine.State state : MachineData.getDryers().values()) {
-            if (state == AppMachine.State.AVAILABLE) {
-                dryerAvailable++;
-            } else if (state == AppMachine.State.IN_USE) {
-                dryerInUse++;
+            for (AppMachine.State state : AppMachine.getDryers().values()) {
+                if (state == AppMachine.State.AVAILABLE) {
+                    dryerAvailable[0]++;
+                } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
+                    dryerInUse[0]++;
+                }
             }
-        }
 
+            runOnUiThread(() -> {
+                ((TextView) findViewById(R.id.snapshot__washer_available)).setText(String.valueOf(washerAvailable[0]));
+                ((TextView) findViewById(R.id.snapshot__washer_in_use)).setText(String.valueOf(washerInUse[0]));
+                ((TextView) findViewById(R.id.snapshot__dryer_available)).setText(String.valueOf(dryerAvailable[0]));
+                ((TextView) findViewById(R.id.snapshot__dryer_in_use)).setText(String.valueOf(dryerInUse[0]));
+            });
 
-        ((TextView) findViewById(R.id.snapshot__washer_available)).setText(String.valueOf(washerAvailable));
-        ((TextView) findViewById(R.id.snapshot__washer_in_use)).setText(String.valueOf(washerInUse));
-
-        ((TextView) findViewById(R.id.snapshot__dryer_available)).setText(String.valueOf(dryerAvailable));
-        ((TextView) findViewById(R.id.snapshot__dryer_in_use)).setText(String.valueOf(dryerInUse));
+        });
     }
 
     public void launchPage(View view) {

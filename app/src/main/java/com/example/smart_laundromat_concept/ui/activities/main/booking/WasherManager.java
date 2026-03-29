@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.AppMachine;
-import com.example.smart_laundromat_concept.data.model.MachineData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class WasherManager {
      */
     public void setState(int washerNum, AppMachine.State state) {
         washerStates.put(washerNum, state);
-        MachineData.setWasherState(washerNum, state);
+        AppMachine.setWasherState(washerNum, state);
         updateUI(washerNum);
     }
 

@@ -1,6 +1,5 @@
-package com.example.smart_laundromat_concept.data.remote;
+package com.example.smart_laundromat_concept.data.remote.server;
 
-import com.example.smart_laundromat_concept.data.model.Machine;
 import com.example.smart_laundromat_concept.data.model.QueueResponse;
 
 import retrofit2.Retrofit;
@@ -9,7 +8,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.Call;
 
-import java.util.List;
 import java.util.Map;
 
 public class BackendClient {

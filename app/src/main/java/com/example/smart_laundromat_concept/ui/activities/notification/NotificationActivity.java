@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.Notification;
-import com.example.smart_laundromat_concept.data.remote.NotificationRepository;
+import com.example.smart_laundromat_concept.data.remote.repository.NotificationRepository;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

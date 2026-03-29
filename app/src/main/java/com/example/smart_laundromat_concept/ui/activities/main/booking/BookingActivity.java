@@ -1,6 +1,7 @@
 package com.example.smart_laundromat_concept.ui.activities.main.booking;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +15,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.AppMachine;
-import com.example.smart_laundromat_concept.data.model.MachineData;
+
 import com.example.smart_laundromat_concept.data.model.QueueResponse;
-import com.example.smart_laundromat_concept.data.remote.QueueCallback;
-import com.example.smart_laundromat_concept.data.remote.QueueRepository;
+import com.example.smart_laundromat_concept.data.remote.repository.MachineRepository;
+import com.example.smart_laundromat_concept.data.remote.server.QueueCallback;
+import com.example.smart_laundromat_concept.data.remote.server.QueueRepository;
+import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseClient;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
@@ -29,6 +32,7 @@ import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
 import static com.example.smart_laundromat_concept.data.model.AppMachine.State.*;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -121,7 +125,7 @@ public class BookingActivity extends AppCompatActivity {
         washerManager = new WasherManager(washerContainer);
         dryerManager  = new DryerManager(dryerContainer);
 
-        // 4. Load current machine states from MachineData
+        // 4. Load current machine states from AppMachine
         fetchMachineStates();
 
         // 5. Set default visible tab (Washer view)
@@ -162,6 +166,7 @@ public class BookingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateLocationName();
+        fetchMachineStates();
 
     }
 
@@ -306,8 +311,7 @@ public class BookingActivity extends AppCompatActivity {
     // -------------------------------------------------------------------------
 
     private void refreshAll() {
-        washerManager.updateAll();
-        dryerManager.updateAll();
+        fetchMachineStates();
         updateLocationName();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -318,46 +322,95 @@ public class BookingActivity extends AppCompatActivity {
             locationName.setText(LocationSession.getInstance().getLocationName());
         }
     }
-
     private void fetchMachineStates() {
-        QueueRepository.getMachines(new Callback<Map<String, Map<Integer, String>>>() {
-            @Override
-            public void onResponse(Call<Map<String, Map<Integer, String>>> call,
-                                   Response<Map<String, Map<Integer, String>>> response) {
+        MachineRepository.fetchAllMachines(() -> {
 
-                if (response.isSuccessful() && response.body() != null) {
-
-                    Map<String, Map<Integer, String>> data = response.body();
-
-                    Map<Integer, String> washers = data.get(TYPE_WASHER);
-                    Map<Integer, String> dryers  = data.get(TYPE_DRYER);
-
-                    if (washers == null || dryers == null) return;
-
-                    for (int i = 1; i <= 4; i++) {
-                        AppMachine.State washerState = parseState(washers.get(i));
-                        AppMachine.State dryerState  = parseState(dryers.get(i));
-
-                        updateWasher(i, washerState);
-                        updateDryer(i, dryerState);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, Map<Integer, String>>> call, Throwable t) {
-                Toast.makeText(BookingActivity.this, "Failed to load machines", Toast.LENGTH_SHORT).show();
+            // Update UI AFTER data loaded
+            for (int i = 1; i <= 4; i++) {
+                washerManager.setState(i, AppMachine.getWashers().get(i));
+                dryerManager.setState(i, AppMachine.getDryers().get(i));
             }
         });
     }
+
+//    private void fetchMachineStates() {
+//
+//        int storeId = 1;
+//
+//        // Washers
+//        SupabaseClient.getApi()
+//                .getMachinesByType("eq." + storeId, "eq." + TYPE_WASHER)
+//                .enqueue(new Callback<List<AppMachine>>() {
+//                    @Override
+//                    public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
+//
+//                        if (!response.isSuccessful()) {
+//                            Toast.makeText(BookingActivity.this,
+//                                    "Error: " + response.code(),
+//                                    Toast.LENGTH_LONG).show();
+//                            return;
+//                        }
+//
+//                        if (response.body() == null) return;
+//                        Log.d("MACHINE_DEBUG", "TOTAL WASHERS = " + response.body().size());
+//
+//                        for (AppMachine machine : response.body()) {
+//                            Log.d("MACHINE_DEBUG", "Washer pos=" + machine.position + " state=" + machine.status);
+//                            AppMachine.State state = AppMachine.State.fromString(machine.status);
+//
+//                            updateWasher(machine.position, state);
+//
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<List<AppMachine>> call, Throwable t) {
+//                        Toast.makeText(BookingActivity.this,
+//                                "Network error: " + t.getMessage(),
+//                                Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//
+//        // Dryers
+//        SupabaseClient.getApi()
+//                .getMachinesByType("eq." + storeId, "eq." + TYPE_DRYER)
+//                .enqueue(new Callback<List<AppMachine>>() {
+//                    @Override
+//                    public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
+//
+//                        if (!response.isSuccessful()) {
+//                            Toast.makeText(BookingActivity.this,
+//                                    "Error: " + response.code(),
+//                                    Toast.LENGTH_LONG).show();
+//                            return;
+//                        }
+//
+//                        if (response.body() == null) return;
+//
+//                        for (AppMachine machine : response.body()) {
+//                            AppMachine.State state = AppMachine.State.fromString(machine.status);
+//
+//                            updateDryer(machine.position, state);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<List<AppMachine>> call, Throwable t) {
+//                        Toast.makeText(BookingActivity.this,
+//                                "Network error: " + t.getMessage(),
+//                                Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//    }
     private void updateWasher(int i, AppMachine.State state) {
         washerManager.setState(i, state);
-        MachineData.setWasherState(i, state);
+        AppMachine.setWasherState(i, state);
     }
 
     private void updateDryer(int i, AppMachine.State state) {
         dryerManager.setState(i, state);
-        MachineData.setDryerState(i, state);
+        AppMachine.setDryerState(i, state);
     }
 
     // -------------------------------------------------------------------------

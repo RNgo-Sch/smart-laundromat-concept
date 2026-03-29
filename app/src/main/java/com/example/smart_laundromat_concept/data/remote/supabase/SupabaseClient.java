@@ -1,8 +1,8 @@
-package com.example.smart_laundromat_concept.data.remote;
+package com.example.smart_laundromat_concept.data.remote.supabase;
 
 import com.example.smart_laundromat_concept.BuildConfig;
 import com.example.smart_laundromat_concept.data.model.AppMachine; // Updated to AppMachine
-import com.example.smart_laundromat_concept.data.model.Machine;
+import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.data.model.User;
 import com.example.smart_laundromat_concept.data.model.Notification;
 
@@ -37,24 +37,14 @@ public class SupabaseClient {
         Call<Void> getUserCount();
 
         @GET("machine")
-        Call<List<AppMachine>> getMachineByStoreType(
-                @Query("store") Integer storeNumber,
-                @Query("type") String machineType
+        Call<List<AppMachine>> getMachines(
+                @Query("store") String store,
+                @Query("type")  String type,
+                @Query("status") String status
         );
-
         @GET("machine")
-        Call<List<AppMachine>> getMachineByStoreTypeStatus(
-                @Query("store") Integer storeNumber,
-                @Query("type") String machineType,
-                @Query("status") String machineStatus
-        );
-        /**
-         * Fetches all machines for a given store and type.
-         * Used by BookingActivity for live machine status.
-         */
-        @GET("machine")
-        Call<List<Machine>> getMachinesByStoreAndType(
-                @Query("store") Integer store,
+        Call<List<AppMachine>> getMachinesByType(
+                @Query("store") String store,
                 @Query("type")  String type
         );
 

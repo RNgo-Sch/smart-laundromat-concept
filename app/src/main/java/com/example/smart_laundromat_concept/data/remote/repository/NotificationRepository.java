@@ -1,6 +1,7 @@
-package com.example.smart_laundromat_concept.data.remote;
+package com.example.smart_laundromat_concept.data.remote.repository;
 
 import com.example.smart_laundromat_concept.data.model.Notification;
+import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseClient;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 
 import java.util.List;

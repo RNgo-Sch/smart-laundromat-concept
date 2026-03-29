@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.User;
-import com.example.smart_laundromat_concept.data.remote.AuthRepository;
+import com.example.smart_laundromat_concept.data.remote.repository.AuthRepository;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.navigation.AuthNavigator;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;

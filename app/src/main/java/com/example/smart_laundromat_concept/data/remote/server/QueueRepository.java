@@ -1,4 +1,4 @@
-package com.example.smart_laundromat_concept.data.remote;
+package com.example.smart_laundromat_concept.data.remote.server;
 
 import com.example.smart_laundromat_concept.data.model.QueueResponse;
 import com.example.smart_laundromat_concept.data.session.UserSession;

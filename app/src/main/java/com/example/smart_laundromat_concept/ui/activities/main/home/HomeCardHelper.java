@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.data.model.AppMachine;
-import com.example.smart_laundromat_concept.data.remote.SupabaseClient;
+import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseClient;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 
 import java.util.List;
@@ -186,20 +186,25 @@ public class HomeCardHelper {
      * @param viewId the TextView resource ID to update with the count
      */
     private void loadCountForStatus(String type, String status, int viewId) {
-        // Supabase PostgREST expects "eq.<value>" for equality filters
+
+        String storeQuery  = "eq." + STORE_NUMBER;
+        String typeQuery   = "eq." + type;
         String statusQuery = "eq." + status;
 
         SupabaseClient.getApi()
-                .getMachineByStoreTypeStatus(STORE_NUMBER, type, statusQuery)
+                .getMachines(storeQuery, typeQuery, statusQuery)
                 .enqueue(new Callback<List<AppMachine>>() {
                     @Override
                     public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
+
                         int count = 0;
+
                         if (response.isSuccessful() && response.body() != null) {
                             count = response.body().size();
                         }
 
                         final int finalCount = count;
+
                         activity.runOnUiThread(() -> {
                             TextView tv = activity.findViewById(viewId);
                             if (tv != null) tv.setText(String.valueOf(finalCount));
@@ -208,7 +213,8 @@ public class HomeCardHelper {
 
                     @Override
                     public void onFailure(Call<List<AppMachine>> call, Throwable t) {
-                        // Silently fail — snapshot will show dashes from XML default
+                        // optional debug
+                        t.printStackTrace();
                     }
                 });
     }

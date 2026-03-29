@@ -1,9 +1,6 @@
 package com.example.smart_laundromat_concept.data.session;
 
 import com.example.smart_laundromat_concept.data.model.User;
-import com.example.smart_laundromat_concept.data.remote.UserRepository;
-
-import retrofit2.Callback;
 
 /**
  * Singleton class that manages the current user's session.
