@@ -2,15 +2,15 @@ package com.laundromat.server.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.laundromat.server.facility.Facility;
 import com.laundromat.server.model.User;
 
 @RestController
-@RequestMapping("/queue")
+@RequestMapping("")
 public class FacilityController {
 
     private final Facility facility;
@@ -19,19 +19,28 @@ public class FacilityController {
         this.facility = facility;
     }
 
-    // POST /queue/washer/join
-    @PostMapping("/washer/join")
-    public ResponseEntity<?> joinWasherQueue(@RequestBody UserRequest body) {
-        facility.queueForWasher(new User());
+    // POST /queue/washer?userId=<_>
+    @PostMapping("/queue/washer")
+    public ResponseEntity<?> joinWasherQueue(@RequestParam int userId) {
+        facility.queueForWasher(queryForUser(userId));
         return ResponseEntity.ok("Joined washer queue");
     }
 
-    // POST /queue/dryer/join
-    @PostMapping("/dryer/join")
-    public ResponseEntity<?> joinDryerQueue(@RequestBody UserRequest body) {
-        facility.queueForDryer(new User());
+    // POST /queue/dryer?userId=<_>
+    @PostMapping("/queue/dryer")
+    public ResponseEntity<?> joinDryerQueue(@RequestParam int userId) {
+        facility.queueForDryer(queryForUser(userId));
         return ResponseEntity.ok("Joined dryer queue");
     }
 
-    record UserRequest(int userId) {}
+    // POST /interact?userId=<_>&machineId=<_>
+    @PostMapping("/interact")
+    public ResponseEntity<?> interactWithMachine(@RequestParam int userId, @RequestParam int machineId) {
+        // TODO implement machine interaction
+        return ResponseEntitiy.ok("Interacted with machine");
+    }
+
+    private User queryForUser(int userId) {
+        // TODO query for user with the user id
+    }
 }
