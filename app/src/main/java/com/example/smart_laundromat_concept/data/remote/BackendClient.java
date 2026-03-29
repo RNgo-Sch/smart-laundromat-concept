@@ -29,24 +29,30 @@ public class BackendClient {
     }
     public interface BackendApi {
 
-        @GET("/queue/join")
-        Call<QueueResponse> joinQueue(
-                @Query("user") String user,
-                @Query("type") String type
+        @GET("/washer/join")
+        Call<QueueResponse> joinWasher(
+                @Query("userId") String userId
+        );
+
+        @GET("/dryer/join")
+        Call<QueueResponse> joinDryer(
+                @Query("userId") String userId
         );
 
 
         @GET("queue/position")
         Call<QueueResponse> getPosition(
-                @Query("user") String user,
+                @Query("userId") String userId,
                 @Query("type") String machineType
         );
 
-        @GET("/queue/cancel")
-        Call<QueueResponse> cancelQueue(
-                @Query("user") String user,
-                @Query("type") String type
-        );
+        @GET("/washer/cancel")
+        Call<QueueResponse> cancelWasher
+                (@Query("userId") String userId);
+
+        @GET("/dryer/cancel")
+        Call<QueueResponse> cancelDryer
+                (@Query("userId") String userId);
 
         @GET("queue/next")
         Call<QueueResponse> nextUser(@Query("type") String machineType);

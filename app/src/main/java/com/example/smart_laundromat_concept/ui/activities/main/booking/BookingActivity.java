@@ -13,25 +13,28 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.smart_laundromat_concept.R;
+import com.example.smart_laundromat_concept.data.model.AppMachine;
+import com.example.smart_laundromat_concept.data.model.MachineData;
 import com.example.smart_laundromat_concept.data.model.QueueResponse;
-import com.example.smart_laundromat_concept.data.remote.BackendClient;
+import com.example.smart_laundromat_concept.data.remote.QueueCallback;
 import com.example.smart_laundromat_concept.data.remote.QueueRepository;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
-import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
 import com.example.smart_laundromat_concept.ui.common.ButtonHelper;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
 import com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.example.smart_laundromat_concept.data.model.AppMachine.State.*;
 
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * BookingActivity manages the machine selection and status display for the laundromat.
@@ -50,13 +53,44 @@ public class BookingActivity extends AppCompatActivity {
     private WasherManager washerManager;
     private DryerManager dryerManager;
 
+    // Constants for machine types
+    private static final String TYPE_WASHER = "washer";
+    private static final String TYPE_DRYER = "dryer";
+
     /** Tracks whether the current user is in the queue. */
     private boolean isInWasherQueue = false;
     private boolean isInDryerQueue = false;
-    private String currentTabType = "washer";
+    private String currentTabType = TYPE_WASHER;
+    private int assignedMachineNumber = -1;
 
     /** Handles the pull-to-refresh gesture on the booking screen. */
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    private String getUserIdOrFail() {
+        if (UserSession.getInstance().getCurrentUser() != null) {
+            return String.valueOf(UserSession.getInstance().getCurrentUser().getId());
+        } else {
+            Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    private boolean isInQueue() {
+        return (TYPE_WASHER.equalsIgnoreCase(currentTabType) && isInWasherQueue)
+                || (TYPE_DRYER.equalsIgnoreCase(currentTabType) && isInDryerQueue);
+    }
+
+    private void setQueueState(String type, boolean value) {
+        if (TYPE_WASHER.equalsIgnoreCase(type)) {
+            isInWasherQueue = value;
+        } else if (TYPE_DRYER.equalsIgnoreCase(type)) {
+            isInDryerQueue = value;
+        }
+    }
 
     // -------------------------------------------------------------------------
     // Lifecycle
@@ -128,6 +162,7 @@ public class BookingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateLocationName();
+
     }
 
     // -------------------------------------------------------------------------
@@ -140,23 +175,12 @@ public class BookingActivity extends AppCompatActivity {
      */
     private void setupQueueButton() {
         ButtonHelper.setup(this, R.id.activity_booking__btn__queue, "Join the Queue", v -> {
-            if (currentTabType.equals("washer")) {
-                if (isInWasherQueue) handleLeaveQueue();
-                else handleJoinQueue();
+            if (isInQueue()) {
+                handleLeaveQueue();
             } else {
-                if (isInDryerQueue) handleLeaveQueue();
-                else handleJoinQueue();
+                handleJoinQueue();
             }
         });
-    }
-    private AppMachine.State mapState(String status) {
-        switch (status) {
-            case "AVAILABLE": return AVAILABLE;
-            case "RESERVED": return RESERVED;
-            case "IN_USE": return IN_USE;
-            case "OOS": return OOS;
-            default: return AVAILABLE;
-        }
     }
 
     /**
@@ -165,85 +189,43 @@ public class BookingActivity extends AppCompatActivity {
 
     private void handleJoinQueue() {
 
-        String userId = UserSession.getInstance().getUsername();
+        String userId = getUserIdOrFail();
+        if (userId == null) return;
 
-        if (userId == null) {
-            Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String machineType = currentTabType;
 
-        String type = currentTabType;
-
-        if (type.equals("washer") && isInWasherQueue) return;
-        if (type.equals("dryer") && isInDryerQueue) return;
-
-        QueueRepository.joinQueue(userId, type, new Callback<QueueResponse>() {
+        // Call repository (clean architecture)
+        QueueRepository.joinQueue(userId, machineType, new QueueCallback() {
             @Override
-            public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
-                if (isFinishing() || isDestroyed()) return;
-
-                if (response.isSuccessful() && response.body() != null) {
-                    QueueResponse body = response.body();
-                    if (body.machineType != null && body.machineType.equalsIgnoreCase("washer")) {
-                        isInWasherQueue = true;
-                    } else if (body.machineType != null && body.machineType.equalsIgnoreCase("dryer")) {
-                        isInDryerQueue = true;
-                    }
-
-                    highlightAssignedMachine(body.machineType, body.machineNumber);
-
-                    updateQueueButtonState();
-
-                    Toast.makeText(BookingActivity.this, body.message, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(BookingActivity.this, "Failed to join queue", Toast.LENGTH_SHORT).show();
-                }
+            public void onSuccess(QueueResponse body) {
+                handleJoinQueueSuccess(body);
             }
 
             @Override
-            public void onFailure(Call<QueueResponse> call, Throwable t) {
-                if (isFinishing() || isDestroyed()) return;
-                Toast.makeText(BookingActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            public void onError(String error) {
+                Toast.makeText(BookingActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void handleLeaveQueue() {
-
-        String userId = UserSession.getInstance().getUsername();
-
-        if (userId == null) {
-            Toast.makeText(this, "No active queue found", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String userId = getUserIdOrFail();
+        if (userId == null) return;
 
         String type = currentTabType;
-        QueueRepository.cancelQueue(userId, type, new Callback<QueueResponse>() {
+
+        QueueRepository.cancelQueue(userId, type, new QueueCallback() {
             @Override
-            public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
-                if (isFinishing() || isDestroyed()) return;
-
-                if (response.isSuccessful() && response.body() != null) {
-                    if (type.equalsIgnoreCase("washer")) {
-                        isInWasherQueue = false;
-                    } else if (type.equalsIgnoreCase("dryer")) {
-                        isInDryerQueue = false;
-                    }
-
-                    clearOutlinesForType(type);
-
-                    updateQueueButtonState();
-
-                    Toast.makeText(BookingActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(BookingActivity.this, "Failed to leave queue", Toast.LENGTH_SHORT).show();
-                }
+            public void onSuccess(QueueResponse body) {
+                setQueueState(type, false);
+                clearAssignedMachine(type);
+                updateQueueButtonState();
+                Toast.makeText(BookingActivity.this, body.message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<QueueResponse> call, Throwable t) {
-                if (isFinishing() || isDestroyed()) return;
-                Toast.makeText(BookingActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            public void onError(String error) {
+                Toast.makeText(BookingActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -257,7 +239,7 @@ public class BookingActivity extends AppCompatActivity {
     private void highlightAssignedMachine(String machineType, int machineNumber) {
         if (machineType == null) return;
 
-        if (machineType.equalsIgnoreCase("washer")) {
+        if (TYPE_WASHER.equalsIgnoreCase(machineType)) {
             // Clear only washer outlines, keep dryer intact
             for (int i = 1; i <= 4; i++) {
                 washerManager.setOutline(i, false);
@@ -265,7 +247,7 @@ public class BookingActivity extends AppCompatActivity {
             washerManager.setOutline(machineNumber, true);
             washerManager.setState(machineNumber, RESERVED);
 
-        } else if (machineType.equalsIgnoreCase("dryer")) {
+        } else if (TYPE_DRYER.equalsIgnoreCase(machineType)) {
             // Clear only dryer outlines, keep washer intact
             for (int i = 1; i <= 4; i++) {
                 dryerManager.setOutline(i, false);
@@ -274,70 +256,26 @@ public class BookingActivity extends AppCompatActivity {
             dryerManager.setState(machineNumber, RESERVED);
         }
     }
-
-    /**
-     * Clears all outlines on all machines.
-     * Called when the user leaves the queue.
-     */
-    private void clearAllOutlines() {
-        for (int i = 1; i <= 4; i++) {
-            washerManager.setOutline(i, false);
-            dryerManager.setOutline(i, false);
-        }
+    private void handleJoinQueueSuccess(QueueResponse body) {
+        assignedMachineNumber = body.machineNumber;
+        setQueueState(body.machineType, true);
+        highlightAssignedMachine(body.machineType, body.machineNumber);
+        updateQueueButtonState();
+        Toast.makeText(this, body.message, Toast.LENGTH_SHORT).show();
     }
 
-    private void clearOutlinesForType(String type) {
-        for (int i = 1; i <= 4; i++) {
-            if (type.equalsIgnoreCase("washer")) {
-                washerManager.setOutline(i, false);
-            } else if (type.equalsIgnoreCase("dryer")) {
-                dryerManager.setOutline(i, false);
-            }
+
+    private void clearAssignedMachine(String type) {
+        if (assignedMachineNumber == -1) return;
+
+        if (TYPE_WASHER.equalsIgnoreCase(type)) {
+            washerManager.setOutline(assignedMachineNumber, false);
+            washerManager.setState(assignedMachineNumber, AVAILABLE);
+        } else if (TYPE_DRYER.equalsIgnoreCase(type)) {
+            dryerManager.setOutline(assignedMachineNumber, false);
+            dryerManager.setState(assignedMachineNumber, AVAILABLE);
         }
-    }
-
-    private void fetchMachineStates() {
-        BackendClient.getApi().getMachines().enqueue(new Callback<Map<String, Map<Integer, String>>>() {
-            @Override
-            public void onResponse(Call<Map<String, Map<Integer, String>>> call,
-                                   Response<Map<String, Map<Integer, String>>> response) {
-
-                if (response.isSuccessful() && response.body() != null) {
-
-                    Map<String, Map<Integer, String>> data = response.body();
-
-                    Map<Integer, String> washers = data.get("washer");
-                    Map<Integer, String> dryers  = data.get("dryer");
-
-                    // Update washer UI
-                    for (int i = 1; i <= 4; i++) {
-                        String state = washers.get(i);
-                        washerManager.setState(i, parseState(state));
-                    }
-
-                    // Update dryer UI
-                    for (int i = 1; i <= 4; i++) {
-                        String state = dryers.get(i);
-                        dryerManager.setState(i, parseState(state));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, Map<Integer, String>>> call, Throwable t) {
-                Toast.makeText(BookingActivity.this, "Failed to load machines", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private AppMachine.State parseState(String state) {
-        if (state == null) return AVAILABLE;
-
-        switch (state) {
-            case "RESERVED": return RESERVED;
-            case "IN_USE": return IN_USE;
-            case "OOS": return OOS;
-            default: return AVAILABLE;
-        }
+        assignedMachineNumber = -1;
     }
 
     // -------------------------------------------------------------------------
@@ -381,6 +319,47 @@ public class BookingActivity extends AppCompatActivity {
         }
     }
 
+    private void fetchMachineStates() {
+        QueueRepository.getMachines(new Callback<Map<String, Map<Integer, String>>>() {
+            @Override
+            public void onResponse(Call<Map<String, Map<Integer, String>>> call,
+                                   Response<Map<String, Map<Integer, String>>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+
+                    Map<String, Map<Integer, String>> data = response.body();
+
+                    Map<Integer, String> washers = data.get(TYPE_WASHER);
+                    Map<Integer, String> dryers  = data.get(TYPE_DRYER);
+
+                    if (washers == null || dryers == null) return;
+
+                    for (int i = 1; i <= 4; i++) {
+                        AppMachine.State washerState = parseState(washers.get(i));
+                        AppMachine.State dryerState  = parseState(dryers.get(i));
+
+                        updateWasher(i, washerState);
+                        updateDryer(i, dryerState);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Map<Integer, String>>> call, Throwable t) {
+                Toast.makeText(BookingActivity.this, "Failed to load machines", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateWasher(int i, AppMachine.State state) {
+        washerManager.setState(i, state);
+        MachineData.setWasherState(i, state);
+    }
+
+    private void updateDryer(int i, AppMachine.State state) {
+        dryerManager.setState(i, state);
+        MachineData.setDryerState(i, state);
+    }
+
     // -------------------------------------------------------------------------
     // Accessors
     // -------------------------------------------------------------------------
@@ -407,21 +386,32 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     private void updateQueueButtonState() {
-        if (currentTabType.equals("washer") && isInWasherQueue) {
-            ButtonHelper.setup(this,
-                    R.id.activity_booking__btn__queue,
-                    "Leave Queue",
-                    v -> handleLeaveQueue());
-        } else if (currentTabType.equals("dryer") && isInDryerQueue) {
-            ButtonHelper.setup(this,
-                    R.id.activity_booking__btn__queue,
-                    "Leave Queue",
-                    v -> handleLeaveQueue());
-        } else {
-            ButtonHelper.setup(this,
-                    R.id.activity_booking__btn__queue,
-                    "Join the Queue",
-                    v -> handleJoinQueue());
+
+
+        ButtonHelper.setup(this,
+                R.id.activity_booking__btn__queue,
+                isInQueue() ? "Leave Queue" : "Join the Queue",
+                v -> {
+                    if (isInQueue()) {
+                        handleLeaveQueue();
+                    } else {
+                        handleJoinQueue();
+                    }
+                });
+    }
+
+    // -------------------------------------------------------------------------
+    // Utilities
+    // -------------------------------------------------------------------------
+
+    private AppMachine.State parseState(String state) {
+        if (state == null) return AVAILABLE;
+
+        switch (state) {
+            case "RESERVED": return RESERVED;
+            case "IN_USE": return IN_USE;
+            case "OOS": return OOS;
+            default: return AVAILABLE;
         }
     }
 }
