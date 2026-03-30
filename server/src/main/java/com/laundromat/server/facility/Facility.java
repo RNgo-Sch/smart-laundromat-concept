@@ -54,7 +54,7 @@ public class Facility {
         } else if (dryerQueue.containsMachine(machineId)) {
             dryerQueue.interactWith(userId, machineId);
         } else {
-            System.out.println("Machine not found in facility")
+            System.out.println("Machine not found in facility");
         }
     }
 

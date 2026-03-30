@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.laundromat.server.db.User;
+import com.laundromat.server.model.User;   // ← fixed (was db.User)
 import com.laundromat.server.db.Query;
 
 public class Machine {
