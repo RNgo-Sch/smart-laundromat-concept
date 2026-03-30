@@ -1,0 +1,69 @@
+Index: app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/NavigationHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.smart_laundromat_concept.ui.navigation;\n\nimport android.app.Activity;\nimport android.content.Intent;\nimport android.view.View;\nimport android.view.animation.AnimationUtils;\n\nimport com.example.smart_laundromat_concept.R;\n\nimport java.util.Arrays;\nimport java.util.List;\n\n/**\n * Centralizes navigation execution across the app.\n * <p>\n * Responsibilities:\n * <ul>\n *   <li>Dispatching navigation requests to appropriate handlers.</li>\n *   <li>Executing activity transitions with animations.</li>\n *   <li>Handling internal view transitions within the same activity.</li>\n * </ul>\n * <p>\n * This class separates navigation execution (how) from navigation decision\n * logic (what), which is handled by {@link NavigatorModule} implementations.\n * <p>\n * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference\n * (e.g., {@link BookingNavigator#handle}) to jump directly to its implementation.\n */\npublic class NavigationHelper {\n\n    // -------------------------------------------------------------------------\n    // Registered Navigators\n    // -------------------------------------------------------------------------\n\n    // Navigators are checked in order — first match wins\n    private static final List<NavigatorModule> NAVIGATORS = Arrays.asList(\n            new AuthNavigator(),\n            new MenuNavigator(),\n            new BookingNavigator(),\n            new SystemNavigator()\n    );\n\n    // -------------------------------------------------------------------------\n    // Public Methods\n    // -------------------------------------------------------------------------\n\n    /**\n     * Entry point for handling navigation triggered by a UI interaction.\n     * Iterates through registered navigators to find a matching handler.\n     *\n     * @param activity the current Activity context\n     * @param view     the clicked view triggering navigation\n     */\n    public static void launchPage(Activity activity, View view) {\n        int id = view.getId();\n\n        for (NavigatorModule navigator : NAVIGATORS) {\n            NavigationRequest request = navigator.handle(activity, id);\n            if (request != null) {\n                executeNavigation(activity, request);\n                return;\n            }\n        }\n    }\n\n    /**\n     * Executes an internal view transition within the same Activity.\n     * Supports directional slide animations or simple visibility toggling.\n     *\n     * @param activity the current Activity context\n     * @param request  the navigation request containing view references and animation type\n     */\n    public static void executeInternalTransition(Activity activity, NavigationRequest request) {\n        View toShow = request.viewToShow;\n        View toHide = request.viewToHide;\n\n        if (request.animation == NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT) {\n            // Show from left, hide to the right\n            if (toHide != null) {\n                toHide.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_out_right));\n                toHide.setVisibility(View.GONE);\n            }\n            toShow.setVisibility(View.VISIBLE);\n            toShow.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_in_left));\n\n        } else if (request.animation == NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT) {\n            // Show from right, hide to the left\n            if (toHide != null) {\n                toHide.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_out_left));\n                toHide.setVisibility(View.GONE);\n            }\n            toShow.setVisibility(View.VISIBLE);\n            toShow.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_in_right));\n\n        } else {\n            // Fallback — toggle visibility without animation\n            if (toHide != null) toHide.setVisibility(View.GONE);\n            if (toShow != null) toShow.setVisibility(View.VISIBLE);\n        }\n    }\n\n    // -------------------------------------------------------------------------\n    // Private Methods\n    // -------------------------------------------------------------------------\n\n    /**\n     * Executes a NavigationRequest by either starting a new Activity\n     * or performing an internal view transition.\n     *\n     * @param activity the current Activity context\n     * @param request  the navigation request describing the action\n     */\n    private static void executeNavigation(Activity activity, NavigationRequest request) {\n        // Case 1 — internal view transition (same activity)\n        if (request.viewToShow != null) {\n            executeInternalTransition(activity, request);\n            return;\n        }\n\n        // Case 2 — activity navigation (new screen)\n        Intent intent = request.intent != null\n                ? request.intent\n                : new Intent(activity, request.targetClass);\n\n        String targetName = intent.getComponent() != null\n                ? intent.getComponent().getClassName()\n                : request.targetClass.getName();\n\n        // Prevent launching the same activity again\n        if (activity.getClass().getName().equals(targetName)) {\n            return;\n        }\n\n        activity.startActivity(intent);\n\n        // Apply transition animation\n        if (request.animation != null) {\n            switch (request.animation) {\n                case FADE:\n                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);\n                    break;\n                case SLIDE_LEFT:\n                    activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);\n                    break;\n                case SLIDE_RIGHT:\n                default:\n                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);\n                    break;\n            }\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/NavigationHelper.java b/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/NavigationHelper.java
+--- a/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/NavigationHelper.java	(revision efb5f8301ea7b4701fddc97b3d136a1803779c32)
++++ b/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/NavigationHelper.java	(date 1774792272077)
+@@ -63,6 +63,21 @@
+         }
+     }
+ 
++    public static void fadingIn(View view) {
++        view.setAlpha(0f);
++        view.animate()
++                .alpha(1f)
++                .setDuration(200)
++                .start();
++    }
++
++    public static void fadingOut(View view) {
++        view.animate()
++                .alpha(0f)
++                .setDuration(200)
++                .start();
++    }
++
+     /**
+      * Executes an internal view transition within the same Activity.
+      * Supports directional slide animations or simple visibility toggling.
+Index: app/src/main/java/com/example/smart_laundromat_concept/ui/activities/admin/AdminActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/admin/AdminActivity.java b/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/admin/AdminActivity.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/smart_laundromat_concept/ui/activities/admin/AdminActivity.java	(revision efb5f8301ea7b4701fddc97b3d136a1803779c32)
++++ /dev/null	(revision efb5f8301ea7b4701fddc97b3d136a1803779c32)
+@@ -1,26 +0,0 @@
+-package com.example.smart_laundromat_concept.ui.activities.admin;
+-
+-import android.os.Bundle;
+-
+-import androidx.activity.EdgeToEdge;
+-import androidx.appcompat.app.AppCompatActivity;
+-import androidx.core.graphics.Insets;
+-import androidx.core.view.ViewCompat;
+-import androidx.core.view.WindowInsetsCompat;
+-
+-import com.example.smart_laundromat_concept.R;
+-
+-public class AdminActivity extends AppCompatActivity {
+-
+-    @Override
+-    protected void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        EdgeToEdge.enable(this);
+-        setContentView(R.layout.activity_admin);
+-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+-            return insets;
+-        });
+-    }
+-}
+\ No newline at end of file

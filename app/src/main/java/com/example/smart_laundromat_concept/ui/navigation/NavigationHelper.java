@@ -80,6 +80,21 @@ public class NavigationHelper {
                 .start();
     }
 
+    public static void fadingIn(View view) {
+        view.setAlpha(0f);
+        view.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start();
+    }
+
+    public static void fadingOut(View view) {
+        view.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .start();
+    }
+
     /**
      * Executes an internal view transition within the same Activity.
      * Supports directional slide animations or simple visibility toggling.

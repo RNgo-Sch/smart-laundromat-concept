@@ -333,76 +333,7 @@ public class BookingActivity extends AppCompatActivity {
         });
     }
 
-//    private void fetchMachineStates() {
-//
-//        int storeId = 1;
-//
-//        // Washers
-//        SupabaseClient.getApi()
-//                .getMachinesByType("eq." + storeId, "eq." + TYPE_WASHER)
-//                .enqueue(new Callback<List<AppMachine>>() {
-//                    @Override
-//                    public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
-//
-//                        if (!response.isSuccessful()) {
-//                            Toast.makeText(BookingActivity.this,
-//                                    "Error: " + response.code(),
-//                                    Toast.LENGTH_LONG).show();
-//                            return;
-//                        }
-//
-//                        if (response.body() == null) return;
-//                        Log.d("MACHINE_DEBUG", "TOTAL WASHERS = " + response.body().size());
-//
-//                        for (AppMachine machine : response.body()) {
-//                            Log.d("MACHINE_DEBUG", "Washer pos=" + machine.position + " state=" + machine.status);
-//                            AppMachine.State state = AppMachine.State.fromString(machine.status);
-//
-//                            updateWasher(machine.position, state);
-//
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<AppMachine>> call, Throwable t) {
-//                        Toast.makeText(BookingActivity.this,
-//                                "Network error: " + t.getMessage(),
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                });
-//
-//        // Dryers
-//        SupabaseClient.getApi()
-//                .getMachinesByType("eq." + storeId, "eq." + TYPE_DRYER)
-//                .enqueue(new Callback<List<AppMachine>>() {
-//                    @Override
-//                    public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
-//
-//                        if (!response.isSuccessful()) {
-//                            Toast.makeText(BookingActivity.this,
-//                                    "Error: " + response.code(),
-//                                    Toast.LENGTH_LONG).show();
-//                            return;
-//                        }
-//
-//                        if (response.body() == null) return;
-//
-//                        for (AppMachine machine : response.body()) {
-//                            AppMachine.State state = AppMachine.State.fromString(machine.status);
-//
-//                            updateDryer(machine.position, state);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<AppMachine>> call, Throwable t) {
-//                        Toast.makeText(BookingActivity.this,
-//                                "Network error: " + t.getMessage(),
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                });
-//    }
+
     private void updateWasher(int i, AppMachine.State state) {
         washerManager.setState(i, state);
         AppMachine.setWasherState(i, state);

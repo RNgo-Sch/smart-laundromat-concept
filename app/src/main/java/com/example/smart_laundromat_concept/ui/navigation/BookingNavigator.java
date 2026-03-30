@@ -1,5 +1,7 @@
 package com.example.smart_laundromat_concept.ui.navigation;
 
+import static com.example.smart_laundromat_concept.ui.navigation.NavigationHelper.*;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.view.View;
@@ -81,6 +83,7 @@ public class BookingNavigator implements NavigatorModule {
             washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             washerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));
+            fadingIn(washerButton);
 
             dryerButton.setBackgroundTintList(null);
             dryerButton.setTextColor(black);
@@ -93,6 +96,7 @@ public class BookingNavigator implements NavigatorModule {
             dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
             dryerButton.setTextColor(white);
             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));
+            fadingIn(dryerButton);
         }
 
         // --- Sync machine data with managers ---

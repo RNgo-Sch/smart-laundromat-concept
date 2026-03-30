@@ -1,0 +1,57 @@
+Index: app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/BookingNavigator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.smart_laundromat_concept.ui.navigation;\n\nimport android.app.Activity;\nimport android.content.res.ColorStateList;\nimport android.view.View;\nimport android.widget.Button;\n\nimport androidx.core.content.ContextCompat;\nimport androidx.core.widget.TextViewCompat;\n\nimport com.example.smart_laundromat_concept.R;\nimport com.example.smart_laundromat_concept.ui.activities.main.booking.BookingActivity;\n\n/**\n * Handles internal UI state navigation within the BookingActivity.\n * <p>\n * This navigator manages the toggling between Washer and Dryer views, including:\n * <ul>\n *   <li>Updating button styles (colors and tints).</li>\n *   <li>Triggering UI updates via the machine managers.</li>\n *   <li>Coordinating slide animations between layout containers.</li>\n * </ul>\n * <p>\n * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link NavigationHelper#executeInternalTransition}\n * to see how the view sliding logic is implemented.\n */\npublic class BookingNavigator implements NavigatorModule {\n\n    // -------------------------------------------------------------------------\n    // NavigatorModule\n    // -------------------------------------------------------------------------\n\n    /**\n     * Processes booking-related navigation requests based on view IDs.\n     *\n     * @param activity the current Activity context\n     * @param id       the ID of the clicked View\n     * @return a {@link NavigationRequest} if the ID is handled, otherwise null\n     */\n    @Override\n    public NavigationRequest handle(Activity activity, int id) {\n        if (id == R.id.activity_booking__btn__washer) {\n            return updateUI(activity, true);\n        }\n\n        if (id == R.id.activity_booking__btn__dryer) {\n            return updateUI(activity, false);\n        }\n\n        return null;\n    }\n\n    // -------------------------------------------------------------------------\n    // Private Methods\n    // -------------------------------------------------------------------------\n\n    /**\n     * Synchronizes button styles, machine data, and container visibility\n     * based on the selected machine type.\n     *\n     * @param activity    the current Activity context\n     * @param showWasher  true to show the Washer section, false for Dryer\n     * @return a {@link NavigationRequest} describing the internal transition, or null\n     */\n    private NavigationRequest updateUI(Activity activity, boolean showWasher) {\n        Button washerButton     = activity.findViewById(R.id.activity_booking__btn__washer);\n        Button dryerButton      = activity.findViewById(R.id.activity_booking__btn__dryer);\n        View washerContainer    = activity.findViewById(R.id.activity_booking__view__washer_container);\n        View dryerContainer     = activity.findViewById(R.id.activity_booking__view__dryer_container);\n\n        if (washerButton == null || dryerButton == null || washerContainer == null || dryerContainer == null) {\n            return null;\n        }\n\n        int white = ContextCompat.getColor(activity, R.color.white);\n        int black = ContextCompat.getColor(activity, R.color.black);\n        int blue  = ContextCompat.getColor(activity, R.color.blue);\n\n        // --- Update button styles ---\n        if (showWasher) {\n            washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));\n            washerButton.setTextColor(white);\n            TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));\n\n            dryerButton.setBackgroundTintList(null);\n            dryerButton.setTextColor(black);\n            TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(black));\n        } else {\n            washerButton.setBackgroundTintList(null);\n            washerButton.setTextColor(black);\n            TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(black));\n\n            dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));\n            dryerButton.setTextColor(white);\n            TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));\n        }\n\n        // --- Sync machine data with managers ---\n        if (activity instanceof BookingActivity) {\n            BookingActivity bookingActivity = (BookingActivity) activity;\n            if (showWasher) {\n                bookingActivity.getWasherManager().updateAll();\n            } else {\n                bookingActivity.getDryerManager().updateAll();\n            }\n        }\n\n\n\n        // --- Return animation request based on current visibility ---\n        if (showWasher) {\n            washerContainer.setVisibility(View.VISIBLE);\n            dryerContainer.setVisibility(View.GONE);\n\n            if (dryerContainer.getVisibility() == View.VISIBLE) {\n                return new NavigationRequest(washerContainer, dryerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT);\n            }\n        } else {\n            dryerContainer.setVisibility(View.VISIBLE);\n            washerContainer.setVisibility(View.GONE);\n\n            if (washerContainer.getVisibility() == View.VISIBLE) {\n                return new NavigationRequest(dryerContainer, washerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);\n            }\n        }\n\n        return null;\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/BookingNavigator.java b/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/BookingNavigator.java
+--- a/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/BookingNavigator.java	(revision f012ef7aad1106a4f65811d04e31cf372e6dbcfb)
++++ b/app/src/main/java/com/example/smart_laundromat_concept/ui/navigation/BookingNavigator.java	(date 1774792249604)
+@@ -1,5 +1,8 @@
+ package com.example.smart_laundromat_concept.ui.navigation;
+ 
++import static com.example.smart_laundromat_concept.ui.navigation.NavigationHelper.*;
++
++
+ import android.app.Activity;
+ import android.content.res.ColorStateList;
+ import android.view.View;
+@@ -78,21 +81,29 @@
+ 
+         // --- Update button styles ---
+         if (showWasher) {
++
++            // Fade washer button in (active)
+             washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
+             washerButton.setTextColor(white);
+             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));
++            fadingIn(washerButton);
++
+ 
+             dryerButton.setBackgroundTintList(null);
+             dryerButton.setTextColor(black);
+             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(black));
++
+         } else {
++
+             washerButton.setBackgroundTintList(null);
+             washerButton.setTextColor(black);
+             TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(black));
+ 
++            // Fade dryer button in (active)
+             dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
+             dryerButton.setTextColor(white);
+             TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));
++            fadingIn(dryerButton);
+         }
+ 
+         // --- Sync machine data with managers ---
+@@ -119,6 +130,7 @@
+             dryerContainer.setVisibility(View.VISIBLE);
+             washerContainer.setVisibility(View.GONE);
+ 
++
+             if (washerContainer.getVisibility() == View.VISIBLE) {
+                 return new NavigationRequest(dryerContainer, washerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);
+             }
