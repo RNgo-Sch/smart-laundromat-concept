@@ -28,6 +28,10 @@ public class QueueController {
     public String testDB() {
         return jdbcTemplate.queryForObject("SELECT 'DB Connected!'", String.class);
     }
+    @GetMapping("/test")
+    public String test() {
+        return "Backend working";
+    }
 
 
 
