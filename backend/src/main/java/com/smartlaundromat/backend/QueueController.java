@@ -193,7 +193,9 @@ public class QueueController {
     }
     @GetMapping("/machines")
     public List<Map<String, Object>> getMachines() {
-        return jdbcTemplate.queryForList("SELECT * FROM machine");
+        return jdbcTemplate.queryForList(
+                "SELECT id, type, status, \"current_user\" FROM machine"
+        );
     }
 
     // -------------------------------------------------------------------------
