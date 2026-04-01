@@ -1,7 +1,5 @@
 package com.laundromat.server.model;
 
-import com.laundromat.server.db.Query; // ← fixed (was com.laundromat.server.Query)
-
 public class User {
 
     private Integer id;
@@ -11,13 +9,12 @@ public class User {
     public String username;
     public String password;
 
-    // TODO: rewrite constructor to be supabase friendly
-    public User(int userId) {
-        this.id = userId; // ← fixed (was Query.userFromId(userId) which returns User not int)
-        this.wallet = new Wallet();
-        this.reputation = new Reputation();
-        this.username = String.valueOf(this.id);
-        this.password = "1";
+    public User(int id, String username, String password, float wallet, int reputation) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.wallet = new Wallet(wallet);
+        this.reputation = new Reputation(reputation);
     }
 
     // accessors
@@ -37,15 +34,16 @@ public class User {
         return Integer.hashCode(id);
     }
 
-    // -------------------------------------------------------------------------
     // Helper Classes
-    // -------------------------------------------------------------------------
-
     public static class Wallet {
         float balance;
 
         public Wallet() {
             this.balance = 0.0f;
+        }
+
+        public Wallet(float initialBalance) {
+            this.balance = initialBalance;
         }
 
         public float getBalance() {
@@ -83,6 +81,10 @@ public class User {
 
         public Reputation() {
             this.score = 0;
+        }
+
+        public Reputation(int initialScore) {
+            this.score = initialScore;
         }
 
         public int getReputationTier() {

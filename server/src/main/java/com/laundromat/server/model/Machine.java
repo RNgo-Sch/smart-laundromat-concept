@@ -4,7 +4,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.laundromat.server.model.User;   // ← fixed (was db.User)
 import com.laundromat.server.db.Query;
 
 public class Machine {
@@ -22,6 +21,10 @@ public class Machine {
                 m.setNextTime(10);
                 return RESERVED;
             }
+            @Override
+            public void resume(Machine m) {
+                // do nothing
+            }
         },
         RESERVED {
             // this state has currentUser and 10s nextTime
@@ -38,14 +41,18 @@ public class Machine {
                 // if same user, they start the washing cycle
                 if (m.getCurrentUser().getId() == u) {
                     m.setNextTime(30);
-                    return INUSE;
+                    return IN_USE;
                 } else {
                     // no effect if different user
                     return RESERVED;
                 }
             }
+            @Override
+            public void resume(Machine m) {
+                m.setNextTime(10);
+            }
         },
-        INUSE {
+        IN_USE {
             // this state has current user and 30s nextTime
             @Override
             public State timeOut(Machine m) {
@@ -55,7 +62,11 @@ public class Machine {
             }
             @Override
             public State interact(Machine m, int u) {
-                return INUSE; // ignore interaction during state
+                return IN_USE;
+            }
+            @Override
+            public void resume(Machine m) {
+                m.setNextTime(30);
             }
         },
         COLLECTION {
@@ -78,10 +89,29 @@ public class Machine {
                     return COLLECTION; // ignore interaction from other users
                 }
             }
+            @Override
+            public void resume(Machine m) {
+                m.setNextTime(10);
+            }
+        },
+        OOS {
+            @Override
+            public State timeOut(Machine m) {
+                return OOS;
+            }
+            @Override
+            public State interact(Machine m, int u) {
+                return OOS;
+            }
+            @Override
+            public void resume(Machine m) {
+                // do nothing
+            }
         };
 
         public abstract State timeOut(Machine m);
         public abstract State interact(Machine m, int u);
+        public abstract void resume(Machine m);
     }
 
     private final Integer id;
@@ -89,12 +119,12 @@ public class Machine {
     private User currentUser;
     private ScheduledExecutorService nextTime;
 
-    // TODO rewrite constructor to be supabase friendly
-    public Machine(int machineId) {
-        this.id = machineId;
-        this.state = State.AVAILABLE;
-        this.currentUser = null;
+    public Machine(int id, State state, User currentUser) {
+        this.id = id;
+        this.state = state;
+        this.currentUser = currentUser;
         this.nextTime = Executors.newSingleThreadScheduledExecutor();
+        this.state.resume(this);
     }
 
     // methods
