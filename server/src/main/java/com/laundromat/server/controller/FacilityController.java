@@ -14,7 +14,6 @@ public class FacilityController {
 
     private final Facility facility;
 
-    // Spring injects both Facility and JdbcTemplate automatically
     public FacilityController(Facility facility) {
         this.facility = facility;
     }
@@ -22,6 +21,7 @@ public class FacilityController {
     // POST /queue/washer?userId=<_>
     @PostMapping("/queue/washer")
     public ResponseEntity<?> joinWasherQueue(@RequestParam int userId) {
+        System.out.println("FacilityController: washer queue request from user "+userId);
         facility.queueForWasher(userId);
         return ResponseEntity.ok("Joined washer queue");
     }
@@ -29,6 +29,7 @@ public class FacilityController {
     // POST /queue/dryer?userId=<_>
     @PostMapping("/queue/dryer")
     public ResponseEntity<?> joinDryerQueue(@RequestParam int userId) {
+        System.out.println("FacilityController: dryer queue request from user "+userId);
         facility.queueForDryer(userId);
         return ResponseEntity.ok("Joined dryer queue");
     }
@@ -36,7 +37,8 @@ public class FacilityController {
     // POST /interact?userId=<_>&machineId=<_>
     @PostMapping("/interact")
     public ResponseEntity<?> interactWithMachine(@RequestParam int userId, @RequestParam int machineId) {
-        // TODO implement machine interaction
+        System.out.println("FacilityController: interact request from "+userId+" for machine "+machineId);
+        facility.interactWith(userId, machineId);
         return ResponseEntity.ok("Interacted with machine");
     }
 }

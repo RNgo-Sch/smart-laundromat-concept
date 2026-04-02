@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.laundromat.server.model.Machine;
 import com.laundromat.server.model.User;
 
+// TODO catch exceptions
 @Component
 public class Query {
 

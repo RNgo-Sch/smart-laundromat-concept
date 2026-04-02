@@ -18,7 +18,7 @@ public class Facility {
     public Facility(Machine[] washers, Machine[] dryers) {
         this.washerQueue = new MachineQueue(washers);
         this.dryerQueue = new MachineQueue(dryers);
-        System.out.println("Facility: Object created:\n"+washerQueue+"\n"+dryerQueue+"\n---");
+        System.out.println("Facility: created\n"+this);
     }
 
     // app request related methods
@@ -33,7 +33,7 @@ public class Facility {
 
     // queue monitoring methods
     public void startMonitoringQueues() {
-        System.out.println("checking queue");
+        System.out.println("Facility (scheduled): checking queue");
         this.queueChecker = Executors.newSingleThreadScheduledExecutor();
         this.queueChecker.scheduleAtFixedRate(() -> {
             if (!washerQueue.isEmpty() && washerQueue.hasAvailableMachine()) {
@@ -43,18 +43,16 @@ public class Facility {
                 dryerQueue.updateQueue();
             }
             // TODO Sync machines to Supabase
-        }, 0, 5, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     // machine interaction
     public void interactWith(int userId, int machineId) {
-        System.out.println("User " + userId + "interacting with Machine " + machineId);
+        System.out.println("Facility: user " + userId + "interacting with Machine " + machineId);
         if (washerQueue.containsMachine(machineId)) {
             washerQueue.interactWith(userId, machineId);
         } else if (dryerQueue.containsMachine(machineId)) {
             dryerQueue.interactWith(userId, machineId);
-        } else {
-            System.out.println("Machine not found in facility");
         }
     }
 

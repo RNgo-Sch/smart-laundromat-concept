@@ -16,7 +16,7 @@ public class Machine {
             }
             @Override
             public State interact(Machine m, int u) {
-                // User which interacted reserved machine
+                // user which interacted reserved machine
                 m.setCurrentUser(u);
                 m.setNextTime(10);
                 return RESERVED;
@@ -30,7 +30,7 @@ public class Machine {
             // this state has currentUser and 10s nextTime
             @Override
             public State timeOut(Machine m) {
-                // User did not use machine within their reserved time
+                // user did not use machine within their reserved time
                 m.clearNextTime();
                 m.punishCurrentUser();
                 m.clearCurrentUser();
@@ -124,24 +124,25 @@ public class Machine {
         this.state = state;
         this.currentUser = currentUser;
         this.nextTime = Executors.newSingleThreadScheduledExecutor();
-        this.state.resume(this);
+        resume();
     }
 
     // methods
     public void timeOut() {
         this.state = this.state.timeOut(this);
-        System.out.print("Timeout triggered; " + this.toString() + "\n");
+        System.out.print("Machine " + this.id + " : timeout triggered; " + this.toString() + "\n");
     }
     public void useMachine(int userId) {
         this.state = this.state.interact(this, userId);
-        System.out.print("User " + userId + " interacted; " + this.toString() + "\n");
+        System.out.print("Machine " + this.id + " : user " + userId + " interacted; " + this.toString() + "\n");
     }
     protected void punishCurrentUser() {
         if (this.currentUser != null) {
             // punishment logic
-            System.out.println("User punishment applied");
+            System.out.println("Machine "+this.id+" : punishment applied for user "+this.currentUser.getId());
         }
     }
+
     // getters
     public int getId() {
         return this.id;
@@ -173,6 +174,9 @@ public class Machine {
     }
 
     // misc
+    private void resume() {
+        this.state.resume(this);
+    }
     @Override
     public String toString() {
         return "Machine " + this.id + " state: " + this.getState() + "; currentUser: " + this.getCurrentUser() + "; Executor: " + this.nextTime;
