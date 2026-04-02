@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 import com.laundromat.server.model.Machine;
 
 public class MachineQueue extends PriorityQueue<QueueMember> {
-    private Machine[] machines;
+    private final Machine[] machines;
 
     public MachineQueue(Machine[] machines) {
         this.machines = machines;
@@ -33,7 +33,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     }
     public void updateQueue() {
         // method called because available machine for user
-        int u = this.poll().getQueuer().getId();
+        int u = this.poll().getQueuer();
         Machine m = findAvailableMachine();
         m.useMachine(u);
     }
@@ -72,7 +72,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
 
     private boolean contains(int queuer) {
         for (Object o: this.toArray()) {
-            if (o instanceof QueueMember m && m.getQueuer().getId() == queuer) {
+            if (o instanceof QueueMember m && m.getQueuer() == queuer) {
                 return true;
             }
         }

@@ -2,23 +2,22 @@ package com.laundromat.server.queue;
 
 import java.util.Objects;
 
-import com.laundromat.server.model.User;
 import com.laundromat.server.db.Query;
-
-// TODO rewrite to only have userId instead of whole object
+import com.laundromat.server.model.User;
 
 public class QueueMember implements Comparable<QueueMember> {
     private final static int REPUTATION_BONUS = 1;
 
-    private final User queuer;
+    private final int queuer;
     private int priority;
 
     public QueueMember(int queuer) {
-        this.queuer = Query.userFromId(queuer);
-        this.priority = (this.queuer.reputation.getReputationTier() * REPUTATION_BONUS);
+        this.queuer = queuer; 
+        Query.userFromId(queuer);
+        this.priority = (Query.userFromId(queuer).reputation.getReputationTier() * REPUTATION_BONUS);
     }
 
-    public User getQueuer() {
+    public int getQueuer() {
         return queuer;
     }
     public int getPriority() {
@@ -36,8 +35,8 @@ public class QueueMember implements Comparable<QueueMember> {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj instanceof QueueMember other) return this.queuer.equals(other.queuer);
-        if (obj instanceof User other) return this.queuer.equals(other);
+        if (obj instanceof QueueMember other) return this.queuer == other.queuer;
+        if (obj instanceof User other) return this.queuer == other.getId();
         return false;
     }
     @Override
