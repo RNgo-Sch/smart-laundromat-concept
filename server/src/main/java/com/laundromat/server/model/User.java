@@ -87,6 +87,10 @@ public class User {
             this.score = initialScore;
         }
 
+        public int getScore() {
+            return score;
+        }
+
         public int getReputationTier() {
             for (int i = 0; i < TIERS.length; i++) {
                 if (score < TIERS[i]) return i;

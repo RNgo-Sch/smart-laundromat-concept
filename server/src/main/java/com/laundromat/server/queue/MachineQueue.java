@@ -58,6 +58,9 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     }
 
     // machine array helper methods
+    public Machine[] getMachines() {
+        return machines;
+    }
     public boolean containsMachine(int machineId) {
         return getMachine(machineId) != null;
     }

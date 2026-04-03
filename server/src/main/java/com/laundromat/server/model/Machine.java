@@ -41,6 +41,7 @@ public class Machine {
                 // if same user, they start the washing cycle
                 if (m.getCurrentUser().getId() == u) {
                     m.setNextTime(30);
+                    m.rewardCurrentUser();
                     return IN_USE;
                 } else {
                     // no effect if different user
@@ -84,6 +85,7 @@ public class Machine {
                 if (m.getCurrentUser().getId() == u) {
                     m.clearNextTime();
                     m.clearCurrentUser();
+                    m.rewardCurrentUser();
                     return AVAILABLE;
                 } else {
                     return COLLECTION; // ignore interaction from other users
@@ -130,16 +132,22 @@ public class Machine {
     // methods
     public void timeOut() {
         this.state = this.state.timeOut(this);
-        System.out.print("Machine " + this.id + " : timeout triggered; " + this.toString() + "\n");
+        System.out.print("Machine " + this.id + ": timeout triggered; " + this.toString() + "\n");
     }
     public void useMachine(int userId) {
         this.state = this.state.interact(this, userId);
-        System.out.print("Machine " + this.id + " : user " + userId + " interacted; " + this.toString() + "\n");
+        System.out.print("Machine " + this.id + ": user " + userId + " interacted; " + this.toString() + "\n");
     }
     protected void punishCurrentUser() {
         if (this.currentUser != null) {
-            // punishment logic
-            System.out.println("Machine "+this.id+" : punishment applied for user "+this.currentUser.getId());
+            this.currentUser.reputation.adjustScore(-5);
+            System.out.println("Machine "+this.id+": punishment applied for user "+this.currentUser.getId());
+        }
+    }
+    protected void rewardCurrentUser() {
+        if (this.currentUser != null) {
+            this.currentUser.reputation.adjustScore(5);
+            System.out.println("Machine "+this.id+": reward applied for user "+this.currentUser.getId());
         }
     }
 

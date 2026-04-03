@@ -4,6 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.laundromat.server.db.Update;
 import com.laundromat.server.model.Machine;
 import com.laundromat.server.queue.MachineQueue;
 
@@ -33,22 +34,28 @@ public class Facility {
 
     // queue monitoring methods
     public void startMonitoringQueues() {
-        System.out.println("Facility (scheduled): checking queue");
+        System.out.println("Facility (scheduled): starting queue monitor");
         this.queueChecker = Executors.newSingleThreadScheduledExecutor();
         this.queueChecker.scheduleAtFixedRate(() -> {
-            if (!washerQueue.isEmpty() && washerQueue.hasAvailableMachine()) {
-                washerQueue.updateQueue();
+            try {
+                System.out.println("Facility (scheduled): checking queue");
+                if (!washerQueue.isEmpty() && washerQueue.hasAvailableMachine()) {
+                    washerQueue.updateQueue();
+                }
+                if (!dryerQueue.isEmpty() && dryerQueue.hasAvailableMachine()) {
+                    dryerQueue.updateQueue();
+                }
+                syncAllMachines();
+            } catch (Exception e) {
+                System.err.println("Facility (scheduled): error during queue check - " + e.getMessage());
+                e.printStackTrace();
             }
-            if (!dryerQueue.isEmpty() && dryerQueue.hasAvailableMachine()) {
-                dryerQueue.updateQueue();
-            }
-            // TODO Sync machines to Supabase
         }, 0, 1, TimeUnit.SECONDS);
     }
 
     // machine interaction
     public void interactWith(int userId, int machineId) {
-        System.out.println("Facility: user " + userId + "interacting with Machine " + machineId);
+        System.out.println("Facility: user " + userId + " interacting with Machine " + machineId);
         if (washerQueue.containsMachine(machineId)) {
             washerQueue.interactWith(userId, machineId);
         } else if (dryerQueue.containsMachine(machineId)) {
@@ -57,6 +64,10 @@ public class Facility {
     }
 
     // misc
+    private void syncAllMachines() {
+        Update.syncMachines(washerQueue.getMachines());
+        Update.syncMachines(dryerQueue.getMachines());
+    }
     @Override
     public String toString() {
         String out = "Facility overview:";
