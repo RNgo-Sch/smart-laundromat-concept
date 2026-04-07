@@ -52,23 +52,23 @@ public class User {
 
         public void topUp(float amount) {
             balance += amount;
-            System.out.println("Topped up $" + amount + " to $" + balance);
+            System.out.println("User.Wallet: Topped up $" + amount + " to $" + balance);
         }
 
         public boolean makePayment(float amount) {
             if (balance < 0.0f) {
-                System.out.println("Account cannot make payment: in debt");
+                System.out.println("User.Wallet: Account cannot make payment: in debt");
                 return false;
             } else {
                 topUp(-amount);
-                System.out.println("Successful payment made");
+                System.out.println("User.Wallet: Successful payment made");
                 return true;
             }
         }
 
         @Override
         public String toString() {
-            return "Wallet balance: $" + balance;
+            return "User.Wallet balance: $" + balance;
         }
     }
 
@@ -99,8 +99,10 @@ public class User {
         }
 
         public void adjustScore(int adjustment) {
-            if ((score + adjustment >= MIN_SCORE) && (score + adjustment <= MAX_SCORE)) {
-                score += adjustment;
+            int newScore = this.score + adjustment;
+            if ((newScore >= MIN_SCORE) && (newScore <= MAX_SCORE)) {
+                System.out.println("User.Reputation: changing score - " + newScore);
+                this.score = newScore;
             }
         }
 
