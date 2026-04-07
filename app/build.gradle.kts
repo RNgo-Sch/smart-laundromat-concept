@@ -16,6 +16,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY")?.toString() ?: ""
+        buildConfigField(
+            "String",
+            "Supabase_Key",
+            "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbXRpY2picnBjbWtkd3VncnRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNTk3MTIsImV4cCI6MjA4NzYzNTcxMn0._6S_8fwsq9A9oyJ25P1nmSWYmZyOZgfGuBuxET__ta4\""
+        )
     }
 
     buildTypes {
@@ -50,6 +55,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

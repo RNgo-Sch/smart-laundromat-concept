@@ -21,6 +21,7 @@ import com.example.smart_laundromat_concept.data.remote.repository.UserRepositor
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
+import com.example.smart_laundromat_concept.ui.activities.main.utils.PollingManager;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
 import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
@@ -48,6 +49,8 @@ public class HomeActivity extends AppCompatActivity {
     private HomeCardHelper homeCardHelper;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private PollingManager pollingManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,11 @@ public class HomeActivity extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.activity_home__swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
+
+        pollingManager = new PollingManager(
+                this::updateMachineAvailability,
+                1000 // 1 second
+        );
     }
 
     public void onTopUpClick(View view) {
@@ -112,12 +120,14 @@ public class HomeActivity extends AppCompatActivity {
         homeCardHelper.refresh();
         loadUserData();
         updateLocationName();
+        pollingManager.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         homeCardHelper.stopTimer();
+        pollingManager.stop();
     }
 
     /**
@@ -138,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                     // Update local session with fresh data from server
                     User freshUser = response.body().get(0);
                     session.setCurrentUser(freshUser);
-                    
+
                     // Update UI
                     loadUserData();
                     homeCardHelper.refresh();

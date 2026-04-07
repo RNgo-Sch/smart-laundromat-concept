@@ -69,4 +69,33 @@ public class MachineRepository {
                     }
                 });
     }
+
+    /**
+     * Updates a single machine locally from realtime updates.
+     * This avoids refetching all machines.
+     */
+    public static void updateMachineLocally(String type, int position, String status, Integer currentUser) {
+        AppMachine.State state = AppMachine.State.fromString(status);
+
+        if ("washer".equalsIgnoreCase(type)) {
+            AppMachine.setWasherState(position, state, currentUser);
+        } else {
+            AppMachine.setDryerState(position, state, currentUser);
+        }
+    }
+
+    public static String getMachineStatus(int id) {
+
+        if (AppMachine.getWashers().containsKey(id)) {
+            return AppMachine.getWashers().get(id).getState().toString();
+        }
+
+        if (AppMachine.getDryers().containsKey(id)) {
+            return AppMachine.getDryers().get(id).getState().toString();
+        }
+
+        return null;
+    }
+
+
 }

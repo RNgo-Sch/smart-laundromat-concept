@@ -19,9 +19,11 @@ import com.example.smart_laundromat_concept.data.model.QueueResponse;
 import com.example.smart_laundromat_concept.data.remote.repository.MachineRepository;
 import com.example.smart_laundromat_concept.data.remote.server.QueueCallback;
 import com.example.smart_laundromat_concept.data.remote.server.QueueRepository;
+import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseRealtime;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
+import com.example.smart_laundromat_concept.ui.activities.main.utils.PollingManager;
 import com.example.smart_laundromat_concept.ui.common.ButtonHelper;
 import com.example.smart_laundromat_concept.ui.common.MenuBarHelper;
 import com.example.smart_laundromat_concept.ui.navigation.BookingNavigator;
@@ -58,6 +60,7 @@ public class BookingActivity extends AppCompatActivity {
 
     /** Handles the pull-to-refresh gesture on the booking screen. */
     private SwipeRefreshLayout swipeRefreshLayout;
+    private PollingManager pollingManager;
 
     // -------------------------------------------------------------------------
     // Helpers
@@ -115,7 +118,16 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         // 1. Start polling Supabase for live machine states
-        subscribeToSupabase();
+        pollingManager = new PollingManager(
+                this::fetchMachineStates,
+                1000 // 1 second
+        );
+
+        // Initial load (VERY IMPORTANT)
+//        fetchMachineStates();
+//
+//        // Realtime updates
+//        SupabaseRealtime.subscribeToMachines();
 
 
         // 2. Retrieve container views for washer and dryer sections
@@ -170,34 +182,16 @@ public class BookingActivity extends AppCompatActivity {
         super.onResume();
         updateLocationName();
         fetchMachineStates();
+        pollingManager.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(refreshTask);
+        pollingManager.stop();
     }
 
-    // -------------------------------------------------------------------------
-    // Polling
-    // -------------------------------------------------------------------------
 
-    private final Handler  handler     = new Handler();
-    private final Runnable refreshTask = new Runnable() {
-        @Override
-        public void run() {
-            fetchMachineStates();
-            handler.postDelayed(this, 2000);
-        }
-    };
-
-    /**
-     * Starts a 2-second polling loop as a fallback for Supabase Realtime,
-     * which is not supported by the Retrofit client.
-     */
-    private void subscribeToSupabase() {
-        handler.post(refreshTask);
-    }
 
     // -------------------------------------------------------------------------
     // Queue
@@ -227,6 +221,7 @@ public class BookingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QueueResponse body) {
                 Toast.makeText(BookingActivity.this, "Joined queue", Toast.LENGTH_SHORT).show();
+                fetchMachineStates();
             }
 
             @Override
