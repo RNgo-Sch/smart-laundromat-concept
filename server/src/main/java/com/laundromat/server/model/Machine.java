@@ -40,12 +40,12 @@ public class Machine {
             @Override
             public State interact(Machine m, int u) {
                 // if same user, they start the washing cycle
-                if (m.getCurrentUser().getId() == u) {
+                if (m.getCurrentUser().getId() == u & m.chargeUser()) {
                     m.setNextTime(30);
                     m.rewardCurrentUser();
                     return IN_USE;
                 } else {
-                    // no effect if different user
+                    // no effect if different user or payment failed
                     return RESERVED;
                 }
             }
@@ -122,6 +122,8 @@ public class Machine {
     private User currentUser;
     private ScheduledExecutorService nextTime;
 
+    protected final float CYCLE_PRICE = 2f;
+
     public Machine(int id, State state, User currentUser) {
         this.id = id;
         this.state = state;
@@ -182,6 +184,14 @@ public class Machine {
             this.nextTime.shutdownNow();
             this.nextTime = null;
         }
+    }
+
+    // timing for machines
+    protected boolean chargeUser() {
+        boolean success = this.currentUser.wallet.makePayment(this.CYCLE_PRICE);
+        Update.updateUser(this.currentUser);
+        System.out.println("Machine "+this.id+": charging current user - " + success);
+        return success;
     }
 
     // misc
