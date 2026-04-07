@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.laundromat.server.facility.Facility;
-
+//mvn spring-boot:run
 @RestController
 @RequestMapping("")
 public class FacilityController {

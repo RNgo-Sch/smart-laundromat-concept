@@ -60,7 +60,14 @@ public class Query {
     // Shared row-to-Machine mapping used by machineFromId and machinesOfType.
     private static Machine buildMachine(java.sql.ResultSet rs) throws java.sql.SQLException {
         int id = rs.getInt("id");
-        Machine.State state = Machine.State.valueOf(rs.getString("status").toUpperCase());
+        String rawStatus = rs.getString("status");
+
+        Machine.State state;
+        if (rawStatus == null) {
+            state = Machine.State.AVAILABLE;
+        } else {
+            state = Machine.State.valueOf(rawStatus.trim().toUpperCase());
+        }
         int currentUserId = rs.getInt("current_user");
         User currentUser = rs.wasNull() ? null : userFromId(currentUserId);
         return new Machine(id, state, currentUser);

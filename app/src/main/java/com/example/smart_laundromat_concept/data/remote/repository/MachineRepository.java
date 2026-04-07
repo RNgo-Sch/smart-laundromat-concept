@@ -1,7 +1,6 @@
 package com.example.smart_laundromat_concept.data.remote.repository;
 
 import com.example.smart_laundromat_concept.data.model.AppMachine;
-import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseClient;
 
 import java.util.List;
@@ -22,25 +21,25 @@ public class MachineRepository {
 
         // Washers
         SupabaseClient.getApi()
-                .getMachinesByType("eq." + STORE_NUMBER, "eq.washer")
+                .getMachinesByType("eq." + STORE_NUMBER, "eq.washer", "*")
                 .enqueue(new Callback<List<AppMachine>>() {
                     @Override
                     public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
-
                         if (response.isSuccessful() && response.body() != null) {
                             for (AppMachine m : response.body()) {
-                                AppMachine.State state = AppMachine.State.fromString(m.status);
-                                AppMachine.setWasherState(m.position, state);
+                                AppMachine.setWasherState(
+                                        m.position,
+                                        AppMachine.State.fromString(m.status),
+                                        m.currentUser
+                                );
                             }
                         }
-
-                        // After washers → fetch dryers
                         fetchDryers(onComplete);
                     }
 
                     @Override
                     public void onFailure(Call<List<AppMachine>> call, Throwable t) {
-                        fetchDryers(onComplete); // still continue
+                        fetchDryers(onComplete);
                     }
                 });
     }
@@ -48,18 +47,19 @@ public class MachineRepository {
     private static void fetchDryers(Runnable onComplete) {
 
         SupabaseClient.getApi()
-                .getMachinesByType("eq." + STORE_NUMBER, "eq.dryer")
+                .getMachinesByType("eq." + STORE_NUMBER, "eq.dryer", "*")
                 .enqueue(new Callback<List<AppMachine>>() {
                     @Override
                     public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
-
                         if (response.isSuccessful() && response.body() != null) {
                             for (AppMachine m : response.body()) {
-                                AppMachine.State state = AppMachine.State.fromString(m.status);
-                                AppMachine.setDryerState(m.position, state);
+                                AppMachine.setDryerState(
+                                        m.position,
+                                        AppMachine.State.fromString(m.status),
+                                        m.currentUser
+                                );
                             }
                         }
-
                         if (onComplete != null) onComplete.run();
                     }
 

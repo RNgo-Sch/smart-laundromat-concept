@@ -69,7 +69,6 @@ public class DryerManager {
      */
     public void setState(int dryerNum, AppMachine.State state) {
         dryerStates.put(dryerNum, state);
-        AppMachine.setDryerState(dryerNum, state);
         updateUI(dryerNum);
     }
 

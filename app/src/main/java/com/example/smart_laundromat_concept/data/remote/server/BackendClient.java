@@ -5,6 +5,7 @@ import com.example.smart_laundromat_concept.data.model.QueueResponse;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.Call;
 
@@ -27,15 +28,11 @@ public class BackendClient {
     }
     public interface BackendApi {
 
-        @GET("/washer/join")
-        Call<QueueResponse> joinWasher(
-                @Query("userId") String userId
-        );
+        @POST("/queue/washer")
+        Call<Void> joinWasher(@Query("userId") String userId);
 
-        @GET("/dryer/join")
-        Call<QueueResponse> joinDryer(
-                @Query("userId") String userId
-        );
+        @POST("/queue/dryer")
+        Call<Void> joinDryer(@Query("userId") String userId);
 
 
         @GET("queue/position")

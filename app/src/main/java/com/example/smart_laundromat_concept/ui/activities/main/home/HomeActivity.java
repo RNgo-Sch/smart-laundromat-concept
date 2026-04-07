@@ -231,7 +231,8 @@ public class HomeActivity extends AppCompatActivity {
             final int[] washerAvailable = {0};
             final int[] washerInUse = {0};
 
-            for (AppMachine.State state : AppMachine.getWashers().values()) {
+            for (AppMachine machine : AppMachine.getWashers().values()) {
+                AppMachine.State state = machine.getState();
                 if (state == AppMachine.State.AVAILABLE) {
                     washerAvailable[0]++;
                 } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
@@ -242,7 +243,8 @@ public class HomeActivity extends AppCompatActivity {
             final int[] dryerAvailable = {0};
             final int[] dryerInUse = {0};
 
-            for (AppMachine.State state : AppMachine.getDryers().values()) {
+            for (AppMachine machine : AppMachine.getDryers().values()) {
+                AppMachine.State state = machine.getState();
                 if (state == AppMachine.State.AVAILABLE) {
                     dryerAvailable[0]++;
                 } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
