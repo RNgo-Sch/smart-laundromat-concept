@@ -58,7 +58,7 @@ public class Facility {
                 // System.err.println("Facility (scheduled): error during queue check - " + e.getMessage());
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     // machine interaction
