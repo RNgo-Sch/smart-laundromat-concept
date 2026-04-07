@@ -28,7 +28,10 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     }
     public void leaveQueue(int queuer) {
         if (contains(queuer)) {
+            System.out.println("MachineQueue: queuer " +queuer+ " found, removing");
             remove(queuer);
+        } else {
+            System.out.println("MachineQueue: queuer " +queuer+ "not found");
         }
     }
     public void updateQueue() {

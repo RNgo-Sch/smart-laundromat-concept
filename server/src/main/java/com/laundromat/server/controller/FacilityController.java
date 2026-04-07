@@ -34,6 +34,22 @@ public class FacilityController {
         return ResponseEntity.ok("Joined dryer queue");
     }
 
+    // POST /leave/washer?userId=<_>
+    @PostMapping("/leave/washer")
+    public ResponseEntity<?> leaveWasherQueue(@RequestParam int userId) {
+        System.out.println("FacilityController: washer leave queue request from user "+userId);
+        facility.leaveForWasher(userId);
+        return ResponseEntity.ok("Left dryer queue");
+    }
+
+    // POST /leave/dryer?userId=<_>
+    @PostMapping("/leave/dryer")
+    public ResponseEntity<?> leaveDryerQueue(@RequestParam int userId) {
+        System.out.println("FacilityController: washer leave queue request from user "+userId);
+        facility.leaveForDryer(userId);
+        return ResponseEntity.ok("Left dryer queue");
+    }
+
     // POST /interact?userId=<_>&machineId=<_>
     @PostMapping("/interact")
     public ResponseEntity<?> interactWithMachine(@RequestParam int userId, @RequestParam int machineId) {

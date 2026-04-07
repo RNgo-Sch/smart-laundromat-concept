@@ -31,6 +31,14 @@ public class Facility {
         System.out.println("Facility: user queueing for dryer - " + userId);
         this.dryerQueue.joinQueue(userId);
     }
+    public void leaveForWasher(int userId) {
+        System.out.println("Facility: user leaving queue for washer - " + userId);
+        this.washerQueue.leaveQueue(userId);
+    }
+    public void leaveForDryer(int userId) {
+        System.out.println("Facility: user leaving queue for dryer - " + userId);
+        this.dryerQueue.leaveQueue(userId);
+    }
 
     // queue monitoring methods
     public void startMonitoringQueues() {
@@ -38,7 +46,7 @@ public class Facility {
         this.queueChecker = Executors.newSingleThreadScheduledExecutor();
         this.queueChecker.scheduleAtFixedRate(() -> {
             try {
-                System.out.println("Facility (scheduled): checking queue");
+                // System.out.println("Facility (scheduled): checking queue");
                 if (!washerQueue.isEmpty() && washerQueue.hasAvailableMachine()) {
                     washerQueue.updateQueue();
                 }
@@ -47,7 +55,7 @@ public class Facility {
                 }
                 syncAllMachines();
             } catch (Exception e) {
-                System.err.println("Facility (scheduled): error during queue check - " + e.getMessage());
+                // System.err.println("Facility (scheduled): error during queue check - " + e.getMessage());
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.SECONDS);
