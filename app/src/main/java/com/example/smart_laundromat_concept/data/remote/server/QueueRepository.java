@@ -15,29 +15,31 @@ import retrofit2.Response;
  */
 public class QueueRepository {
 
-    public static void joinQueue(String userId, String machineType, QueueCallback callback) {
+    public static void joinQueue(String userId, String type, QueueCallback callback) {
 
-        Call<QueueResponse> call;
+        BackendClient.BackendApi api = BackendClient.getApi();
 
-        if ("washer".equalsIgnoreCase(machineType)) {
-            call = BackendClient.getApi().joinWasher(userId);
+        Call<Void> call;
+
+        if ("washer".equalsIgnoreCase(type)) {
+            call = api.joinWasher(userId);
         } else {
-            call = BackendClient.getApi().joinDryer(userId);
+            call = api.joinDryer(userId);
         }
 
-        call.enqueue(new Callback<QueueResponse>() {
+        call.enqueue(new retrofit2.Callback<Void>() {
             @Override
-            public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
                 } else {
-                    callback.onError("Failed to join queue");
+                    callback.onError("Server error: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<QueueResponse> call, Throwable t) {
-                callback.onError("Network error");
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onError("Network error: " + t.getMessage());
             }
         });
     }

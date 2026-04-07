@@ -192,7 +192,7 @@ public class HomeCardHelper {
         String statusQuery = "eq." + status;
 
         SupabaseClient.getApi()
-                .getMachines(storeQuery, typeQuery, statusQuery)
+                .getMachines(storeQuery, typeQuery, statusQuery, "*")
                 .enqueue(new Callback<List<AppMachine>>() {
                     @Override
                     public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {

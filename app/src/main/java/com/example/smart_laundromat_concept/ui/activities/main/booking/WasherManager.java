@@ -67,7 +67,6 @@ public class WasherManager {
      */
     public void setState(int washerNum, AppMachine.State state) {
         washerStates.put(washerNum, state);
-        AppMachine.setWasherState(washerNum, state);
         updateUI(washerNum);
     }
 

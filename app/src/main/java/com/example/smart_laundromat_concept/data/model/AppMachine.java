@@ -15,7 +15,16 @@ import java.util.Map;
  * - Static in-memory store (AppMachine)
  */
 public class AppMachine {
+
+    private String assignedUserId;
+    public String getAssignedUserId() {
+        if (assignedUserId != null) return assignedUserId;
+        if (currentUser != null) return String.valueOf(currentUser);
+        return null;
+    }
+    @SerializedName("position")
     public int position;
+
 
     // -------------------------------------------------------------------------
     // State Enum
@@ -29,6 +38,7 @@ public class AppMachine {
         OOS(R.string.status_out_of_service);
 
         private final int stringResId;
+
 
         State(int stringResId) {
             this.stringResId = stringResId;
@@ -74,7 +84,11 @@ public class AppMachine {
 
     /** Username of the current user using this machine. */
     @SerializedName("current_user")
-    public String currentUser;
+    public Integer currentUser;
+
+    public void setCurrentUser(Integer userId) {
+        this.currentUser = userId;
+    }
 
     // -------------------------------------------------------------------------
     // UI State
@@ -134,25 +148,33 @@ public class AppMachine {
     // Static In-Memory Store (replaces AppMachine)
     // -------------------------------------------------------------------------
 
-    private static final Map<Integer, State> washers = new HashMap<>();
-    private static final Map<Integer, State> dryers  = new HashMap<>();
+    private static final Map<Integer, AppMachine> washers = new HashMap<>();
+    private static final Map<Integer, AppMachine> dryers  = new HashMap<>();
 
     static {
-        // Default states — overwritten by Supabase fetch on app start
-        washers.put(1, State.AVAILABLE);
-        washers.put(2, State.AVAILABLE);
-        washers.put(3, State.AVAILABLE);
-        washers.put(4, State.AVAILABLE);
-
-        dryers.put(1, State.AVAILABLE);
-        dryers.put(2, State.AVAILABLE);
-        dryers.put(3, State.AVAILABLE);
-        dryers.put(4, State.AVAILABLE);
+        // Default machines — overwritten by Supabase fetch on app start
+        for (int i = 1; i <= 4; i++) {
+            washers.put(i, new AppMachine(i, State.AVAILABLE, "washer"));
+            dryers.put(i, new AppMachine(i, State.AVAILABLE, "dryer"));
+        }
     }
 
-    public static void setWasherState(int id, State state) { washers.put(id, state); }
-    public static void setDryerState(int id, State state)  { dryers.put(id, state); }
+    public static void setWasherState(int id, State state, Integer userId) {
+        if (washers.containsKey(id)) {
+            AppMachine m = washers.get(id);
+            m.setState(state);
+            m.setCurrentUser(userId);
+        }
+    }
 
-    public static Map<Integer, State> getWashers() { return washers; }
-    public static Map<Integer, State> getDryers()  { return dryers; }
+    public static void setDryerState(int id, State state, Integer userId) {
+        if (dryers.containsKey(id)) {
+            AppMachine m = dryers.get(id);
+            m.setState(state);
+            m.setCurrentUser(userId);
+        }
+    }
+
+    public static Map<Integer, AppMachine> getWashers() { return washers; }
+    public static Map<Integer, AppMachine> getDryers()  { return dryers; }
 }

@@ -21,6 +21,7 @@ public class SupabaseClient {
 
     private static final String API_KEY = BuildConfig.Supabase_Key;
 
+
     public interface UserApi {
         @POST("users")
         @Headers("Prefer: return=representation")
@@ -40,12 +41,14 @@ public class SupabaseClient {
         Call<List<AppMachine>> getMachines(
                 @Query("store") String store,
                 @Query("type")  String type,
-                @Query("status") String status
+                @Query("status") String status,
+                @Query("select") String select
         );
         @GET("machine")
         Call<List<AppMachine>> getMachinesByType(
                 @Query("store") String store,
-                @Query("type")  String type
+                @Query("type")  String type,
+                @Query("select") String select
         );
 
         @GET("notifications")
