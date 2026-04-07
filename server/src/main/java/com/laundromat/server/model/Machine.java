@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.laundromat.server.db.Query;
+import com.laundromat.server.db.Update;
 
 public class Machine {
     public static enum State {
@@ -84,8 +85,8 @@ public class Machine {
                 // user collects laundry on time
                 if (m.getCurrentUser().getId() == u) {
                     m.clearNextTime();
-                    m.clearCurrentUser();
                     m.rewardCurrentUser();
+                    m.clearCurrentUser();
                     return AVAILABLE;
                 } else {
                     return COLLECTION; // ignore interaction from other users
@@ -142,12 +143,14 @@ public class Machine {
         if (this.currentUser != null) {
             this.currentUser.reputation.adjustScore(-5);
             System.out.println("Machine "+this.id+": punishment applied for user "+this.currentUser.getId());
+            Update.updateUser(this.currentUser);
         }
     }
     protected void rewardCurrentUser() {
         if (this.currentUser != null) {
             this.currentUser.reputation.adjustScore(5);
             System.out.println("Machine "+this.id+": reward applied for user "+this.currentUser.getId());
+            Update.updateUser(this.currentUser);
         }
     }
 
