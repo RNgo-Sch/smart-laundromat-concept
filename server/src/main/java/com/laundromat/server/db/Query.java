@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.laundromat.server.model.Dryer;
 import com.laundromat.server.model.Machine;
 import com.laundromat.server.model.User;
+import com.laundromat.server.model.Washer;
 
 // TODO catch exceptions
 @Component
@@ -35,7 +37,7 @@ public class Query {
     public static Machine machineFromId(int machineId) {
         return jdbcTemplate.queryForObject(
             "SELECT id, type, status, \"current_user\" FROM machine WHERE id = ?",
-            (rs, rowNum) -> buildMachine(rs),
+            (rs, rowNum) -> buildMachine(rs, rs.getString("type")),
             machineId
         );
     }
@@ -51,14 +53,14 @@ public class Query {
     private static Machine[] machinesOfType(String type) {
         List<Machine> machines = jdbcTemplate.query(
             "SELECT id, status, \"current_user\" FROM machine WHERE \"type\" = ?",
-            (rs, rowNum) -> buildMachine(rs),
+            (rs, rowNum) -> buildMachine(rs,type),
             type
         );
         return machines.toArray(Machine[]::new);
     }
 
     // Shared row-to-Machine mapping used by machineFromId and machinesOfType.
-    private static Machine buildMachine(java.sql.ResultSet rs) throws java.sql.SQLException {
+    private static Machine buildMachine(java.sql.ResultSet rs, String type) throws java.sql.SQLException {
         int id = rs.getInt("id");
         String rawStatus = rs.getString("status");
 
@@ -70,6 +72,16 @@ public class Query {
         }
         int currentUserId = rs.getInt("current_user");
         User currentUser = rs.wasNull() ? null : userFromId(currentUserId);
-        return new Machine(id, state, currentUser);
+
+        Machine newMachine;
+        if (type == "washer") {
+            newMachine = new Washer(id, state, currentUser);
+        } else if (type == "dryer") {
+            newMachine = new Dryer(id, state, currentUser);
+        } else {
+            // should not be possible based on SQL query
+            newMachine = null;
+        }
+        return newMachine;
     }
 }
