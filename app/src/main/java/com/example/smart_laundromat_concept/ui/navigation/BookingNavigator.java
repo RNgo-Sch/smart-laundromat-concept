@@ -113,18 +113,18 @@ public class BookingNavigator implements NavigatorModule {
 
         // --- Return animation request based on current visibility ---
         if (showWasher) {
-            washerContainer.setVisibility(View.VISIBLE);
-            dryerContainer.setVisibility(View.GONE);
-
             if (dryerContainer.getVisibility() == View.VISIBLE) {
                 return new NavigationRequest(washerContainer, dryerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT);
+            } else {
+                washerContainer.setVisibility(View.VISIBLE);
+                dryerContainer.setVisibility(View.GONE);
             }
         } else {
-            dryerContainer.setVisibility(View.VISIBLE);
-            washerContainer.setVisibility(View.GONE);
-
             if (washerContainer.getVisibility() == View.VISIBLE) {
                 return new NavigationRequest(dryerContainer, washerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);
+            } else {
+                dryerContainer.setVisibility(View.VISIBLE);
+                washerContainer.setVisibility(View.GONE);
             }
         }
 

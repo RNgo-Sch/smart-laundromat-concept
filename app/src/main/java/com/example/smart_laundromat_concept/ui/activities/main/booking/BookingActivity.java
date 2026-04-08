@@ -144,7 +144,6 @@ public class BookingActivity extends AppCompatActivity {
 
         // 5. Set default visible tab (Washer view)
         new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
-        currentTabType = TYPE_WASHER;
 
         // 6. Setup Queue button
         setupQueueButton();
@@ -163,7 +162,7 @@ public class BookingActivity extends AppCompatActivity {
         View washerBtn = findViewById(R.id.activity_booking__btn__washer);
         if (washerBtn != null) {
             washerBtn.setOnClickListener(v -> {
-                new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
+                NavigationHelper.launchPage(this, v);
                 onWasherTabSelected();
             });
         }
@@ -171,7 +170,7 @@ public class BookingActivity extends AppCompatActivity {
         View dryerBtn = findViewById(R.id.activity_booking__btn__dryer);
         if (dryerBtn != null) {
             dryerBtn.setOnClickListener(v -> {
-                new BookingNavigator().handle(this, R.id.activity_booking__btn__dryer);
+                NavigationHelper.launchPage(this, v);
                 onDryerTabSelected();
             });
         }
