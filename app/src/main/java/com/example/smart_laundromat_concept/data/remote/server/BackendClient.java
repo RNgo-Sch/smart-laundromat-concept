@@ -12,15 +12,6 @@ import retrofit2.Call;
 import java.util.Map;
 
 public class BackendClient {
-
-    // Automatically picks the right URL based on device type
-//    private static final String BASE_URL = isEmulator()
-//            ? "http://10.0.2.2:8080/" // for emulator
-//            //: "http://192.168.1.111:8080/"; // jh's pc id
-//            //: "http://172.20.10.2:8080/";
-//            //: "http://10.37.7.184:8080/"; // sutd guest
-//            : "https://laundromat-server-production.up.railway.app/";
-
     private static final String BASE_URL =
             "https://laundromat-server-production.up.railway.app/";
 
