@@ -16,14 +16,21 @@ import java.util.Map;
  */
 public class AppMachine {
 
-    private String assignedUserId;
-    public String getAssignedUserId() {
-        if (assignedUserId != null) return assignedUserId;
-        if (currentUser != null) return String.valueOf(currentUser);
-        return null;
-    }
     @SerializedName("position")
     public int position;
+
+    private String assignedUserId;
+
+    public String getAssignedUserId() {
+        if (assignedUserId != null){
+            return assignedUserId;
+        }
+        if (currentUser != null) {
+            return String.valueOf(currentUser);
+        }
+        return null;
+    }
+
 
 
     // -------------------------------------------------------------------------
@@ -86,8 +93,8 @@ public class AppMachine {
     @SerializedName("current_user")
     public Integer currentUser;
 
-    public void setCurrentUser(Integer userId) {
-        this.currentUser = userId;
+    public void setCurrentUser(Integer currentUser) {
+        this.currentUser = currentUser;
     }
 
     // -------------------------------------------------------------------------
@@ -175,6 +182,10 @@ public class AppMachine {
         }
     }
 
-    public static Map<Integer, AppMachine> getWashers() { return washers; }
-    public static Map<Integer, AppMachine> getDryers()  { return dryers; }
+    public static Map<Integer, AppMachine> getWashers() {
+        return washers;
+    }
+    public static Map<Integer, AppMachine> getDryers()  {
+        return dryers;
+    }
 }

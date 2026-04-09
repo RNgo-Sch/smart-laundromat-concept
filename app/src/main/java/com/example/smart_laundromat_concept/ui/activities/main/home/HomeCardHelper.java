@@ -172,7 +172,7 @@ public class HomeCardHelper {
      * Loads machine availability counts from Supabase for all four status TextViews.
      */
     private void loadMachineSnapshot() {
-        loadCountForStatus("washer", "open",   R.id.snapshot__washer_available);
+        loadCountForStatus("washer", "available",   R.id.snapshot__washer_available);
         loadCountForStatus("washer", "in_use", R.id.snapshot__washer_in_use);
         loadCountForStatus("dryer",  "open",   R.id.snapshot__dryer_available);
         loadCountForStatus("dryer",  "in_use", R.id.snapshot__dryer_in_use);

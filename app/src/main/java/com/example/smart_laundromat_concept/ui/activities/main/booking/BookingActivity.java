@@ -1,7 +1,6 @@
 package com.example.smart_laundromat_concept.ui.activities.main.booking;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ import com.example.smart_laundromat_concept.data.model.QueueResponse;
 import com.example.smart_laundromat_concept.data.remote.repository.MachineRepository;
 import com.example.smart_laundromat_concept.data.remote.server.QueueCallback;
 import com.example.smart_laundromat_concept.data.remote.server.QueueRepository;
-import com.example.smart_laundromat_concept.data.remote.supabase.SupabaseRealtime;
 import com.example.smart_laundromat_concept.data.session.LocationSession;
 import com.example.smart_laundromat_concept.data.session.UserSession;
 import com.example.smart_laundromat_concept.ui.activities.location.LocationHelper;
@@ -31,74 +29,54 @@ import com.example.smart_laundromat_concept.ui.navigation.NavigationHelper;
 
 import static com.example.smart_laundromat_concept.data.model.AppMachine.State.*;
 
+import java.util.Map;
+
 /**
- * BookingActivity manages the machine selection and status display for the laundromat.
- * <p>
- * Responsibilities:
+ * BookingActivity is the main screen where users view and book laundry machines.
+ *
+ * <p>The screen has two tabs — <b>Washer</b> and <b>Dryer</b> — each displaying
+ * four machines with live status badges fetched from Supabase every second.
+ *
+ * <p><b>Key responsibilities:</b>
  * <ul>
- *   <li>Coordinating {@link WasherManager} and {@link DryerManager} to display machine states.</li>
- *   <li>Initializing UI components like the menu bar and location markers.</li>
- *   <li>Handling navigation to specific machine pages via {@link NavigationHelper}.</li>
- *   <li>Handling queue join/cancel via {@link QueueRepository}.</li>
+ *   <li>Polling Supabase every 1 second via {@link PollingManager} to keep machine
+ *       states up to date.</li>
+ *   <li>Delegating washer UI to {@link WasherManager} and dryer UI to
+ *       {@link DryerManager}, both of which extend {@link MachineManager}.</li>
+ *   <li>Allowing the user to join or leave the queue via the Spring Boot backend
+ *       through {@link QueueRepository}.</li>
+ *   <li>Automatically highlighting the machine assigned to the logged-in user
+ *       based on the {@code current_user} field returned by Supabase.</li>
  * </ul>
- * <p>
- * Queue state is derived directly from Supabase via the {@code current_user} field —
- * no local queue state is tracked in this Activity.
+ *
+ * <p><b>Queue state is derived entirely from Supabase</b> — no local queue flags
+ * are stored in this Activity. The queue button label ("Join" vs "Leave") is
+ * recalculated on every poll using {@link #isAssignedToMachine()}.
  */
 public class BookingActivity extends AppCompatActivity {
 
-    // Machine managers to handle UI and state logic for each section
+    // -------------------------------------------------------------------------
+    // Fields
+    // -------------------------------------------------------------------------
+
+    /** Handles UI state for the washer section. */
     private WasherManager washerManager;
-    private DryerManager  dryerManager;
 
-    // Constants for machine types
-    private static final String TYPE_WASHER = "washer";
-    private static final String TYPE_DRYER  = "dryer";
+    /** Handles UI state for the dryer section. */
+    private DryerManager dryerManager;
 
-    /** Currently visible tab — drives queue button label and join/leave logic. */
+    /** Currently active tab type — drives queue button behaviour. */
     private String currentTabType = TYPE_WASHER;
 
-    /** Handles the pull-to-refresh gesture on the booking screen. */
+    /** Handles the pull-to-refresh gesture. */
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    /** Repeatedly calls {@link #fetchMachineStates()} on a 1-second interval. */
     private PollingManager pollingManager;
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
-    /**
-     * Returns the current user's ID as a String, or shows a toast and returns null
-     * if the session has expired.
-     */
-    private String getUserIdOrFail() {
-        if (UserSession.getInstance().getCurrentUser() != null) {
-            return String.valueOf(UserSession.getInstance().getCurrentUser().getId());
-        }
-        Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
-        return null;
-    }
-
-    /**
-     * Checks whether the logged-in user is currently assigned to any machine
-     * of the active tab type. Derived from Supabase data — no local state needed.
-     *
-     * @return true if the user has an assigned machine on the current tab
-     */
-    private boolean isAssignedToMachine() {
-        String myUserId = getUserIdOrFail();
-        if (myUserId == null) return false;
-
-        if (TYPE_WASHER.equalsIgnoreCase(currentTabType)) {
-            for (int i = 1; i <= 4; i++) {
-                if (myUserId.equals(AppMachine.getWashers().get(i).getAssignedUserId())) return true;
-            }
-        } else {
-            for (int i = 1; i <= 4; i++) {
-                if (myUserId.equals(AppMachine.getDryers().get(i).getAssignedUserId())) return true;
-            }
-        }
-        return false;
-    }
+    // Machine type constants
+    private static final String TYPE_WASHER = "washer";
+    private static final String TYPE_DRYER  = "dryer";
 
     // -------------------------------------------------------------------------
     // Lifecycle
@@ -117,48 +95,29 @@ public class BookingActivity extends AppCompatActivity {
             return insets;
         });
 
-        // 1. Start polling Supabase for live machine states
-        pollingManager = new PollingManager(
-                this::fetchMachineStates,
-                1000 // 1 second
-        );
-
-        // Initial load (VERY IMPORTANT)
-//        fetchMachineStates();
-//
-//        // Realtime updates
-//        SupabaseRealtime.subscribeToMachines();
-
-
-        // 2. Retrieve container views for washer and dryer sections
+        // Retrieve the container views for each machine section
         View washerContainer = findViewById(R.id.activity_booking__view__washer_container);
         View dryerContainer  = findViewById(R.id.activity_booking__view__dryer_container);
 
-        // 3. Initialize UI styling helpers
+        // Set up navigation and location UI
         MenuBarHelper.menuBar(this, MenuBarHelper.BOOKING);
         LocationHelper.setupUnderline(this);
 
-        // 4. Initialize machine managers
+        // Initialise machine managers — each knows how to render its own section
         washerManager = new WasherManager(washerContainer);
         dryerManager  = new DryerManager(dryerContainer);
 
-        // 5. Set default visible tab (Washer view)
+        // Show the Washer tab by default
         new BookingNavigator().handle(this, R.id.activity_booking__btn__washer);
 
-        // 6. Setup Queue button
+        // Set up the queue join/leave button
         setupQueueButton();
 
-        // 7. Demo button — populates machine states for presentation purposes
-        ButtonHelper.setup(this, R.id.activity_booking__btn__populate, "Populate Demo", v -> {
-            populateDemoData();
-            Toast.makeText(this, "Demo populated", Toast.LENGTH_SHORT).show();
-        });
-
-        // 8. Initialize swipe to refresh
+        // Set up swipe-to-refresh
         swipeRefreshLayout = findViewById(R.id.activity_booking__swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
 
-        // 9. Tab button listeners
+        // Tab button listeners — switch between Washer and Dryer views
         View washerBtn = findViewById(R.id.activity_booking__btn__washer);
         if (washerBtn != null) {
             washerBtn.setOnClickListener(v -> {
@@ -174,6 +133,9 @@ public class BookingActivity extends AppCompatActivity {
                 onDryerTabSelected();
             });
         }
+
+        // Start polling — fires fetchMachineStates() every 1 second
+        pollingManager = new PollingManager(this::fetchMachineStates, 1000);
     }
 
     @Override
@@ -190,14 +152,14 @@ public class BookingActivity extends AppCompatActivity {
         pollingManager.stop();
     }
 
-
-
     // -------------------------------------------------------------------------
     // Queue
     // -------------------------------------------------------------------------
 
     /**
-     * Sets up the queue button. Label and action are derived from Supabase state.
+     * Configures the queue button with a default label.
+     * The label and action are dynamically updated on every poll via
+     * {@link #updateQueueButtonState()}.
      */
     private void setupQueueButton() {
         ButtonHelper.setup(this, R.id.activity_booking__btn__queue, "Join the Queue", v -> {
@@ -210,7 +172,8 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     /**
-     * Sends a request to join the queue for the current tab's machine type.
+     * Sends a request to the Spring Boot backend to join the queue
+     * for the currently active tab's machine type.
      */
     private void handleJoinQueue() {
         String userId = getUserIdOrFail();
@@ -231,7 +194,8 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     /**
-     * Sends a request to leave the queue for the current tab's machine type.
+     * Sends a request to the Spring Boot backend to leave the queue
+     * for the currently active tab's machine type.
      */
     private void handleLeaveQueue() {
         String userId = getUserIdOrFail();
@@ -252,15 +216,13 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     /**
-     * Highlights the machine assigned to the current user by showing a blue outline.
-     * Clears all other outlines of the same type first.
+     * Shows the blue selection outline on the machine assigned to the current user,
+     * and clears outlines on all other machines of the same type.
      *
      * @param machineType   "washer" or "dryer"
      * @param machineNumber 1 to 4
      */
     private void highlightAssignedMachine(String machineType, int machineNumber) {
-        if (machineType == null) return;
-
         if (TYPE_WASHER.equalsIgnoreCase(machineType)) {
             for (int i = 1; i <= 4; i++) washerManager.setOutline(i, false);
             washerManager.setOutline(machineNumber, true);
@@ -275,23 +237,12 @@ public class BookingActivity extends AppCompatActivity {
     // UI Data
     // -------------------------------------------------------------------------
 
-    private void refreshAll() {
-        fetchMachineStates();
-        updateLocationName();
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    private void updateLocationName() {
-        TextView locationName = findViewById(R.id.location_name);
-        if (locationName != null) {
-            locationName.setText(LocationSession.getInstance().getLocationName());
-        }
-    }
-
     /**
-     * Fetches machine states from Supabase, updates the UI, and highlights
-     * any machine currently assigned to the logged-in user.
-     * Also refreshes the queue button label based on the latest Supabase state.
+     * Fetches the latest machine states from Supabase, updates both machine sections,
+     * and recalculates the queue button label.
+     *
+     * <p>This is the core polling method. It runs every 1 second via
+     * {@link PollingManager}.
      */
     private void fetchMachineStates() {
         String myUserId = getUserIdOrFail();
@@ -299,6 +250,7 @@ public class BookingActivity extends AppCompatActivity {
 
         MachineRepository.fetchAllMachines(() -> {
 
+            // Find which machine (if any) is assigned to the logged-in user
             int myWasher = -1;
             int myDryer  = -1;
 
@@ -316,14 +268,14 @@ public class BookingActivity extends AppCompatActivity {
             final int finalDryer  = myDryer;
 
             runOnUiThread(() -> {
-                // Washer — highlight if assigned, clear all outlines if not
+                // Highlight the user's assigned washer, or clear all washer outlines
                 if (finalWasher != -1) {
                     highlightAssignedMachine(TYPE_WASHER, finalWasher);
                 } else {
                     for (int i = 1; i <= 4; i++) washerManager.setOutline(i, false);
                 }
 
-                // Dryer — highlight if assigned, clear all outlines if not
+                // Highlight the user's assigned dryer, or clear all dryer outlines
                 if (finalDryer != -1) {
                     highlightAssignedMachine(TYPE_DRYER, finalDryer);
                 } else {
@@ -335,57 +287,24 @@ public class BookingActivity extends AppCompatActivity {
         });
     }
 
-
-    // -------------------------------------------------------------------------
-    // Demo
-    // -------------------------------------------------------------------------
-
-    private void populateDemoData() {
-        washerManager.setState(1, RESERVED);
-        washerManager.setState(2, IN_USE);
-        washerManager.setState(3, IN_USE);
-        washerManager.setState(4, OOS);
-
-        dryerManager.setState(1, IN_USE);
-        dryerManager.setState(2, IN_USE);
-        dryerManager.setState(3, OOS);
-        dryerManager.setState(4, IN_USE);
-
-        UserSession.getInstance().setActiveBooking("Washer", 2, 30 * 60 * 1000L);
-
-
-        highlightAssignedMachine(TYPE_WASHER, 1);
-        dryerManager.setOutline(3, true);
+    /** Refreshes machine states and location name when the user swipes down. */
+    private void refreshAll() {
+        fetchMachineStates();
+        updateLocationName();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
-    // -------------------------------------------------------------------------
-    // Accessors
-    // -------------------------------------------------------------------------
-
-    public WasherManager getWasherManager() { return washerManager; }
-    public DryerManager  getDryerManager()  { return dryerManager; }
-
-    // -------------------------------------------------------------------------
-    // Navigation
-    // -------------------------------------------------------------------------
-
-    public void launchPage(View view) {
-        NavigationHelper.launchPage(this, view);
-    }
-
-    public void onWasherTabSelected() {
-        currentTabType = TYPE_WASHER;
-        updateQueueButtonState();
-    }
-
-    public void onDryerTabSelected() {
-        currentTabType = TYPE_DRYER;
-        updateQueueButtonState();
+    /** Updates the location name label from {@link LocationSession}. */
+    private void updateLocationName() {
+        TextView locationName = findViewById(R.id.location_name);
+        if (locationName != null) {
+            locationName.setText(LocationSession.getInstance().getLocationName());
+        }
     }
 
     /**
-     * Refreshes the queue button label based on current Supabase state.
-     * "Leave Queue" if the user is assigned to a machine, "Join the Queue" otherwise.
+     * Updates the queue button label and click action based on whether the current
+     * user is already assigned to a machine on the active tab.
      */
     private void updateQueueButtonState() {
         ButtonHelper.setup(this,
@@ -395,5 +314,80 @@ public class BookingActivity extends AppCompatActivity {
                     if (isAssignedToMachine()) handleLeaveQueue();
                     else                       handleJoinQueue();
                 });
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns the logged-in user's ID as a String.
+     * Shows a toast and returns null if the session has expired.
+     *
+     * @return user ID string, or null if not logged in
+     */
+    private String getUserIdOrFail() {
+        if (UserSession.getInstance().getCurrentUser() != null) {
+            return String.valueOf(UserSession.getInstance().getCurrentUser().getId());
+        }
+        Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+        return null;
+    }
+
+    /**
+     * Checks whether the logged-in user is currently assigned to any machine
+     * of the active tab type, based on live Supabase data.
+     *
+     * @return true if the user has an assigned machine on the current tab
+     */
+    private boolean isAssignedToMachine() {
+        String myUserId = getUserIdOrFail();
+        if (myUserId == null) return false;
+
+        Map<Integer, AppMachine> machines = TYPE_WASHER.equalsIgnoreCase(currentTabType)
+                ? AppMachine.getWashers()
+                : AppMachine.getDryers();
+
+        for (int i = 1; i <= 4; i++) {
+            if (myUserId.equals(machines.get(i).getAssignedUserId())) return true;
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------------
+    // Tab Callbacks
+    // -------------------------------------------------------------------------
+
+    /** Called when the user taps the Washer tab button. */
+    public void onWasherTabSelected() {
+        currentTabType = TYPE_WASHER;
+        updateQueueButtonState();
+    }
+
+    /** Called when the user taps the Dryer tab button. */
+    public void onDryerTabSelected() {
+        currentTabType = TYPE_DRYER;
+        updateQueueButtonState();
+    }
+
+    // -------------------------------------------------------------------------
+    // Accessors (used by BookingNavigator)
+    // -------------------------------------------------------------------------
+
+    /** @return the WasherManager for this activity */
+    public WasherManager getWasherManager() { return washerManager; }
+
+    /** @return the DryerManager for this activity */
+    public DryerManager  getDryerManager()  { return dryerManager; }
+
+    // -------------------------------------------------------------------------
+    // Navigation
+    // -------------------------------------------------------------------------
+
+    /**
+     * Delegates all navigation events to {@link NavigationHelper}.
+     */
+    public void launchPage(View view) {
+        NavigationHelper.launchPage(this, view);
     }
 }

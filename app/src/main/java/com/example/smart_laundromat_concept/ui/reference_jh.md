@@ -89,7 +89,8 @@ If AI-generated code is modified, include a remark:
   - Solution: Corrected query filters and request format
   - Outcome: Reliable backend updates without overwriting data
 
-(All outputs were reviewed and edited by Jiahao)
+ (All outputs were reviewed and edited by Jiahao)
+
 
 ---
 
@@ -159,6 +160,12 @@ If AI-generated code is modified, include a remark:
   - Issue: Comparison between `String` user ID and `Integer current_user` caused matching issues
   - Solution: Standardized handling and conversion between types for accurate comparison
   - Outcome: Reliable user-to-machine matching logic
+
+- **Navigation Execution Bug Fix (Internal Animation Not Triggering)**
+  - Issue: Washer/Dryer tab sliding animation stopped working after refactoring click listeners; navigation logic was executed via `BookingNavigator.handle()` directly, bypassing animation execution
+  - Solution: Identified that `handle()` only returns a `NavigationRequest` but does not execute it; refactored button click handling to use `NavigationHelper.launchPage()` to restore the full navigation pipeline (handle → executeNavigation → executeInternalTransition)
+  - Outcome: Internal slide animations function correctly again with proper separation between navigation decision and execution logic
+
 
 (All outputs were reviewed and edited by Jiahao)
 
