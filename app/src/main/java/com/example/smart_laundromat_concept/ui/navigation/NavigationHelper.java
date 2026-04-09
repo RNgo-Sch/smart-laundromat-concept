@@ -11,20 +11,22 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Centralizes navigation execution across the app.
- * <p>
- * Responsibilities:
- * <ul>
- *   <li>Dispatching navigation requests to appropriate handlers.</li>
- *   <li>Executing activity transitions with animations.</li>
- *   <li>Handling internal view transitions within the same activity.</li>
- * </ul>
- * <p>
- * This class separates navigation execution (how) from navigation decision
- * logic (what), which is handled by {@link NavigatorModule} implementations.
- * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on any class or method reference
- * (e.g., {@link BookingNavigator#handle}) to jump directly to its implementation.
+ * Central hub for executing all navigation in the app.
+ *
+ * <p><b>OOP Design — Polymorphism:</b><br>
+ * This class holds a list of {@link NavigatorModule} implementations. When a button
+ * is tapped, {@link #launchPage} asks each module in turn "can you handle this ID?".
+ * The first module that returns a non-null {@link NavigationRequest} wins and the
+ * navigation is executed. Adding new navigation destinations only requires adding
+ * a new {@link NavigatorModule} — this class never changes.
+ *
+ * <p><b>Navigation modules (checked in order):</b>
+ * <ol>
+ *   <li>{@link AuthNavigator}   — Login / Sign Up screens</li>
+ *   <li>{@link MenuNavigator}   — Bottom menu bar (Home, Booking, Profile)</li>
+ *   <li>{@link BookingNavigator}— Internal tab switching in BookingActivity</li>
+ *   <li>{@link SystemNavigator} — Notifications, Location, Logout, Back button</li>
+ * </ol>
  */
 public class NavigationHelper {
 
@@ -32,7 +34,7 @@ public class NavigationHelper {
     // Registered Navigators
     // -------------------------------------------------------------------------
 
-    // Navigators are checked in order — first match wins
+    // Modules are checked in order — the first match handles the request
     private static final List<NavigatorModule> NAVIGATORS = Arrays.asList(
             new AuthNavigator(),
             new MenuNavigator(),
@@ -41,15 +43,17 @@ public class NavigationHelper {
     );
 
     // -------------------------------------------------------------------------
-    // Public Methods
+    // Public Methods — Entry Point
     // -------------------------------------------------------------------------
 
     /**
-     * Entry point for handling navigation triggered by a UI interaction.
-     * Iterates through registered navigators to find a matching handler.
+     * Handles a navigation event triggered by a UI click.
+     *
+     * <p>Iterates through all registered {@link NavigatorModule} instances and
+     * delegates execution to the first one that claims the view ID.
      *
      * @param activity the current Activity context
-     * @param view     the clicked view triggering navigation
+     * @param view     the view that was clicked
      */
     public static void launchPage(Activity activity, View view) {
         int id = view.getId();
@@ -63,15 +67,28 @@ public class NavigationHelper {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Public Methods — View Fade Helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Fades a view in: sets it to VISIBLE and animates its alpha from 0 to 1.
+     * Use this to reveal overlays or dialogs.
+     *
+     * @param view the view to show
+     */
     public static void fadeIn(View view) {
         view.setAlpha(0f);
         view.setVisibility(View.VISIBLE);
-        view.animate()
-                .alpha(1f)
-                .setDuration(200)
-                .start();
+        view.animate().alpha(1f).setDuration(200).start();
     }
 
+    /**
+     * Fades a view out: animates its alpha from 1 to 0, then sets it to GONE.
+     * Use this to dismiss overlays or dialogs.
+     *
+     * @param view the view to hide
+     */
     public static void fadeOut(View view) {
         view.animate()
                 .alpha(0f)
@@ -80,34 +97,38 @@ public class NavigationHelper {
                 .start();
     }
 
-    public static void fadingIn(View view) {
-        view.setAlpha(0f);
-        view.animate()
-                .alpha(1f)
-                .setDuration(200)
-                .start();
-    }
-
-    public static void fadingOut(View view) {
-        view.animate()
-                .alpha(0f)
-                .setDuration(200)
-                .start();
-    }
+    // -------------------------------------------------------------------------
+    // Package-Private — Used by BookingNavigator for tab animations
+    // -------------------------------------------------------------------------
 
     /**
-     * Executes an internal view transition within the same Activity.
-     * Supports directional slide animations or simple visibility toggling.
+     * Fades a view's alpha from its current value to 1 without changing visibility.
+     * Used by {@link BookingNavigator} to animate the active tab button.
+     *
+     * @param view the view to animate
+     */
+    static void fadeInAlpha(View view) {
+        view.setAlpha(0f);
+        view.animate().alpha(1f).setDuration(200).start();
+    }
+
+    // -------------------------------------------------------------------------
+    // Public Methods — Internal Transition
+    // -------------------------------------------------------------------------
+
+    /**
+     * Executes an internal view transition (sliding between views in the same Activity).
+     * Used by {@link BookingNavigator} to animate between the washer and dryer containers.
      *
      * @param activity the current Activity context
-     * @param request  the navigation request containing view references and animation type
+     * @param request  the request describing which views to show/hide and which animation to use
      */
     public static void executeInternalTransition(Activity activity, NavigationRequest request) {
         View toShow = request.viewToShow;
         View toHide = request.viewToHide;
 
         if (request.animation == NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT) {
-            // Show from left, hide to the right
+            // Slide new view in from left, slide old view out to right
             if (toHide != null) {
                 toHide.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_out_right));
                 toHide.setVisibility(View.GONE);
@@ -116,7 +137,7 @@ public class NavigationHelper {
             toShow.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_in_left));
 
         } else if (request.animation == NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT) {
-            // Show from right, hide to the left
+            // Slide new view in from right, slide old view out to left
             if (toHide != null) {
                 toHide.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_out_left));
                 toHide.setVisibility(View.GONE);
@@ -125,7 +146,7 @@ public class NavigationHelper {
             toShow.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.slide_in_right));
 
         } else {
-            // Fallback — toggle visibility without animation
+            // Fallback — no animation, just toggle visibility
             if (toHide != null) toHide.setVisibility(View.GONE);
             if (toShow != null) toShow.setVisibility(View.VISIBLE);
         }
@@ -136,61 +157,46 @@ public class NavigationHelper {
     // -------------------------------------------------------------------------
 
     /**
-     * Executes a NavigationRequest by either starting a new Activity
-     * or performing an internal view transition.
+     * Executes a {@link NavigationRequest} — either starting a new Activity
+     * or performing an internal view transition within the same Activity.
      *
      * @param activity the current Activity context
-     * @param request  the navigation request describing the action
+     * @param request  the navigation request to execute
      */
     private static void executeNavigation(Activity activity, NavigationRequest request) {
-        // Case 1 — internal view transition (same activity)
+
+        // Case 1 — internal view transition (same Activity, e.g. tab switch)
         if (request.viewToShow != null) {
             executeInternalTransition(activity, request);
             return;
         }
 
-        // Case 2 — activity navigation (new screen)
-        Intent intent;
-        if (request.intent != null) {
-            intent = request.intent;
-        } else {
-            intent = new Intent(activity, request.targetClass);
-        }
+        // Case 2 — start a new Activity
+        Intent intent = (request.intent != null)
+                ? request.intent
+                : new Intent(activity, request.targetClass);
 
-        // Get target activity name
-        String targetName;
-        if (intent.getComponent() != null) {
-            targetName = intent.getComponent().getClassName();
-        } else {
-            targetName = request.targetClass.getName();
-        }
+        // Determine the target class name for duplicate-launch prevention
+        String targetName = (intent.getComponent() != null)
+                ? intent.getComponent().getClassName()
+                : request.targetClass.getName();
 
-        // Prevent launching the same activity again to avoid duplicate screens
-        if (activity.getClass().getName().equals(targetName)) {
-            return;
-        }
+        // Do not relaunch the same Activity (avoids duplicate screens)
+        if (activity.getClass().getName().equals(targetName)) return;
 
-        // Launch the target activity
         activity.startActivity(intent);
 
-        // -----------------------------------------------------------------
-        // Apply transition animation between activities
-        // -----------------------------------------------------------------
+        // Apply the transition animation
         if (request.animation != null) {
             switch (request.animation) {
                 case FADE:
-                    // Fade transition (smooth appearance)
                     activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
-
                 case SLIDE_LEFT:
-                    // New screen slides in from left
                     activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     break;
-
                 case SLIDE_RIGHT:
                 default:
-                    // Default: new screen slides in from right
                     activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
             }

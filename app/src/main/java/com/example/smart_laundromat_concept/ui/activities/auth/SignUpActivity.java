@@ -1,6 +1,7 @@
 package com.example.smart_laundromat_concept.ui.activities.auth;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -130,18 +131,27 @@ public class SignUpActivity extends AppCompatActivity {
      */
     private void handleSignupError(Response<List<User>> response) {
         try {
+            if (response.errorBody() == null) {
+                Toast.makeText(this, "Signup failed (no error body)", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String errorBody = response.errorBody().string();
             SupabaseError error = new Gson().fromJson(errorBody, SupabaseError.class);
 
-            if (error.code.equals("23505")) {
+            if (error != null && "23505".equals(error.code)) {
                 Toast.makeText(this, "Username already exists!", Toast.LENGTH_SHORT).show();
-            } else if (error.code.equals("22P02")) {
+            } else if (error != null && "22P02".equals(error.code)) {
                 Toast.makeText(this, "Invalid input!", Toast.LENGTH_SHORT).show();
+            } else if (error != null && error.error != null) {
+                Toast.makeText(this, error.error, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Signup failed", Toast.LENGTH_SHORT).show();
+                Log.d("SIGNUP_ERROR", errorBody);
+                Toast.makeText(this, errorBody, Toast.LENGTH_LONG).show();
             }
+
         } catch (Exception e) {
-            Toast.makeText(this, "Signup failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Signup failed (parse error)", Toast.LENGTH_SHORT).show();
         }
     }
 
