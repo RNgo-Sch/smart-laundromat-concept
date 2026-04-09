@@ -78,8 +78,8 @@ public class MachineStateHelper {
                 case RESERVED:   bgColorRes = R.color.orange_50_visibility; break;
                 case IN_USE:     bgColorRes = R.color.red_50_visibility;    break;
                 case OOS:        bgColorRes = R.color.grey_50_visibility;   break;
+                case COLLECTION: bgColorRes = R.color.purple_50_visibility;  break;
                 case AVAILABLE:
-                case COLLECTION:
                 default:         bgColorRes = R.color.green_50_visibility;  break;
             }
 

@@ -113,6 +113,9 @@ public class BookingActivity extends AppCompatActivity {
         // Set up the queue join/leave button
         setupQueueButton();
 
+        // Set up the start machine button
+        startMachineButton();
+
         // Set up swipe-to-refresh
         swipeRefreshLayout = findViewById(R.id.activity_booking__swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
@@ -171,6 +174,35 @@ public class BookingActivity extends AppCompatActivity {
         });
     }
 
+    private void startMachineButton() {
+        ButtonHelper.setup(this, R.id.activity_booking__btn__start, "Start machine", v -> {
+            String userIdStr = getUserIdOrFail();
+            if (userIdStr == null) return;
+
+            int machineId = getAssignedMachineId();
+            if (machineId == -1) {
+                Toast.makeText(this, "No machine assigned", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int userId = Integer.parseInt(userIdStr);
+
+            QueueRepository.interact(userId, machineId, new QueueCallback() {
+                @Override
+                public void onSuccess(QueueResponse body) {
+                    Toast.makeText(BookingActivity.this, "Machine started", Toast.LENGTH_SHORT).show();
+                    fetchMachineStates();
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(BookingActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+
     /**
      * Sends a request to the Spring Boot backend to join the queue
      * for the currently active tab's machine type.
@@ -205,7 +237,8 @@ public class BookingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QueueResponse body) {
                 updateQueueButtonState();
-                Toast.makeText(BookingActivity.this, body.message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookingActivity.this, "Left queue", Toast.LENGTH_SHORT).show();
+                fetchMachineStates(); // ensure UI refresh
             }
 
             @Override
@@ -245,8 +278,11 @@ public class BookingActivity extends AppCompatActivity {
      * {@link PollingManager}.
      */
     private void fetchMachineStates() {
-        String myUserId = getUserIdOrFail();
-        if (myUserId == null) return;
+        String myUserId = UserSession.getInstance().getCurrentUser() != null
+                ? String.valueOf(UserSession.getInstance().getCurrentUser().getId())
+                : null;
+
+        if (myUserId == null) return; // no toast here
 
         MachineRepository.fetchAllMachines(() -> {
 
@@ -352,6 +388,26 @@ public class BookingActivity extends AppCompatActivity {
             if (myUserId.equals(machines.get(i).getAssignedUserId())) return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the machine ID assigned to the current user.
+     * If none is assigned, returns -1.
+     */
+    private int getAssignedMachineId() {
+        String myUserId = getUserIdOrFail();
+        if (myUserId == null) return -1;
+
+        Map<Integer, AppMachine> machines = TYPE_WASHER.equalsIgnoreCase(currentTabType)
+                ? AppMachine.getWashers()
+                : AppMachine.getDryers();
+
+        for (int i = 1; i <= 4; i++) {
+            if (myUserId.equals(machines.get(i).getAssignedUserId())) {
+                return i; // machine number as ID
+            }
+        }
+        return -1;
     }
 
     // -------------------------------------------------------------------------

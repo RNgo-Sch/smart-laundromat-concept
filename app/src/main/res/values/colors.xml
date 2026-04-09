@@ -88,4 +88,16 @@
     <color name="blue_30_visibility">#4D0088FF</color> <!-- 30% Visibility -->
     <color name="blue_20_visibility">#330088FF</color> <!-- 20% Visibility -->
     <color name="blue_10_visibility">#1A0088FF</color> <!-- 10% Visibility -->
+
+    <!-- Purple Base -->
+    <color name="purple">#AF52DE</color> <!-- iOS-style purple -->
+
+    <!-- Purple Visibility Steps -->
+    <color name="purple_90_visibility">#E6AF52DE</color> <!-- 90% -->
+    <color name="purple_80_visibility">#CCAF52DE</color> <!-- 80% -->
+    <color name="purple_70_visibility">#B3AF52DE</color> <!-- 70% -->
+    <color name="purple_50_visibility">#80AF52DE</color> <!-- 50% -->
+    <color name="purple_30_visibility">#4DAF52DE</color> <!-- 30% -->
+    <color name="purple_20_visibility">#33AF52DE</color> <!-- 20% -->
+    <color name="purple_10_visibility">#1AAF52DE</color> <!-- 10% -->
 </resources>

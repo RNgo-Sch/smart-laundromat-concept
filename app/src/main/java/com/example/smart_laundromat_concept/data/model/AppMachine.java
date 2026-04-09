@@ -10,8 +10,11 @@ import java.util.Map;
  * Unified machine model for the Smart Laundromat system.
  * <p>
  * Combines:
+ * <p>
  * - Supabase data model (raw fields from database)
+ * <p>
  * - UI state model (State enum with string resources)
+ * <p>
  * - Static in-memory store (AppMachine)
  */
 public class AppMachine {

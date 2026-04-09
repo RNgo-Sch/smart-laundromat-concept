@@ -76,7 +76,6 @@ public class HomeActivity extends AppCompatActivity {
         pollingManager = new PollingManager(
                 () -> {
                     refreshAll();
-
                 },
                 1000 // 1 second
         );
