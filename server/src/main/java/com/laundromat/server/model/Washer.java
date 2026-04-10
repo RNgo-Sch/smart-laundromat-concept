@@ -1,14 +1,14 @@
 package com.laundromat.server.model;
 
-public class Dryer extends Machine {
+public class Washer extends Machine {
 
-    public Dryer(int id, State state, User currentUser) {
+    public Washer(int id, State state, User currentUser) {
         super(id, state, currentUser);
     }
 
     @Override
     protected int getDuration() {
-        return 30;
+        return 20;
     }
     @Override
     protected int getGracePeriod() {
@@ -16,6 +16,6 @@ public class Dryer extends Machine {
     }
     @Override
     protected float getPrice() {
-        return 3.0f;
+        return 2.0f;
     }
 }

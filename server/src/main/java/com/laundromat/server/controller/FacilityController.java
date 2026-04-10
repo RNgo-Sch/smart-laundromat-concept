@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.laundromat.server.db.Query;
 import com.laundromat.server.facility.Facility;
+
 //mvn spring-boot:run
 @RestController
 @RequestMapping("")
@@ -50,11 +52,18 @@ public class FacilityController {
         return ResponseEntity.ok("Left dryer queue");
     }
 
-    // POST /interact?userId=<_>&machineId=<_>
+    // POST /interact?userId=<_>
     @PostMapping("/interact")
-    public ResponseEntity<?> interactWithMachine(@RequestParam int userId, @RequestParam int machineId) {
-        System.out.println("FacilityController: interact request from "+userId+" for machine "+machineId);
-        facility.interactWith(userId, machineId);
-        return ResponseEntity.ok("Interacted with machine");
+    public ResponseEntity<?> interactWithMachine(@RequestParam int userId) {
+        int machineId;
+        try {
+            machineId = Query.machineIdFromUserId(userId);
+            System.out.println("FacilityController: interact request from "+userId+" for machine "+machineId);
+            facility.interactWith(userId, machineId);
+            return ResponseEntity.ok("Interacted with machine");
+        } catch (Exception e) {
+            return ResponseEntity.ok("No machine found for user");
+        }
+        
     }
 }

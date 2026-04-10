@@ -59,6 +59,14 @@ public class Query {
         return machines.toArray(Machine[]::new);
     }
 
+    public static int machineIdFromUserId(int userId) {
+        return jdbcTemplate.queryForObject(
+            "SELECT id FROM machine WHERE \"current_user\" = ?",
+            (rs, rowNum) -> rs.getInt("id"),
+            userId
+        );
+    }
+
     // Shared row-to-Machine mapping used by machineFromId and machinesOfType.
     private static Machine buildMachine(java.sql.ResultSet rs, String type) throws java.sql.SQLException {
         int id = rs.getInt("id");
@@ -74,13 +82,15 @@ public class Query {
         User currentUser = rs.wasNull() ? null : userFromId(currentUserId);
 
         Machine newMachine;
-        if (type == "washer") {
-            newMachine = new Washer(id, state, currentUser);
-        } else if (type == "dryer") {
-            newMachine = new Dryer(id, state, currentUser);
-        } else {
-            // should not be possible based on SQL query
-            newMachine = null;
+        switch (type) {
+            case "washer":
+                newMachine = new Washer(id, state, currentUser);
+                break;
+            case "dryer":
+                newMachine = new Dryer(id, state, currentUser);
+                break;
+            default:
+                newMachine = null;
         }
         return newMachine;
     }

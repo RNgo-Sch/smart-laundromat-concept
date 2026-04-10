@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import com.laundromat.server.db.Query;
 import com.laundromat.server.db.Update;
 
-public class Machine {
+public abstract class Machine {
     public static enum State {
         AVAILABLE {
             // this state does not have currentUser or nextTime
@@ -19,7 +19,7 @@ public class Machine {
             public State interact(Machine m, int u) {
                 // user which interacted reserved machine
                 m.setCurrentUser(u);
-                m.setNextTime(10);
+                m.setNextTime(m.getGracePeriod());
                 return RESERVED;
             }
             @Override
@@ -41,7 +41,7 @@ public class Machine {
             public State interact(Machine m, int u) {
                 // if same user, they start the washing cycle
                 if (m.getCurrentUser().getId() == u & m.chargeUser()) {
-                    m.setNextTime(30);
+                    m.setNextTime(m.getDuration());
                     m.rewardCurrentUser();
                     return IN_USE;
                 } else {
@@ -51,7 +51,7 @@ public class Machine {
             }
             @Override
             public void resume(Machine m) {
-                m.setNextTime(10);
+                m.setNextTime(m.getGracePeriod());
             }
         },
         IN_USE {
@@ -59,7 +59,7 @@ public class Machine {
             @Override
             public State timeOut(Machine m) {
                 // laundry cycle complete
-                m.setNextTime(10);
+                m.setNextTime(m.getGracePeriod());
                 return COLLECTION;
             }
             @Override
@@ -68,7 +68,7 @@ public class Machine {
             }
             @Override
             public void resume(Machine m) {
-                m.setNextTime(30);
+                m.setNextTime(m.getDuration());
             }
         },
         COLLECTION {
@@ -94,7 +94,7 @@ public class Machine {
             }
             @Override
             public void resume(Machine m) {
-                m.setNextTime(10);
+                m.setNextTime(m.getGracePeriod());
             }
         },
         OOS {
@@ -121,8 +121,6 @@ public class Machine {
     private State state;
     private User currentUser;
     private ScheduledExecutorService nextTime;
-
-    protected final float CYCLE_PRICE = 2f;
 
     public Machine(int id, State state, User currentUser) {
         this.id = id;
@@ -155,6 +153,12 @@ public class Machine {
             Update.updateUser(this.currentUser);
         }
     }
+    protected boolean chargeUser() {
+        boolean success = this.currentUser.wallet.makePayment(this.getPrice());
+        Update.updateUser(this.currentUser);
+        System.out.println("Machine "+this.id+": charging current user - " + success);
+        return success;
+    }
 
     // getters
     public int getId() {
@@ -186,13 +190,10 @@ public class Machine {
         }
     }
 
-    // timing for machines
-    protected boolean chargeUser() {
-        boolean success = this.currentUser.wallet.makePayment(this.CYCLE_PRICE);
-        Update.updateUser(this.currentUser);
-        System.out.println("Machine "+this.id+": charging current user - " + success);
-        return success;
-    }
+    // timings and constants
+    protected abstract int getDuration();
+    protected abstract int getGracePeriod();
+    protected abstract float getPrice();
 
     // misc
     private void resume() {
