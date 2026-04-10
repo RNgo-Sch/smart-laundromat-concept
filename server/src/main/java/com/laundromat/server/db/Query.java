@@ -95,3 +95,4 @@ public class Query {
         return newMachine;
     }
 }
+

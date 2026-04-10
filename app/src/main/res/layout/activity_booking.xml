@@ -99,9 +99,9 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="0dp" />
 
-                <!-- Demo Button -->
+                <!-- Start Button -->
                 <include
-                    android:id="@+id/activity_booking__btn__populate"
+                    android:id="@+id/activity_booking__btn__start"
                     layout="@layout/layout_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

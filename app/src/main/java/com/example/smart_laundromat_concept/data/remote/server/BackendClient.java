@@ -38,13 +38,17 @@ public class BackendClient {
                 @Query("type") String machineType
         );
 
-        @GET("/washer/cancel")
-        Call<QueueResponse> cancelWasher
-                (@Query("userId") String userId);
+        @POST("/interact")
+        Call<Void> interact(
+                @Query("userId") int userId,
+                @Query("machineId") int machineId
+        );
 
-        @GET("/dryer/cancel")
-        Call<QueueResponse> cancelDryer
-                (@Query("userId") String userId);
+        @POST("/leave/washer")
+        Call<Void> leaveWasher(@Query("userId") String userId);
+
+        @POST("/leave/dryer")
+        Call<Void> leaveDryer(@Query("userId") String userId);
 
         @GET("queue/next")
         Call<QueueResponse> nextUser(@Query("type") String machineType);

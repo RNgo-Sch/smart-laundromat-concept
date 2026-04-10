@@ -77,13 +77,21 @@ public class HomeCardHelper {
 
         if (snapshotView == null || activeBookingView == null) return;
 
-        if (session.hasActiveBooking()) {
-            // Show active booking countdown and reveal toggle button
+        boolean shouldShowActive =
+                session.hasActiveBooking()
+                || session.getBookingEndTimeMillis() > System.currentTimeMillis();
+
+        if (shouldShowActive) {
+            // Always show active booking if exists or booking is still relevant
             snapshotView.setVisibility(View.GONE);
             activeBookingView.setVisibility(View.VISIBLE);
             if (toggleBtn != null) toggleBtn.setVisibility(View.VISIBLE);
+
             stopTimer();
+
+            // Bind latest session info (from BookingActivity)
             bindActiveBooking(session);
+
         } else {
             // Show machine snapshot and hide toggle — nothing to toggle to
             activeBookingView.setVisibility(View.GONE);
@@ -119,12 +127,23 @@ public class HomeCardHelper {
         TextView statusLabel  = activity.findViewById(R.id.active__status_label);
 
         if (machineLabel != null) {
-            // e.g. "Washer 2" or "Dryer 3"
-            machineLabel.setText(session.getActiveMachineType() + " " + session.getActiveMachineNum());
+            machineLabel.setText(
+                    session.getActiveMachineType() + " " + session.getActiveMachineNum()
+            );
         }
 
         if (statusLabel != null) {
-            statusLabel.setText("In Progress");
+            long remaining = session.getBookingEndTimeMillis() - System.currentTimeMillis();
+
+            if (remaining > 20000) {
+                statusLabel.setText("In Use");
+            } else if (remaining > 10000) {
+                statusLabel.setText("Reserved");
+            } else if (remaining > 0) {
+                statusLabel.setText("Collection");
+            } else {
+                statusLabel.setText("Completed");
+            }
         }
 
         startCountdown(session.getBookingEndTimeMillis());
@@ -172,7 +191,7 @@ public class HomeCardHelper {
      * Loads machine availability counts from Supabase for all four status TextViews.
      */
     private void loadMachineSnapshot() {
-        loadCountForStatus("washer", "open",   R.id.snapshot__washer_available);
+        loadCountForStatus("washer", "available",   R.id.snapshot__washer_available);
         loadCountForStatus("washer", "in_use", R.id.snapshot__washer_in_use);
         loadCountForStatus("dryer",  "open",   R.id.snapshot__dryer_available);
         loadCountForStatus("dryer",  "in_use", R.id.snapshot__dryer_in_use);

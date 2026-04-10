@@ -44,37 +44,59 @@ public class QueueRepository {
         });
     }
 
-
-    public static void getPosition(String machineType, Callback<QueueResponse> callback) {
-        String username = UserSession.getInstance().getUsername();
-        BackendClient.getApi().getPosition(username, machineType).enqueue(callback);
-    }
-
     public static void cancelQueue(String userId, String machineType, QueueCallback callback) {
+        BackendClient.BackendApi api = BackendClient.getApi();
 
-        Call<QueueResponse> call;
+        Call<Void> call;
 
         if ("washer".equalsIgnoreCase(machineType)) {
-            call = BackendClient.getApi().cancelWasher(userId);
+            call = api.leaveWasher(userId);
         } else {
-            call = BackendClient.getApi().cancelDryer(userId);
+            call = api.leaveDryer(userId);
         }
 
-        call.enqueue(new Callback<QueueResponse>() {
+        call.enqueue(new retrofit2.Callback<Void>() {
             @Override
-            public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
                 } else {
-                    callback.onError("Failed to leave queue");
+                    callback.onError("Server error: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<QueueResponse> call, Throwable t) {
-                callback.onError("Network error");
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onError("Network error: " + t.getMessage());
             }
         });
+    }
+
+    public static void interact(int userId, int machineId, QueueCallback callback) {
+        BackendClient.getApi()
+                .interact(userId, machineId)
+                .enqueue(new retrofit2.Callback<Void>() {
+
+                    @Override
+                    public void onResponse(retrofit2.Call<Void> call,
+                                           retrofit2.Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            callback.onSuccess(new QueueResponse());
+                        } else {
+                            callback.onError("Failed to start machine");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<Void> call, Throwable t) {
+                        callback.onError(t.getMessage());
+                    }
+                });
+    }
+
+    public static void getPosition(String machineType, Callback<QueueResponse> callback) {
+        String username = UserSession.getInstance().getUsername();
+        BackendClient.getApi().getPosition(username, machineType).enqueue(callback);
     }
 
     public static void getMachines(Callback<Map<String, Map<Integer, String>>> callback) {

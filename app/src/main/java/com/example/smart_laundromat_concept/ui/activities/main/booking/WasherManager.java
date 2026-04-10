@@ -1,34 +1,23 @@
 package com.example.smart_laundromat_concept.ui.activities.main.booking;
 
-import android.util.Log;
 import android.view.View;
 
 import com.example.smart_laundromat_concept.R;
-import com.example.smart_laundromat_concept.data.model.AppMachine;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * WasherManager is responsible for managing the UI state and selection of washers.
- * <p>
- * It encapsulates the logic for finding washer-specific views within a shared layout
- * and applying state updates via {@link MachineStateHelper}.
- * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link MachineStateHelper#setMachineState}
- * to jump directly to the UI update implementation.
+ * Manages the UI state for the washer machine section in {@link BookingActivity}.
+ *
+ * <p><b>OOP Design — Inheritance:</b><br>
+ * All shared logic (state tracking, outline toggling, UI refresh) lives in the
+ * parent class {@link MachineManager}. This class only provides the washer-specific
+ * view IDs via {@link #getMachineIds()}, keeping it concise and focused.
+ *
+ * @see MachineManager
+ * @see DryerManager
  */
-public class WasherManager {
+public class WasherManager extends MachineManager {
 
-    // The container view holding the washer layouts
-    private final View container;
-
-    // Internal mapping of washer numbers to their current state constants
-    private final Map<Integer, AppMachine.State> washerStates = new HashMap<>();
-
-    /**
-     * Array of resource IDs corresponding to the washer views in the layout.
-     */
+    // Resource IDs for the four washer machine card views in the layout
     private static final int[] WASHER_IDS = {
             R.id.booking__machine_1,
             R.id.booking__machine_2,
@@ -41,74 +30,26 @@ public class WasherManager {
     // -------------------------------------------------------------------------
 
     /**
-     * Constructs a WasherManager tied to a specific container view.
+     * Constructs a WasherManager for the given washer container view.
      *
-     * @param container the parent view containing the washer layout
+     * @param container the parent view containing all washer card views
      */
     public WasherManager(View container) {
-        this.container = container;
-        Log.d("DEBUG", "WasherManager container = " + container);
-
-        // Initialize all washers to OPEN state by default
-        for (int i = 1; i <= WASHER_IDS.length; i++) {
-            washerStates.put(i, AppMachine.State.AVAILABLE);
-        }
+        super(container);
     }
 
     // -------------------------------------------------------------------------
-    // Public Methods
+    // MachineManager
     // -------------------------------------------------------------------------
 
     /**
-     * Updates the logical state and UI display for a specific washer.
+     * Provides the washer-specific view IDs to the base class.
+     * Index 0 corresponds to Washer 1, index 1 to Washer 2, and so on.
      *
-     * @param washerNum the machine number (1-based index)
-     * @param state     the new state from {@link AppMachine.State}
+     * @return array of washer card view resource IDs
      */
-    public void setState(int washerNum, AppMachine.State state) {
-        washerStates.put(washerNum, state);
-        updateUI(washerNum);
-    }
-
-    /**
-     * Toggles the selection outline for a specific washer.
-     *
-     * @param washerNum the machine number (1-based index)
-     * @param visible   true to show the blue outline, false to hide it
-     */
-    public void setOutline(int washerNum, boolean visible) {
-        if (washerNum < 1 || washerNum > WASHER_IDS.length || container == null) return;
-
-        View view = container.findViewById(WASHER_IDS[washerNum - 1]);
-        MachineStateHelper.setOutlineVisible(view, visible);
-    }
-
-    /**
-     * Refreshes the UI for all washers managed by this instance.
-     */
-    public void updateAll() {
-        for (int i = 1; i <= WASHER_IDS.length; i++) {
-            updateUI(i);
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Private Methods
-    // -------------------------------------------------------------------------
-
-    /**
-     * Syncs the UI of a specific washer with its logical state.
-     *
-     * @param washerNum the machine number to update
-     */
-    private void updateUI(int washerNum) {
-        if (washerNum < 1 || washerNum > WASHER_IDS.length || container == null) return;
-
-        // Ensure we only find views within this manager's specific container
-        View view = container.findViewById(WASHER_IDS[washerNum - 1]);
-
-        if (view != null) {
-            MachineStateHelper.setMachineState(view, washerNum, washerStates.get(washerNum));
-        }
+    @Override
+    protected int[] getMachineIds() {
+        return WASHER_IDS;
     }
 }

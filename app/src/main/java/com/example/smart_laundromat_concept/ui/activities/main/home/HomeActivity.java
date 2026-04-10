@@ -74,7 +74,9 @@ public class HomeActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
 
         pollingManager = new PollingManager(
-                this::updateMachineAvailability,
+                () -> {
+                    refreshAll();
+                },
                 1000 // 1 second
         );
     }
@@ -116,12 +118,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateMachineAvailability();
-        homeCardHelper.refresh();
-        loadUserData();
-        updateLocationName();
         pollingManager.start();
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -150,10 +150,12 @@ public class HomeActivity extends AppCompatActivity {
                     session.setCurrentUser(freshUser);
 
                     // Update UI
-                    loadUserData();
-                    homeCardHelper.refresh();
-                    updateLocationName();
                     updateMachineAvailability();
+                    loadUserData();
+                    //homeCardHelper.refresh();
+                    updateLocationName();
+
+
 
                 } else {
                     Toast.makeText(HomeActivity.this, "Failed to sync data", Toast.LENGTH_SHORT).show();

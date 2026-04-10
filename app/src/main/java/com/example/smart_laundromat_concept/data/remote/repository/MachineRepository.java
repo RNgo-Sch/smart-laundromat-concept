@@ -18,8 +18,11 @@ public class MachineRepository {
     private static final int STORE_NUMBER = 1;
 
     public static void fetchAllMachines(Runnable onComplete) {
+        fetchWashers(onComplete);
+    }
 
-        // Washers
+    private static void fetchWashers(Runnable onComplete) {
+
         SupabaseClient.getApi()
                 .getMachinesByType("eq." + STORE_NUMBER, "eq.washer", "*")
                 .enqueue(new Callback<List<AppMachine>>() {

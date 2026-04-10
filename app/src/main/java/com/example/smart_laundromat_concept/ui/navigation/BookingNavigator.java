@@ -1,7 +1,5 @@
 package com.example.smart_laundromat_concept.ui.navigation;
 
-import static com.example.smart_laundromat_concept.ui.navigation.NavigationHelper.*;
-
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.view.View;
@@ -14,17 +12,15 @@ import com.example.smart_laundromat_concept.R;
 import com.example.smart_laundromat_concept.ui.activities.main.booking.BookingActivity;
 
 /**
- * Handles internal UI state navigation within the BookingActivity.
- * <p>
- * This navigator manages the toggling between Washer and Dryer views, including:
- * <ul>
- *   <li>Updating button styles (colors and tints).</li>
- *   <li>Triggering UI updates via the machine managers.</li>
- *   <li>Coordinating slide animations between layout containers.</li>
- * </ul>
- * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link NavigationHelper#executeInternalTransition}
- * to see how the view sliding logic is implemented.
+ * Handles the internal tab switch between the Washer and Dryer views
+ * inside {@link BookingActivity}.
+ *
+ * <p>This is not a screen-to-screen navigation — it is an <b>internal UI transition</b>
+ * that slides the machine container views left or right and updates the tab button styles.
+ *
+ * <p><b>OOP Design — Polymorphism:</b><br>
+ * Implements {@link NavigatorModule} so it integrates cleanly into
+ * {@link NavigationHelper}'s module chain, just like all other navigators.
  */
 public class BookingNavigator implements NavigatorModule {
 
@@ -33,22 +29,20 @@ public class BookingNavigator implements NavigatorModule {
     // -------------------------------------------------------------------------
 
     /**
-     * Processes booking-related navigation requests based on view IDs.
+     * Handles a tap on either the Washer or Dryer tab button.
      *
      * @param activity the current Activity context
-     * @param id       the ID of the clicked View
-     * @return a {@link NavigationRequest} if the ID is handled, otherwise null
+     * @param id       the resource ID of the clicked view
+     * @return a {@link NavigationRequest} for the internal slide animation, or null
      */
     @Override
     public NavigationRequest handle(Activity activity, int id) {
         if (id == R.id.activity_booking__btn__washer) {
-            return updateUI(activity, true);
+            return switchTab(activity, true);
         }
-
         if (id == R.id.activity_booking__btn__dryer) {
-            return updateUI(activity, false);
+            return switchTab(activity, false);
         }
-
         return null;
     }
 
@@ -57,20 +51,21 @@ public class BookingNavigator implements NavigatorModule {
     // -------------------------------------------------------------------------
 
     /**
-     * Synchronizes button styles, machine data, and container visibility
-     * based on the selected machine type.
+     * Applies button style changes and prepares the internal slide animation
+     * when switching between the Washer and Dryer tabs.
      *
-     * @param activity    the current Activity context
-     * @param showWasher  true to show the Washer section, false for Dryer
-     * @return a {@link NavigationRequest} describing the internal transition, or null
+     * @param activity   the current Activity context
+     * @param showWasher true to activate the Washer tab, false for the Dryer tab
+     * @return a {@link NavigationRequest} for the slide animation, or null
      */
-    private NavigationRequest updateUI(Activity activity, boolean showWasher) {
-        Button washerButton     = activity.findViewById(R.id.activity_booking__btn__washer);
-        Button dryerButton      = activity.findViewById(R.id.activity_booking__btn__dryer);
-        View washerContainer    = activity.findViewById(R.id.activity_booking__view__washer_container);
-        View dryerContainer     = activity.findViewById(R.id.activity_booking__view__dryer_container);
+    private NavigationRequest switchTab(Activity activity, boolean showWasher) {
+        Button washerButton  = activity.findViewById(R.id.activity_booking__btn__washer);
+        Button dryerButton   = activity.findViewById(R.id.activity_booking__btn__dryer);
+        View washerContainer = activity.findViewById(R.id.activity_booking__view__washer_container);
+        View dryerContainer  = activity.findViewById(R.id.activity_booking__view__dryer_container);
 
-        if (washerButton == null || dryerButton == null || washerContainer == null || dryerContainer == null) {
+        if (washerButton == null || dryerButton == null
+                || washerContainer == null || dryerContainer == null) {
             return null;
         }
 
@@ -78,56 +73,54 @@ public class BookingNavigator implements NavigatorModule {
         int black = ContextCompat.getColor(activity, R.color.black);
         int blue  = ContextCompat.getColor(activity, R.color.blue);
 
-        // --- Update button styles ---
+        // Update tab button styles: active = blue fill, inactive = transparent
         if (showWasher) {
-            washerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
-            washerButton.setTextColor(white);
-            TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(white));
-            fadingIn(washerButton);
-
-            dryerButton.setBackgroundTintList(null);
-            dryerButton.setTextColor(black);
-            TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(black));
+            applyActiveStyle(washerButton, blue, white, activity);
+            applyInactiveStyle(dryerButton, black);
+            NavigationHelper.fadeInAlpha(washerButton);
         } else {
-            washerButton.setBackgroundTintList(null);
-            washerButton.setTextColor(black);
-            TextViewCompat.setCompoundDrawableTintList(washerButton, ColorStateList.valueOf(black));
-
-            dryerButton.setBackgroundTintList(ColorStateList.valueOf(blue));
-            dryerButton.setTextColor(white);
-            TextViewCompat.setCompoundDrawableTintList(dryerButton, ColorStateList.valueOf(white));
-            fadingIn(dryerButton);
+            applyInactiveStyle(washerButton, black);
+            applyActiveStyle(dryerButton, blue, white, activity);
+            NavigationHelper.fadeInAlpha(dryerButton);
         }
 
-        // --- Sync machine data with managers ---
+        // Notify BookingActivity so its machine managers can refresh their data
         if (activity instanceof BookingActivity) {
             BookingActivity bookingActivity = (BookingActivity) activity;
-            if (showWasher) {
-                bookingActivity.getWasherManager().updateAll();
-            } else {
-                bookingActivity.getDryerManager().updateAll();
-            }
+            if (showWasher) bookingActivity.getWasherManager().updateAll();
+            else            bookingActivity.getDryerManager().updateAll();
         }
 
-
-
-        // --- Return animation request based on current visibility ---
+        // Return the slide animation request based on which container is currently visible
         if (showWasher) {
             if (dryerContainer.getVisibility() == View.VISIBLE) {
-                return new NavigationRequest(washerContainer, dryerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT);
-            } else {
-                washerContainer.setVisibility(View.VISIBLE);
-                dryerContainer.setVisibility(View.GONE);
+                return new NavigationRequest(washerContainer, dryerContainer,
+                        NavigationRequest.AnimationType.INTERNAL_SLIDE_LEFT);
             }
         } else {
             if (washerContainer.getVisibility() == View.VISIBLE) {
-                return new NavigationRequest(dryerContainer, washerContainer, NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);
-            } else {
-                dryerContainer.setVisibility(View.VISIBLE);
-                washerContainer.setVisibility(View.GONE);
+                return new NavigationRequest(dryerContainer, washerContainer,
+                        NavigationRequest.AnimationType.INTERNAL_SLIDE_RIGHT);
             }
         }
 
+        // Fallback — set visibility directly if no slide animation is needed
+        washerContainer.setVisibility(showWasher ? View.VISIBLE : View.GONE);
+        dryerContainer.setVisibility(showWasher ? View.GONE : View.VISIBLE);
         return null;
+    }
+
+    /** Applies the active (filled blue) style to a tab button. */
+    private void applyActiveStyle(Button button, int blue, int white, Activity activity) {
+        button.setBackgroundTintList(ColorStateList.valueOf(blue));
+        button.setTextColor(white);
+        TextViewCompat.setCompoundDrawableTintList(button, ColorStateList.valueOf(white));
+    }
+
+    /** Applies the inactive (no fill) style to a tab button. */
+    private void applyInactiveStyle(Button button, int black) {
+        button.setBackgroundTintList(null);
+        button.setTextColor(black);
+        TextViewCompat.setCompoundDrawableTintList(button, ColorStateList.valueOf(black));
     }
 }

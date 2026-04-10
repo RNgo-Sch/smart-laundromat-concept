@@ -11,89 +11,70 @@ import com.example.smart_laundromat_concept.ui.activities.location.LocationActiv
 import com.example.smart_laundromat_concept.ui.activities.notification.NotificationActivity;
 
 /**
- * Handles navigation for global system features like Notifications, Location, and Logout.
- * <p>
- * This navigator manages:
- * <ul>
- *   <li>Direct screen navigation (Notifications, Location).</li>
- *   <li>Overlay visibility toggling for the logout confirmation dialog.</li>
- *   <li>Session termination and task stack clearing during logout.</li>
- *   <li>Global back button behavior.</li>
- * </ul>
- * <p>
- * <b>Navigation Hint:</b> Hold Cmd/Ctrl + Click on {@link NavigationHelper#launchPage}
- * to see how these requests are dispatched.
+ * Handles navigation for global system features: Notifications, Location,
+ * Logout, the Reputation overlay, and the back button.
+ *
+ * <p>Some actions in this class do not produce a {@link NavigationRequest} — instead
+ * they perform the action directly (e.g. showing/hiding an overlay) and return null
+ * so {@link NavigationHelper} knows no further action is needed.
  */
 public class SystemNavigator implements NavigatorModule {
 
-    // -------------------------------------------------------------------------
-    // NavigatorModule
-    // -------------------------------------------------------------------------
-
     /**
-     * Processes system-wide navigation requests based on view IDs.
+     * Handles system-level navigation and overlay events.
      *
      * @param activity the current Activity context
-     * @param id       the ID of the clicked View
-     * @return a {@link NavigationRequest} if the ID is handled, otherwise null
+     * @param id       the resource ID of the clicked view
+     * @return a {@link NavigationRequest} if a screen change is needed, otherwise null
      */
     @Override
     public NavigationRequest handle(Activity activity, int id) {
 
-        // --- 1. Notification screen ---
+        // --- Notifications ---
         if (id == R.id.activity_notification__Notification_Button) {
-            return new NavigationRequest(NotificationActivity.class, NavigationRequest.AnimationType.SLIDE_RIGHT);
+            return new NavigationRequest(NotificationActivity.class,
+                    NavigationRequest.AnimationType.SLIDE_RIGHT);
         }
 
-        // --- 2. Location screen ---
+        // --- Location ---
         if (id == R.id.activity_location__Location_Button) {
-            return new NavigationRequest(LocationActivity.class, NavigationRequest.AnimationType.SLIDE_RIGHT);
+            return new NavigationRequest(LocationActivity.class,
+                    NavigationRequest.AnimationType.SLIDE_RIGHT);
         }
 
-        // --- 3. Logout — show confirmation overlay ---
+        // --- Logout: show confirmation overlay ---
         if (id == R.id.activity_profile__Logout_Button) {
-            View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
-            if (overlay != null) {
-                NavigationHelper.fadeIn(overlay);
-            }
+            showOverlay(activity, R.id.activity_profile__logout_confirmation_overlay);
             return null;
         }
 
-
-        // --- 4. Logout — cancel and hide overlay ---
+        // --- Logout: cancel (hide overlay) ---
         if (id == R.id.activity_profile__cancel_logout_action) {
-            View overlay = activity.findViewById(R.id.activity_profile__logout_confirmation_overlay);
-            if (overlay != null){
-                NavigationHelper.fadeOut(overlay);
-            }
+            hideOverlay(activity, R.id.activity_profile__logout_confirmation_overlay);
             return null;
         }
 
-        // --- 5. Logout — confirm, clear session and back stack ---
+        // --- Logout: confirm — clear session and navigate to Login ---
         if (id == R.id.activity_profile__confirm_logout_action) {
             UserSession.getInstance().logout();
-            Intent logoutIntent = new Intent(activity, LogInActivity.class);
-            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            return new NavigationRequest(logoutIntent, NavigationRequest.AnimationType.FADE);
+            Intent intent = new Intent(activity, LogInActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            return new NavigationRequest(intent, NavigationRequest.AnimationType.FADE);
         }
 
-        if (id == R.id.reputation__progress_details|| id == R.id.reputation__progress_details_1){
-            View overlay = activity.findViewById(R.id.activity_home__Reputation_Details);
-            if (overlay != null) {
-                NavigationHelper.fadeIn(overlay);
-            }
+        // --- Reputation overlay: open ---
+        if (id == R.id.reputation__progress_details || id == R.id.reputation__progress_details_1) {
+            showOverlay(activity, R.id.activity_home__Reputation_Details);
             return null;
         }
 
-        if (id == R.id.activity_home__Reputation_Details){
-            View overlay = activity.findViewById(R.id.activity_home__Reputation_Details);
-            if (overlay != null){
-                NavigationHelper.fadeOut(overlay);
-            }
+        // --- Reputation overlay: close (tapping the overlay itself dismisses it) ---
+        if (id == R.id.activity_home__Reputation_Details || id == R.id.activity_home__cancel_Reputation_Details) {
+            hideOverlay(activity, R.id.activity_home__Reputation_Details);
             return null;
         }
 
-        // --- 6. Global back button ---
+        // --- Global back button ---
         if (id == R.id.Back_Button) {
             activity.finish();
             activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -101,5 +82,21 @@ public class SystemNavigator implements NavigatorModule {
         }
 
         return null;
+    }
+
+    // -------------------------------------------------------------------------
+    // Private Helpers
+    // -------------------------------------------------------------------------
+
+    /** Fades in an overlay view, making it visible. */
+    private void showOverlay(Activity activity, int overlayId) {
+        View overlay = activity.findViewById(overlayId);
+        if (overlay != null) NavigationHelper.fadeIn(overlay);
+    }
+
+    /** Fades out an overlay view, hiding it. */
+    private void hideOverlay(Activity activity, int overlayId) {
+        View overlay = activity.findViewById(overlayId);
+        if (overlay != null) NavigationHelper.fadeOut(overlay);
     }
 }
