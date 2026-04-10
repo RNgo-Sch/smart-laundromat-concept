@@ -1,5 +1,6 @@
 package com.laundromat.server.model;
 
+import java.sql.Timestamp;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -7,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import com.laundromat.server.db.Query;
 import com.laundromat.server.db.Update;
 
-public abstract class Machine {
 public abstract class Machine {
     public static enum State {
         AVAILABLE {
@@ -166,12 +166,6 @@ public abstract class Machine {
         System.out.println("Machine "+this.id+": charging current user - " + success);
         return success;
     }
-    protected boolean chargeUser() {
-        boolean success = this.currentUser.wallet.makePayment(this.getPrice());
-        Update.updateUser(this.currentUser);
-        System.out.println("Machine "+this.id+": charging current user - " + success);
-        return success;
-    }
 
     // getters
     public int getId() {
@@ -195,12 +189,15 @@ public abstract class Machine {
         this.clearNextTime();
         this.nextTime = Executors.newSingleThreadScheduledExecutor();
         this.nextTime.schedule(this::timeOut, seconds, TimeUnit.SECONDS);
+        Timestamp timeoutAt = new Timestamp(System.currentTimeMillis() + seconds * 1000);
+        Update.syncMachineTimestamp(this.getId(), timeoutAt);
     }
     protected void clearNextTime() {
         if (this.nextTime != null) {
             this.nextTime.shutdownNow();
             this.nextTime = null;
         }
+        Update.syncMachineTimestamp(this.getId(), null);
     }
 
     // timings and constants
