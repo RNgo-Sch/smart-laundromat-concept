@@ -39,7 +39,9 @@ public class NavigationHelper {
             new AuthNavigator(),
             new MenuNavigator(),
             new BookingNavigator(),
-            new SystemNavigator()
+            new SystemNavigator(),
+            new HomeNavigator()
+
     );
 
     // -------------------------------------------------------------------------

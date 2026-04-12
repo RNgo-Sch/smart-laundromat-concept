@@ -2,6 +2,7 @@ package com.example.smart_laundromat_concept.ui.activities.main.home;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +52,10 @@ public class HomeActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private PollingManager pollingManager;
+    private Button gobooking;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +75,11 @@ public class HomeActivity extends AppCompatActivity {
         MenuBarHelper.menuBar(this, MenuBarHelper.HOME);
         LocationHelper.setupUnderline(this);
         homeCardHelper = new HomeCardHelper(this);
+        gobooking = findViewById(R.id.active__view_details);
 
         swipeRefreshLayout = findViewById(R.id.activity_home__swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this::refreshAll);
+        gobooking.setOnClickListener(v -> launchPage(v));
 
         pollingManager = new PollingManager(
                 () -> {
@@ -126,7 +134,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        homeCardHelper.stopTimer();
+
         pollingManager.stop();
     }
 
@@ -237,41 +245,97 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
     private void updateMachineAvailability() {
+        UserSession session = UserSession.getInstance();
+        if (!session.isLoggedIn()) return;
+        String myUserId = String.valueOf(session.getCurrentUser().getId());
 
         MachineRepository.fetchAllMachines(() -> {
 
-            final int[] washerAvailable = {0};
-            final int[] washerInUse = {0};
-
+            // --- Availability counts ---
+            final int[] washerAvailable = {0}, washerInUse = {0};
             for (AppMachine machine : AppMachine.getWashers().values()) {
                 AppMachine.State state = machine.getState();
-                if (state == AppMachine.State.AVAILABLE) {
-                    washerAvailable[0]++;
-                } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
-                    washerInUse[0]++;
-                }
+                if (state == AppMachine.State.AVAILABLE) washerAvailable[0]++;
+                else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) washerInUse[0]++;
             }
 
-            final int[] dryerAvailable = {0};
-            final int[] dryerInUse = {0};
-
+            final int[] dryerAvailable = {0}, dryerInUse = {0};
             for (AppMachine machine : AppMachine.getDryers().values()) {
                 AppMachine.State state = machine.getState();
-                if (state == AppMachine.State.AVAILABLE) {
-                    dryerAvailable[0]++;
-                } else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) {
-                    dryerInUse[0]++;
+                if (state == AppMachine.State.AVAILABLE) dryerAvailable[0]++;
+                else if (state == AppMachine.State.IN_USE || state == AppMachine.State.RESERVED) dryerInUse[0]++;
+            }
+
+            // --- Find user's assigned machine ---
+            String foundType         = null;
+            int foundPosition        = -1;
+            long foundEndMillis      = 0;
+            AppMachine.State foundState = null;
+
+            for (Map.Entry<Integer, AppMachine> entry : AppMachine.getWashers().entrySet()) {
+                AppMachine machine = entry.getValue();
+                if (myUserId.equals(machine.getAssignedUserId()) && machine.timeoutTime != null) {
+                    foundType      = "Washer";
+                    foundPosition  = entry.getKey();
+                    foundEndMillis = parseTimeoutTime(machine.timeoutTime);
+                    foundState     = machine.getState();
+                    break;
+                }
+            }
+            if (foundType == null) {
+                for (Map.Entry<Integer, AppMachine> entry : AppMachine.getDryers().entrySet()) {
+                    AppMachine machine = entry.getValue();
+                    if (myUserId.equals(machine.getAssignedUserId()) && machine.timeoutTime != null) {
+                        foundType      = "Dryer";
+                        foundPosition  = entry.getKey();
+                        foundEndMillis = parseTimeoutTime(machine.timeoutTime);
+                        foundState     = machine.getState();
+                        break;
+                    }
                 }
             }
 
+            final String finalType         = foundType;
+            final int finalPosition        = foundPosition;
+            final long finalEndMillis      = foundEndMillis;
+            final AppMachine.State finalState = foundState;
+
             runOnUiThread(() -> {
+                // 1. Update session first
+                long remaining = finalEndMillis - System.currentTimeMillis();
+                if (finalType != null && remaining > 0) {
+                    session.setActiveBooking(finalType, finalPosition, remaining);
+                    session.setActiveMachineState(finalState);
+                } else {
+                    session.clearActiveBooking();
+                }
+
+                // 2. Refresh card
+                homeCardHelper.refresh();
+
+                // 3. Update counts
                 ((TextView) findViewById(R.id.snapshot__washer_available)).setText(String.valueOf(washerAvailable[0]));
                 ((TextView) findViewById(R.id.snapshot__washer_in_use)).setText(String.valueOf(washerInUse[0]));
                 ((TextView) findViewById(R.id.snapshot__dryer_available)).setText(String.valueOf(dryerAvailable[0]));
                 ((TextView) findViewById(R.id.snapshot__dryer_in_use)).setText(String.valueOf(dryerInUse[0]));
             });
-
         });
+    }
+
+    private long parseTimeoutTime(String raw) {
+        if (raw == null) return 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
+            return sdf.parse(raw.trim()).getTime();
+        } catch (Exception e) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
+                return sdf.parse(raw.trim()).getTime();
+            } catch (Exception ex) {
+                android.util.Log.e("PARSE_ERROR", "Failed to parse: " + raw);
+                return 0;
+            }
+        }
     }
 
     public void launchPage(View view) {

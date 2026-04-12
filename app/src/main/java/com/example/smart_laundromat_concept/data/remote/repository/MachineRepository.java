@@ -30,10 +30,16 @@ public class MachineRepository {
                     public void onResponse(Call<List<AppMachine>> call, Response<List<AppMachine>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             for (AppMachine m : response.body()) {
+                                android.util.Log.d("MACHINE_DEBUG",
+                                        "position=" + m.position
+                                                + " status=" + m.status
+                                                + " current_user=" + m.currentUser
+                                                + " timeout_time=" + m.timeoutTime);
                                 AppMachine.setWasherState(
                                         m.position,
                                         AppMachine.State.fromString(m.status),
-                                        m.currentUser
+                                        m.currentUser,
+                                        m.timeoutTime
                                 );
                             }
                         }
@@ -59,7 +65,8 @@ public class MachineRepository {
                                 AppMachine.setDryerState(
                                         m.position,
                                         AppMachine.State.fromString(m.status),
-                                        m.currentUser
+                                        m.currentUser,
+                                        m.timeoutTime
                                 );
                             }
                         }
@@ -79,11 +86,10 @@ public class MachineRepository {
      */
     public static void updateMachineLocally(String type, int position, String status, Integer currentUser) {
         AppMachine.State state = AppMachine.State.fromString(status);
-
         if ("washer".equalsIgnoreCase(type)) {
-            AppMachine.setWasherState(position, state, currentUser);
+            AppMachine.setWasherState(position, state, currentUser, null);
         } else {
-            AppMachine.setDryerState(position, state, currentUser);
+            AppMachine.setDryerState(position, state, currentUser, null);
         }
     }
 
