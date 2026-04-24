@@ -1,5 +1,7 @@
 package com.laundromat.server.db;
 
+import java.sql.Timestamp;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +38,13 @@ public class Update {
             );
         }
         // System.out.println("Update: " + machines.length + " machines synced to DB");
+    }
+
+    public static void syncMachineTimestamp(int machineId, Timestamp time) {
+        jdbcTemplate.update(
+            "UPDATE machine SET timeout_time = ? WHERE id = ?",
+            time,
+            machineId
+        );
     }
 }

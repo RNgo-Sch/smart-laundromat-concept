@@ -1,5 +1,6 @@
 package com.example.smart_laundromat_concept.data.session;
 
+import com.example.smart_laundromat_concept.data.model.AppMachine;
 import com.example.smart_laundromat_concept.data.model.User;
 
 /**
@@ -17,6 +18,7 @@ import com.example.smart_laundromat_concept.data.model.User;
 public class UserSession {
 
     private static UserSession instance;
+    private AppMachine.State activeMachineState;
 
     // --- Current User ---
     /** The currently logged-in user (null if not logged in). */
@@ -143,7 +145,18 @@ public class UserSession {
         this.activeMachineType    = null;
         this.activeMachineNum     = 0;
         this.bookingEndTimeMillis = 0;
+        this.activeMachineState   = null;
     }
+
+    public void setActiveMachineState(AppMachine.State state) {
+        this.activeMachineState = state;
+    }
+
+    public AppMachine.State getActiveMachineState() {
+        return activeMachineState;
+    }
+
+
 
     /** @return the type of machine currently booked */
     public String getActiveMachineType()  { return activeMachineType; }

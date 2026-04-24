@@ -113,8 +113,8 @@ public class BookingActivity extends AppCompatActivity {
         // Set up the queue join/leave button
         setupQueueButton();
 
-        // Set up the start machine button
-        startMachineButton();
+        // Set up the start / collect button
+        updateStartButton();
 
         // Set up swipe-to-refresh
         swipeRefreshLayout = findViewById(R.id.activity_booking__swipe_refresh);
@@ -174,8 +174,43 @@ public class BookingActivity extends AppCompatActivity {
         });
     }
 
-    private void startMachineButton() {
-        ButtonHelper.setup(this, R.id.activity_booking__btn__start, "Start machine", v -> {
+    // -------------------------------------------------------------------------
+    // Start / Collect Button
+    // -------------------------------------------------------------------------
+
+    /**
+     * Configures the start/collect button label, click action, and enabled state
+     * based on the current state of the machine assigned to the logged-in user.
+     *
+     * <ul>
+     *   <li>{@link AppMachine.State#IN_USE}     → "Using machine" (disabled, dimmed)</li>
+     *   <li>{@link AppMachine.State#COLLECTION} → "Collect laundry" (enabled)</li>
+     *   <li>Any other state                     → "Start machine" (enabled)</li>
+     * </ul>
+     *
+     * <p>Called from {@link #updateQueueButtonState()} so it refreshes automatically
+     * on every poll cycle — no manual calls needed after the first setup.
+     */
+    private void updateStartButton() {
+        AppMachine.State assignedState = getAssignedMachineState();
+
+        String label;
+        boolean enabled;
+
+        if (assignedState == AppMachine.State.IN_USE) {
+            label   = "Using machine";
+            enabled = false;
+        } else if (assignedState == AppMachine.State.COLLECTION) {
+            label   = "Collect laundry";
+            enabled = true;
+        } else {
+            label   = "Start machine";
+            enabled = true;
+        }
+
+        ButtonHelper.setup(this, R.id.activity_booking__btn__start, label, v -> {
+            if (!enabled) return; // safety guard — should never fire when disabled
+
             String userIdStr = getUserIdOrFail();
             if (userIdStr == null) return;
 
@@ -185,12 +220,14 @@ public class BookingActivity extends AppCompatActivity {
                 return;
             }
 
-            int userId = Integer.parseInt(userIdStr);
-
-            QueueRepository.interact(userId, machineId, new QueueCallback() {
+            QueueRepository.interact(Integer.parseInt(userIdStr), machineId, new QueueCallback() {
                 @Override
                 public void onSuccess(QueueResponse body) {
-                    Toast.makeText(BookingActivity.this, "Machine started", Toast.LENGTH_SHORT).show();
+                    // Re-read state at callback time for the correct toast message
+                    String msg = getAssignedMachineState() == AppMachine.State.COLLECTION
+                            ? "Laundry collected!"
+                            : "Machine started";
+                    Toast.makeText(BookingActivity.this, msg, Toast.LENGTH_SHORT).show();
                     fetchMachineStates();
                 }
 
@@ -200,8 +237,21 @@ public class BookingActivity extends AppCompatActivity {
                 }
             });
         });
+
+        // Apply visual enabled/disabled state to the button's interactive area
+        View btnRoot = findViewById(R.id.activity_booking__btn__start);
+        if (btnRoot != null) {
+            View interactiveArea = btnRoot.findViewById(R.id.layout_button__btn__button);
+            if (interactiveArea != null) {
+                interactiveArea.setEnabled(enabled);
+                interactiveArea.setAlpha(enabled ? 1.0f : 0.4f);
+            }
+        }
     }
 
+    // -------------------------------------------------------------------------
+    // Queue Actions
+    // -------------------------------------------------------------------------
 
     /**
      * Sends a request to the Spring Boot backend to join the queue
@@ -238,7 +288,7 @@ public class BookingActivity extends AppCompatActivity {
             public void onSuccess(QueueResponse body) {
                 updateQueueButtonState();
                 Toast.makeText(BookingActivity.this, "Left queue", Toast.LENGTH_SHORT).show();
-                fetchMachineStates(); // ensure UI refresh
+                fetchMachineStates();
             }
 
             @Override
@@ -272,7 +322,7 @@ public class BookingActivity extends AppCompatActivity {
 
     /**
      * Fetches the latest machine states from Supabase, updates both machine sections,
-     * and recalculates the queue button label.
+     * and recalculates the queue and start button labels.
      *
      * <p>This is the core polling method. It runs every 1 second via
      * {@link PollingManager}.
@@ -282,7 +332,7 @@ public class BookingActivity extends AppCompatActivity {
                 ? String.valueOf(UserSession.getInstance().getCurrentUser().getId())
                 : null;
 
-        if (myUserId == null) return; // no toast here
+        if (myUserId == null) return;
 
         MachineRepository.fetchAllMachines(() -> {
 
@@ -341,6 +391,9 @@ public class BookingActivity extends AppCompatActivity {
     /**
      * Updates the queue button label and click action based on whether the current
      * user is already assigned to a machine on the active tab.
+     * <p>
+     * Also triggers {@link #updateStartButton()} so both buttons stay in sync
+     * after every poll cycle.
      */
     private void updateQueueButtonState() {
         ButtonHelper.setup(this,
@@ -350,6 +403,8 @@ public class BookingActivity extends AppCompatActivity {
                     if (isAssignedToMachine()) handleLeaveQueue();
                     else                       handleJoinQueue();
                 });
+
+        updateStartButton(); // keep start/collect/disabled label in sync
     }
 
     // -------------------------------------------------------------------------
@@ -391,8 +446,37 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns the machine ID assigned to the current user.
-     * If none is assigned, returns -1.
+     * Returns the current {@link AppMachine.State} of the machine assigned to the
+     * logged-in user on the active tab, or {@code null} if no machine is assigned.
+     *
+     * <p>Used by {@link #updateStartButton()} to determine the correct button label
+     * and enabled state without iterating the machine map more than once.
+     *
+     * @return assigned machine state, or null
+     */
+    private AppMachine.State getAssignedMachineState() {
+        String myUserId = UserSession.getInstance().getCurrentUser() != null
+                ? String.valueOf(UserSession.getInstance().getCurrentUser().getId())
+                : null;
+        if (myUserId == null) return null;
+
+        Map<Integer, AppMachine> machines = TYPE_WASHER.equalsIgnoreCase(currentTabType)
+                ? AppMachine.getWashers()
+                : AppMachine.getDryers();
+
+        for (AppMachine machine : machines.values()) {
+            if (myUserId.equals(machine.getAssignedUserId())) {
+                return machine.getState();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the machine ID (1–4) assigned to the current user on the active tab.
+     * Returns -1 if no machine is assigned.
+     *
+     * @return 1-based machine number, or -1
      */
     private int getAssignedMachineId() {
         String myUserId = getUserIdOrFail();
@@ -404,7 +488,7 @@ public class BookingActivity extends AppCompatActivity {
 
         for (int i = 1; i <= 4; i++) {
             if (myUserId.equals(machines.get(i).getAssignedUserId())) {
-                return i; // machine number as ID
+                return i;
             }
         }
         return -1;

@@ -1,5 +1,6 @@
 package com.laundromat.server.model;
 
+import java.sql.Timestamp;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -182,12 +183,15 @@ public abstract class Machine {
         this.clearNextTime();
         this.nextTime = Executors.newSingleThreadScheduledExecutor();
         this.nextTime.schedule(this::timeOut, seconds, TimeUnit.SECONDS);
+        Timestamp timeoutAt = new Timestamp(System.currentTimeMillis() + seconds * 1000);
+        Update.syncMachineTimestamp(this.getId(), timeoutAt);
     }
     protected void clearNextTime() {
         if (this.nextTime != null) {
             this.nextTime.shutdownNow();
             this.nextTime = null;
         }
+        Update.syncMachineTimestamp(this.getId(), null);
     }
 
     // timings and constants

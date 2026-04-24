@@ -21,6 +21,8 @@ public class AppMachine {
 
     @SerializedName("position")
     public int position;
+    @SerializedName("timeout_time")
+    public String timeoutTime;
 
     private String assignedUserId;
 
@@ -169,19 +171,21 @@ public class AppMachine {
         }
     }
 
-    public static void setWasherState(int id, State state, Integer userId) {
+    public static void setWasherState(int id, State state, Integer userId, String timeoutTime) {
         if (washers.containsKey(id)) {
             AppMachine m = washers.get(id);
             m.setState(state);
             m.setCurrentUser(userId);
+            m.timeoutTime = timeoutTime;
         }
     }
 
-    public static void setDryerState(int id, State state, Integer userId) {
+    public static void setDryerState(int id, State state, Integer userId, String timeoutTime) {
         if (dryers.containsKey(id)) {
             AppMachine m = dryers.get(id);
             m.setState(state);
             m.setCurrentUser(userId);
+            m.timeoutTime = timeoutTime;
         }
     }
 
