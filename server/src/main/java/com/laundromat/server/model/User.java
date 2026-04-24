@@ -1,6 +1,8 @@
 package com.laundromat.server.model;
 
-public class User {
+import com.laundromat.server.db.Query;
+
+public class User implements Comparable<User> {
 
     private Integer id;
     public final Wallet wallet;
@@ -8,6 +10,10 @@ public class User {
 
     public String username;
     public String password;
+
+    public static User fromId(int id) {
+        return Query.userFromId(id);
+    }
 
     public User(int id, String username, String password, float wallet, int reputation) {
         this.id = id;
@@ -20,6 +26,11 @@ public class User {
     // accessors
     public int getId() {
         return id;
+    }
+
+    @Override
+    public int compareTo(User other) {
+        return other.reputation.getPriority() - this.reputation.getPriority();
     }
 
     @Override
@@ -76,6 +87,7 @@ public class User {
         private static final int MIN_SCORE = -10;
         private static final int MAX_SCORE = 120;
         private static final int[] TIERS = { 10, 25, 50, 100 };
+        private static final int REPUTATION_BONUS = 5;
 
         private int score;
 
@@ -96,6 +108,10 @@ public class User {
                 if (score < TIERS[i]) return i;
             }
             return TIERS.length;
+        }
+
+        public int getPriority() {
+            return getReputationTier() * REPUTATION_BONUS;
         }
 
         public void adjustScore(int adjustment) {

@@ -3,8 +3,9 @@ package com.laundromat.server.queue;
 import java.util.PriorityQueue;
 
 import com.laundromat.server.model.Machine;
+import com.laundromat.server.model.User;
 
-public class MachineQueue extends PriorityQueue<QueueMember> {
+public class MachineQueue extends PriorityQueue<User> {
     private final Machine[] machines;
 
     public MachineQueue(Machine[] machines) {
@@ -15,15 +16,15 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     public void joinQueue(int queuer) {
         // assign machine if possible
         if (isEmpty()) {
-            Machine m = this.findAvailableMachine();
+            Machine m = findAvailableMachine();
             if (m != null) {
                 m.useMachine(queuer);
             } else {
-                this.add(new QueueMember(queuer));
+                this.add(User.fromId(queuer));
             }
             // cannot assign or queue already has people waiting
         } else if (!contains(queuer)) {
-            add(new QueueMember(queuer));
+            add(User.fromId(queuer));
         }
     }
     public void leaveQueue(int queuer) {
@@ -36,7 +37,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
     }
     public void updateQueue() {
         // method called because available machine for user
-        int u = this.poll().getQueuer();
+        int u = this.poll().getId();
         Machine m = findAvailableMachine();
         m.useMachine(u);
     }
@@ -78,7 +79,7 @@ public class MachineQueue extends PriorityQueue<QueueMember> {
 
     private boolean contains(int queuer) {
         for (Object o: this.toArray()) {
-            if (o instanceof QueueMember m && m.getQueuer() == queuer) {
+            if (o instanceof User m && m.getId() == queuer) {
                 return true;
             }
         }

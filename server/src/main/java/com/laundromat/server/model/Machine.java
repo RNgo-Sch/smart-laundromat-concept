@@ -8,7 +8,6 @@ import com.laundromat.server.db.Query;
 import com.laundromat.server.db.Update;
 
 public abstract class Machine {
-public abstract class Machine {
     public static enum State {
         AVAILABLE {
             // this state does not have currentUser or nextTime
@@ -20,7 +19,6 @@ public abstract class Machine {
             public State interact(Machine m, int u) {
                 // user which interacted reserved machine
                 m.setCurrentUser(u);
-                m.setNextTime(m.getGracePeriod());
                 m.setNextTime(m.getGracePeriod());
                 return RESERVED;
             }
@@ -42,8 +40,7 @@ public abstract class Machine {
             @Override
             public State interact(Machine m, int u) {
                 // if same user, they start the washing cycle
-                if (m.getCurrentUser().getId() == u & m.chargeUser()) {
-                    m.setNextTime(m.getDuration());
+                if (m.getCurrentUser().getId() == u && m.chargeUser()) {
                     m.setNextTime(m.getDuration());
                     m.rewardCurrentUser();
                     return IN_USE;
@@ -55,7 +52,6 @@ public abstract class Machine {
             @Override
             public void resume(Machine m) {
                 m.setNextTime(m.getGracePeriod());
-                m.setNextTime(m.getGracePeriod());
             }
         },
         IN_USE {
@@ -63,7 +59,6 @@ public abstract class Machine {
             @Override
             public State timeOut(Machine m) {
                 // laundry cycle complete
-                m.setNextTime(m.getGracePeriod());
                 m.setNextTime(m.getGracePeriod());
                 return COLLECTION;
             }
@@ -73,7 +68,6 @@ public abstract class Machine {
             }
             @Override
             public void resume(Machine m) {
-                m.setNextTime(m.getDuration());
                 m.setNextTime(m.getDuration());
             }
         },
@@ -100,7 +94,6 @@ public abstract class Machine {
             }
             @Override
             public void resume(Machine m) {
-                m.setNextTime(m.getGracePeriod());
                 m.setNextTime(m.getGracePeriod());
             }
         },
@@ -159,12 +152,6 @@ public abstract class Machine {
             System.out.println("Machine "+this.id+": reward applied for user "+this.currentUser.getId());
             Update.updateUser(this.currentUser);
         }
-    }
-    protected boolean chargeUser() {
-        boolean success = this.currentUser.wallet.makePayment(this.getPrice());
-        Update.updateUser(this.currentUser);
-        System.out.println("Machine "+this.id+": charging current user - " + success);
-        return success;
     }
     protected boolean chargeUser() {
         boolean success = this.currentUser.wallet.makePayment(this.getPrice());
