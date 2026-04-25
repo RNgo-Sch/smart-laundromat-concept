@@ -5,39 +5,42 @@ import java.util.PriorityQueue;
 import com.laundromat.server.model.Machine;
 import com.laundromat.server.model.User;
 
-public class MachineQueue extends PriorityQueue<User> {
+public class MachineQueue {
     private final Machine[] machines;
+    private final PriorityQueue<User> userQueue;
 
     public MachineQueue(Machine[] machines) {
         this.machines = machines;
+        this.userQueue = new PriorityQueue<>();
     }
 
     // queue related methods
     public void joinQueue(int queuer) {
         // assign machine if possible
-        if (isEmpty()) {
+        if (userQueue.isEmpty()) {
             Machine m = findAvailableMachine();
-            if (m != null) {
+            if (hasAvailableMachine()) {
                 m.useMachine(queuer);
             } else {
-                this.add(User.fromId(queuer));
+                userQueue.add(User.fromId(queuer));
             }
-            // cannot assign or queue already has people waiting
-        } else if (!contains(queuer)) {
-            add(User.fromId(queuer));
+        // cannot assign or queue already has people waiting
+        } else if (!userQueue.contains(queuer)) {
+            userQueue.add(User.fromId(queuer));
         }
     }
     public void leaveQueue(int queuer) {
-        if (contains(queuer)) {
+        User u = User.fromId(queuer);
+        if (userQueue.contains(u)) {
             System.out.println("MachineQueue: queuer " +queuer+ " found, removing");
-            remove(queuer);
+            userQueue.remove(u);
         } else {
             System.out.println("MachineQueue: queuer " +queuer+ "not found");
         }
     }
     public void updateQueue() {
         // method called because available machine for user
-        int u = this.poll().getId();
+        int u = userQueue.poll().getId();
         Machine m = findAvailableMachine();
         m.useMachine(u);
     }
@@ -53,6 +56,9 @@ public class MachineQueue extends PriorityQueue<User> {
     }
     public boolean hasAvailableMachine() {
         return findAvailableMachine() != null;
+    }
+    public boolean isEmpty() {
+        return userQueue.isEmpty();
     }
 
     // facility helper methods
@@ -77,20 +83,11 @@ public class MachineQueue extends PriorityQueue<User> {
         return null;
     }
 
-    private boolean contains(int queuer) {
-        for (Object o: this.toArray()) {
-            if (o instanceof User m && m.getId() == queuer) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     //misc
     @Override
     public String toString() {
         String out = "";
-        for (Machine m: this.machines) {
+        for (Machine m: machines) {
             out += "\t" + m.toString() + "\n";
         }
         return out;
