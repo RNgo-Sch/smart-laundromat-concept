@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class BackendClient {
     private static final String BASE_URL =
-            "https://laundromat-server-production.up.railway.app/";
+            isEmulator()
+                    ? "http://10.0.2.2:3000/" // for local host address
+                    : "https://laundromat-server-production.up.railway.app/";
 
     private static boolean isEmulator() {
         return android.os.Build.FINGERPRINT.contains("generic")
